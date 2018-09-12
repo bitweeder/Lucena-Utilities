@@ -1,0 +1,381 @@
+/*------------------------------------------------------------------------------
+
+	Lucena Utilities Library
+	“Config.hpp”
+	Copyright © 2015-2018 Lucena
+	All Rights Reserved
+
+	This file is distributed under the University of Illinois Open Source
+	License. See license/License.txt for details.
+
+	Config documents the internal options used in a given build of
+	Lucena Utilities. The contents of this file should not typically be changed
+	unless the library is rebuilt at the same time; in particular, a client
+	program that modifies this file risks crashing when built against a version
+	of the library that is not using the same settings.
+
+	Settings available in client code that can be set independently of those
+	used to build the library are also documented here, as well as certain
+	situational settings. Such settings should be set in the client code’s own
+	master headers.
+
+	Note that codes are littered through the source comments to indicate areas
+	that require special attention; we document those here:
+
+		FIXME - something that is a known bug, incomplete, or a likely trouble
+				area; these should be addressed prior to shipping
+
+		APIME - a likely API problem; these are not an impediment to shipping,
+				but may pose a future maintenance problem
+
+		OPTME - something that could be made more efficient with a high
+				probable performance return; this notation is generally
+				reserved for speed-critical sections
+
+		VERME - a place where an assumption has been made about performance,
+				stability, usefulness, etc.; these document areas that might
+				benefit from future testing
+
+		SEEME - something noteworthy that requires care to use properly;
+				possibly counterintuitive, but not easily addressable
+
+------------------------------------------------------------------------------*/
+
+
+#pragma once
+
+
+//	Set up versioned namespaces for Lucena Utilities. This allows us to have
+//	non-disruptive ABI changes, should the need arise.
+//	APIME Note that there doesn’t appear to be a way to ensure that these
+//	macros are invoked correctly, e.g., guard values to keep from accidentally
+//	embedding std in our library namespace.
+#define LUL_version					20000
+#define LUL_abi_version				2
+
+//	Turn the literal value param_ into a string literal
+#define LUL_Stringify1_(LUL_param_) #LUL_param_
+#define LUL_Stringify_(LUL_param_) LUL_Stringify1_(LUL_param_)
+
+//	LUL_Concat_ concatenates any two preprocessor macro arguments to create a
+//	new token. The additional indirection is necessary to ensure that the
+//	values of the arguments, not the argument identifiers, are used. Note that
+//	these macros must exist here since this file gets included before anything
+//	else of ours.
+#define LUL_Concat1_(LUL_base_, LUL_suffix_)	\
+	LUL_base_ ## LUL_suffix_
+
+#define LUL_Concat_(LUL_base_, LUL_suffix_)	\
+	LUL_Concat1_ (LUL_base_, LUL_suffix_)
+
+//	Anything contained in this namespace is versioned.
+#define LUL_abi_namespace			LUL_Concat_(ul_, LUL_abi_version)
+
+//	Begin and end the unversioned library namespace. This must be done from the
+//	global namespace.
+#define LUL_begin_namespace			namespace lucena { namespace ul {
+#define LUL_end_namespace			} }
+
+//	Enter and exit the inline versioned library namespace. This must be done
+//	from within the unversioned library namespace.
+#define LUL_enter_v_namespace		inline namespace LUL_abi_namespace {
+#define LUL_exit_v_namespace		}
+
+//	Begin and end the fully qualified versioned library namespace. This must be
+//	done from the global namespace.
+#define LUL_begin_v_namespace		LUL_begin_namespace LUL_enter_v_namespace
+#define LUL_end_v_namespace			LUL_exit_v_namespace LUL_end_namespace
+
+//	Versioned namespace qualifier
+#define LUL_v_						lucena::ul::LUL_abi_namespace
+
+//	Unversioned namespace qualifier
+#define LUL_						lucena::ul
+
+//	Bring our namespace into existence.
+LUL_begin_v_namespace
+LUL_end_v_namespace
+
+
+//	ABI decorators. These are used to identify which ABI a given chunk of code
+//	adheres to. The “normal” ABI is the default, and provided for completeness.
+//	The “cpp” ABI is the stable C++ ABI for a given platform. The “c” ABI is
+//	the C ABI; enter/exit macros are provided for completeness, though they are
+//	unnecessary in practice since all supported C++ compilers handle extern "C"
+//	correctly already.
+//
+//	APIME  These are intended to track the emerging C++ ABI proposal(s). For
+//	now, they’re mostly placeholders - only the C ABI is generally supported.
+#ifndef LUL_enter_normal_abi
+	#define LUL_enter_normal_abi
+#endif
+
+#ifndef LUL_exit_normal_abi
+	#define LUL_exit_normal_abi
+#endif
+
+#ifndef LUL_enter_cpp_abi
+	#define LUL_enter_cpp_abi
+#endif
+
+#ifndef LUL_exit_cpp_abi
+	#define LUL_exit_cpp_abi
+#endif
+
+#ifndef LUL_enter_c_abi
+	#define LUL_enter_c_abi			extern "C" {
+#endif
+
+#ifndef LUL_exit_c_abi
+	#define LUL_exit_c_abi			}
+#endif
+
+
+//	Begin and end the std library namespace; this is intended for implementing
+//	template specializations. This must be done from the global namespace.
+#ifndef LUL_begin_std_namespace
+	#define LUL_begin_std_namespace	namespace std {
+#endif
+
+#ifndef LUL_end_std_namespace
+	#define LUL_end_std_namespace	}
+#endif
+
+//	This is used to maintain ABI stability when using Standard Library
+//	constructs in our APIs. Use “LUL_std_abi::” instead of just “std::” when
+//	qualifying the namespace of Standard Library objects to ensure that we’re
+//	using the ABI-stable interface for a given platform. For completeness, we
+//	also offer LUL_std for usage that isn’t tied to a particular ABI.
+//
+//	To be clear, LUL_std_abi should be used in client APIs to indicate symbols
+//	from the std namespace that could be affected by ABI differences between
+//	between separate binaries that both include a given header.
+//	APIME  This is intended to track the emerging C++ ABI proposal. For now,
+//	it’s really just a placeholder; the only value is for documentation.
+#ifndef LUL_std_abi
+	#define LUL_std_abi				std
+#endif
+
+#ifndef LUL_std
+	#define LUL_std					std
+#endif
+
+
+//	The value of LUL_CONFIG_debug is 1 for debug builds and 0 for other builds.
+//	It is set by the build system and passed in to the compiler. The value used
+//	by client code does not have to match the library build’s (or even exist).
+//	Debug builds include many static_asserts and other compile-time tests, add
+//	extra data to log entries, log more than release builds, perform runtime
+//	asserts, emit debugger symbol tables, disable most optimizations, and
+//	generally do things thatshould never ever happen in shippng code.
+//#define LUL_CONFIG_debug				1
+
+
+//	Packaging Settings
+//
+//	There are several settings used for packaging build products that are
+//	defined elsewhere. These include:
+//
+//		LUL_PACKAGING_api
+//		LUL_PACKAGING_build
+//		LUL_PACKAGING_copyright_date
+//		LUL_PACKAGING_copyright_holder
+//		LUL_PACKAGING_description
+//		LUL_PACKAGING_prefix
+//		LUL_PACKAGING_product_domain
+//		LUL_PACKAGING_product_identifier
+//		LUL_PACKAGING_product_name
+//		LUL_PACKAGING_signature
+//		LUL_PACKAGING_version
+//
+//	See “lulPackaging.hpp” for details.
+
+
+//	These can be used in prefix headers to indicate whether headers from the
+//	C Standard Library, C++ STL, gsl, or boost should be precompiled. Note that
+//	some header implementations will not work correctly when precompiled on a
+//	given platform, and these are situationally disabled in the appropriate
+//	include file, namely “lulPCH_boost.hpp” or “lpalPCH_std.hpp”. Also note
+//	that relevant headers should always be included even if they are part of
+//	the precompiled set in order to avoid unexpected problems should a given
+//	header be removed, and as a form of documentation. Finally, note that these
+//	settings only affect client code if they are set in the client; whether or
+//	not they are used in component libraries should not matter. However, it is
+//	recommended to enable these and make use of them in client code; nobody
+//	likes excessively long builds.
+//#define LUL_CONFIG_use_prefix_std				1
+//#define LUL_CONFIG_use_prefix_boost			0
+//#define LUL_CONFIG_use_prefix_gsl				0
+
+
+//	Ideally, this should always be set to 1; the only reason to set it to 0 is
+//	to allow support for reference implementations of Standard Library features
+//	that require object code to work correctly, e.g., our versions of <any>,
+//	<optional>, and <variant>.
+//	FIXME This is incorrect, as currently we have a number of class and
+//	function definitions that require object code to work correctly.
+//	Additionally, there are vestigial startup and takedown functions that
+//	previously held runtime environment configuration code and that might be
+//	required again, should a future Standard Library feature reference
+//	implementation require it; disabling them conditionally may create a
+//	confusing situation for users. Most likely, we’ll just remove this switch,
+//	as it’s not actually being used now, anyway, and it may represent a
+//	pointless aspiration.
+#ifndef LUL_CONFIG_headers_only
+	#define LUL_CONFIG_headers_only				0
+#endif
+
+
+//	The following feature switches specify which implementations to use for
+//	various language features which may not be widely implemented at the
+//	library level, yet, or may have broken implementations on some platforms.
+//	These could be determined programmatically (using __has_include, for
+//	example), but that would only tell us about the current build environment,
+//	which may differ from the one used to build the library; the ABIs could
+//	differ because of differences in implementation, among other things. As
+//	such, these are for documentation as well as for dictating build
+//	requirements. Changing one of these requires rebuilding every component
+//	that links to Lucena Utilities.
+
+//	<any>
+//	This works in conjunction with LUL_LIBCPP17_ANY to determine what <any>
+//	variant to use. Note that if LUL_LIBCPP17_ANY is not explicity defined,
+//	it is assigned a value based on compile-time availability. By default, if
+//	there is std support, that version of <any> will be used; if not, the
+//	reference implementation will be used. Set LUL_CONFIG_force_local_any in
+//	order to force the use of the reference implementation.
+#ifndef LUL_CONFIG_force_local_any
+	#define LUL_CONFIG_force_local_any			0
+#endif
+
+//	Note that the following will be set appropriately in lulAnyWrapper.hpp.
+//
+//		LUL_CONFIG_std_any_supported
+
+
+//	<bit>
+//	This works in conjunction with LUL_LIBCPP2A_BIT_CAST to determine what
+//	<bit> variant to use. Note that if LUL_LIBCPP2A_BIT_CAST is not
+//	explicity defined, it is assigned a value based on compile-time
+//	availability. By default, if there is std support, that version of <bit>
+//	will be used; if not, the reference implementation will be used. Set
+//	LUL_CONFIG_force_local_bit_cast in order to force the use of the reference
+//	implementation.
+//	SEEME bit_cast is weird since it’s in the <bit> header, but was approved
+//	independently of the rest of <bit>, in fact, in advance of it. We track
+//	bit_cast separately from the rest of <bit> for this reason.
+#ifndef LUL_CONFIG_force_local_bit_cast
+	#define LUL_CONFIG_force_local_bit_cast		0
+#endif
+
+//	Note that the following will be set appropriately in lulBitWrapper.hpp.
+//
+//		LUL_CONFIG_std_bit_cast_supported
+
+
+//	<filesystem>
+//	These work in conjunction with LUL_LIBCPP17_FILESYSTEM to determine what
+//	<filesystem> variant to use. Note that if LUL_LIBCPP17_FILESYSTEM is not
+//	explicity defined, it is assigned a value based on compile-time
+//	availability. By default, if there is std support, that version of
+//	<filesystem> will be used; if not, the local reference implementation will
+//	be used. Set LUL_CONFIG_force_local_filesystem in order to force the use of
+//	the local implementation.
+#define LUL_CONFIG_force_local_filesystem		0
+
+//	Note that the following will be set appropriately in
+//	lulFilesystemWrapper.hpp.
+//
+//		LUL_CONFIG_std_filesystem_supported
+
+
+//	<networking>
+//	These work in conjunction with LUL_LIBCPPTS_NETWORKING to determine what
+//	<networking> variant to use. Note that if LUL_LIBCPPTS_NETWORKING is not
+//	explicity defined, it is assigned a value based on compile-time
+//	availability. By default, if there is std support, that version of
+//	<networking> will be used; if not, and if LUL_CONFIG_use_boost_networking
+//	is set, networking will be used. Set LUL_CONFIG_force_boost_networking in
+//	order to force the use of the boost implementation. Note that there is no
+//	reference implementation for this; if the std version is unavailable and
+//	the boost version is not allowed, there is no fallback.
+#define LUL_CONFIG_use_boost_networking			1
+#define LUL_CONFIG_force_boost_networking		0
+
+//	Note that the following will be set appropriately in
+//	lulNetworkingWrapper.hpp.
+//
+//		LUL_CONFIG_boost_networking_supported
+//		LUL_CONFIG_std_networking_supported
+
+
+//	std::observer_ptr
+//	This works in conjunction with LUL_LIBCPPTS_OBSERVER_PTR to determine
+//	what observer_ptr variant to use. Note that if LUL_LIBCPPTS_OBSERVER_PTR
+//	is not explicity defined, it is assigned a value based on the compile-time
+//	availability of a relevant std header. By default, if there is std
+//	support, that version of observer_ptr will be used; otherwise we fall back
+//	to a reference implementation. Set LUL_CONFIG_force_local_observer_ptr in
+//	order to force the use of the reference implementation.
+#define LUL_CONFIG_force_local_observer_ptr		0
+
+
+//	<optional>
+//	This works in conjunction with LUL_LIBCPP17_OPTIONAL to determine what
+//	<optional> variant to use. Note that if LUL_LIBCPP17_OPTIONAL is not
+//	explicity defined, it is assigned a value based on the compile-time
+//	availability of a relevant std header. By default, if there is std
+//	support, that version of <optional> will be used; otherwise we fall back to
+//	a reference implementation. Set LUL_CONFIG_force_local_optional in order
+//	to force the use of the reference implementation.
+#define LUL_CONFIG_force_local_optional			0
+
+//	Note that the following will be set appropriately in
+//	lulOptionalWrapper.hpp.
+//
+//		LUL_CONFIG_std_optional_supported
+
+//	std::shared_lock
+//	In modern C++, shared locks are always available; this switch is only used
+//	to express a preference for whether or not to use them when setting up
+//	convenience aliases.
+#define LUL_CONFIG_use_shared_lock				1
+
+
+//	<span>
+//	These work in conjunction with LUL_LIBCPP2A_SPAN to determine what
+//	<span> variant to use. Note that if LUL_LIBCPP2A_SPAN is not explicity
+//	defined, it is assigned a value based on compile-time availability. By
+//	default, if there is std support, that version of <span> will be used;
+//	otherwise we fall back to a reference implementation. Set
+//	LUL_CONFIG_force_local_span in order to force the use of the reference
+//	implementation.
+#define LUL_CONFIG_force_local_span				0
+
+//	Note that the following will be set appropriately in lulSpanWrapper.hpp.
+//
+//		LUL_CONFIG_std_span_supported
+
+
+//	<variant>
+//	This works in conjunction with LUL_LIBCPP17_VARIANT to determine what
+//	<variant> header to use. Note that if LUL_LIBCPP17_VARIANT is not explicity
+//	defined, it is assigned a value based on the compile-time availability of a
+//	relevant std header. By default, if there is std support, that version of
+//	<variant> will be used; otherwise we fall back to a reference
+//	implementation. Set LUL_CONFIG_force_local_variant in order to force the
+//	use of the reference implementation.
+#define LUL_CONFIG_force_local_variant			0
+
+//	Note that the following will be set appropriately in
+//	lulVariantWrapper.hpp.
+//
+//		LUL_CONFIG_std_variant_supported
+
+
+//	Diagnostic flag for indicating that we’d like to test the build environment
+//	for feature availbility. If this is defined, the tests are performed and
+//	the results are displayed as compile-time warnings. It is assumed that both
+//	lulCompilerFlags.hpp and lulVersionWrapper.hpp have been included, as
+//	otherwise the flags to be tested may not have been initialized.
+#define LUL_DIAGNOSTIC_feature_detection		0
