@@ -22,20 +22,37 @@ if ($<PLATFORM_ID:Darwin> AND NOT CMAKE_OSX_DEPLOYMENT_TARGET)
     message (FATAL_ERROR "-DCMAKE_OSX_DEPLOYMENT_TARGET=[xx] must be an argument to CMake on Apple platforms")
 endif()
 
-project (Lucena-Utilities
-    VERSION 2.0.0
+set (PROJECT_VERSION_MAJOR 2)
+set (PROJECT_VERSION_MINOR 0)
+set (PROJECT_VERSION_PATCH 0)
+set (PROJECT_VERSION_TWEAK "")
+
+if (${PROJECT_VERSION_TWEAK})
+	set (LUL_PROXY_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_TWEAK})
+else()
+	set (LUL_PROXY_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+endif()
+
+project (bob
+    VERSION ${LUL_PROXY_VERSION}
     DESCRIPTION
         "C++ feature detection, utilities, and Standard Library feature implementations"
     HOMEPAGE_URL
         "https://bitweeder.com"
     LANGUAGES CXX)
 
-
 # Forbid poisoning the source tree, ’cuz we’re authoritarian that way.
 if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
     message (FATAL_ERROR "FATAL: In-source builds are not allowed. "
         "You should create a separate directory for build files.")
 endif()
+
+configure_file (
+	${CMAKE_CURRENT_SOURCE_DIR}/cmake/lulConfig.hpp.in
+	${CMAKE_CURRENT_SOURCE_DIR}/include/Lucena-Utilities/lulConfig.hpp
+	@ONLY
+	NEWLINE_STYLE UNIX
+)
 
 
 #[[#############################################################################
@@ -301,9 +318,9 @@ if (LUL_BUILD_LIBRARY)
             LUL_PACKAGING_COPYRIGHT_DATE="2015-2018"
             LUL_PACKAGING_PRODUCT_DOMAIN="com.lucena"
             LUL_PACKAGING_PREFIX="lul"
-            LUL_PACKAGING_DESCRIPTION=${CMAKE_PROJECT_DESCRIPTION}
-            LUL_PACKAGING_BUILD="200"
-            LUL_PACKAGING_VERSION="${CMAKE_PROJECT_VERSION}"
+            LUL_PACKAGING_DESCRIPTION="${CMAKE_PROJECT_DESCRIPTION}"
+            LUL_PACKAGING_BUILD="${PROJECT_VERSION_TWEAK}"
+            LUL_PACKAGING_VERSION="${PROJECT_VERSION}"
             $<$<CONFIG:DEBUG>:LUL_CONFIG_debug=1>
     )
 

@@ -38,6 +38,8 @@
 
 #if LUL_TYPE_HAS_INT128
 
+extern "C" __int128_t __muloti4(__int128_t a, __int128_t b, int* overflow);
+
 extern "C" //	__attribute__((no_sanitize("undefined")))
 __int128_t __muloti4(__int128_t a, __int128_t b, int* overflow) {
   const int N = (int)(sizeof(__int128_t) * CHAR_BIT);

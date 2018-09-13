@@ -50,9 +50,9 @@
 //	APIME Note that there doesn’t appear to be a way to ensure that these
 //	macros are invoked correctly, e.g., guard values to keep from accidentally
 //	embedding std in our library namespace.
-#define LUL_version_major			2UL
-#define LUL_version_minor			0UL
-#define LUL_version_patch			0UL
+#define LUL_version_major			@PROJECT_VERSION_MAJOR@UL
+#define LUL_version_minor			@PROJECT_VERSION_MINOR@UL
+#define LUL_version_patch			@PROJECT_VERSION_PATCH@UL
 
 #define LUL_version					(LUL_version_major << 24 |			\
 									LUL_version_minor << 16 |			\

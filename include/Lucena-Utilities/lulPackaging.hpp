@@ -49,17 +49,19 @@
 
 	LUL_PACKAGING_version is the simplified version descriptor for the program.
 	It should be composed of (M)ajor release number, (m)inor release number,
-	(b)ug fix number, (R)elease status code, and (r)elease number, in the form
-	of MMMM[.mm[.bb[Rrrrr]]], where (R) is one of (d)developmental, (a)lpha,
-	(b)eta, or (f)inal candidate and everything in []’s is optional and the
-	number of characters indicates the maximum field width.
+	(p)atch number, and (b)uild, in the form of MM[.mm[.pppp[.b[...]]]], where
+	everything in []’s is optional and the number of characters indicates the
+	maximum field width, except for build, which takes the form described
+	below. Note that build won’t necessarily be included, even if there is a
+	value assigned to LUL_PACKAGING_build. LUL_PACKAGING_version is intended to
+	be a human-readable string.
 
 	LUL_PACKAGING_build can be in any format involving alphanumeric characters
-	and members of [-_.]. It is combined with LUL_PACKAGING_version to represent
-	the full version identifier for a given build of the product, but it has no
-	programmatic meaning. Reasonable formats include monotonically increasing
-	integers for each build of a given LUL_PACKAGING_version, UUIDs that
-	uniquely identify every single build ever made, and hash numbers that
+	and members of [-_.]. It may be included in LUL_PACKAGING_version to
+	represent the full version identifier for a given build of the product, but
+	it has no programmatic meaning. Reasonable formats include monotonically
+	increasing integers for each build of a given LUL_PACKAGING_version, UUIDs
+	that uniquely identify every single build ever made, and hash numbers that
 	identify a given build within a version control system.
 
 	LUL_PACKAGING_signature is a 4-character (UTF-8) value used on certain
