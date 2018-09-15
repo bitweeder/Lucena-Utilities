@@ -33,7 +33,7 @@ else()
 	set (LUL_PROXY_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 endif()
 
-project (bob
+project (Lucena-Utilities
     VERSION ${LUL_PROXY_VERSION}
     DESCRIPTION
         "C++ feature detection, utilities, and Standard Library feature implementations"
