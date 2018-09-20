@@ -69,6 +69,11 @@ set_target_properties (check
 
 #[[#############################################################################
     source files
+
+    We use the much-maligned GLOB feature of file() to generate our source
+    lists, but only because we require CMake 3.12+ and CONFIGURE_DEPENDS; this
+    is still not fail-safe for crufty generators and theoretical future
+    generators on mythical filesystems, but I’ll take my chances,
 #]]
 
 set (lul_test_source_files
@@ -77,6 +82,20 @@ set (lul_test_source_files
 
 set (lul_test_header_files
     luuConfig_priv.hpp
+)
+
+file (
+	GLOB lul_test_source_files
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/
+    CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/luu*.cpp
+)
+
+file (
+	GLOB lul_test_header_files
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/
+    CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/luu*.hpp
 )
 
 

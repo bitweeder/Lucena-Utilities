@@ -15,8 +15,8 @@
     initialization
 #]]
 
-# This minimum is for FetchContent, among other things
-cmake_minimum_required (VERSION 3.11)
+# This minimum is for FetchContent (3.11), CONFIGURE_DEPENDS (3.12) and more.
+cmake_minimum_required (VERSION 3.12)
 
 if ($<PLATFORM_ID:Darwin> AND NOT CMAKE_OSX_DEPLOYMENT_TARGET)
     message (FATAL_ERROR "-DCMAKE_OSX_DEPLOYMENT_TARGET=[xx] must be an argument to CMake on Apple platforms")
@@ -203,74 +203,43 @@ set (CMAKE_CXX_EXTENSIONS OFF)
 #[[#############################################################################
     source files
 
-    We keep file lists in variables as a temporary measure; it’s silly to
-    duplicate the file structure for something that can be mechanically
-    generated, so these definitions are placeholders until we find or write a
-    module to generate them for us.
+    We use the much-maligned GLOB feature of file() to generate our source
+    lists, but only because we require CMake 3.12+ and CONFIGURE_DEPENDS; this
+    is still not fail-safe for crufty generators and theoretical future
+    generators on mythical filesystems, but I’ll take my chances,
 #]]
 
-set (lul_public_includes
-    include/Lucena-Utilities/lulConfig.hpp
-    include/Lucena-Utilities/lulAny.hpp
-    include/Lucena-Utilities/lulAnyWrapper.hpp
-    include/Lucena-Utilities/lulBit.hpp
-    include/Lucena-Utilities/lulBitWrapper.hpp
-    include/Lucena-Utilities/lulCompilerFlags.hpp
-    include/Lucena-Utilities/lulConcurrencyTypes.hpp
-    include/Lucena-Utilities/lulEndian.hpp
-    include/Lucena-Utilities/lulFilesystem.hpp
-    include/Lucena-Utilities/lulFilesystemWrapper.hpp
-    include/Lucena-Utilities/lulIterator.hpp
-    include/Lucena-Utilities/lulMemoryTypes.hpp
-    include/Lucena-Utilities/lulMemoryWrapper.hpp
-    include/Lucena-Utilities/lulNetworkingWrapper.hpp
-    include/Lucena-Utilities/lulObserverPtr.hpp
-    include/Lucena-Utilities/lulOptional.hpp
-    include/Lucena-Utilities/lulOptionalWrapper.hpp
-    include/Lucena-Utilities/lulPackaging.hpp
-    include/Lucena-Utilities/lulSpan.hpp
-    include/Lucena-Utilities/lulSpanWrapper.hpp
-    include/Lucena-Utilities/lulTime.hpp
-    include/Lucena-Utilities/lulTypes.hpp
-    include/Lucena-Utilities/lulTypeTraits.hpp
-    include/Lucena-Utilities/lulTypeTraitsWrapper.hpp
-    include/Lucena-Utilities/lulUtilities.hpp
-    include/Lucena-Utilities/lulVariant.hpp
-    include/Lucena-Utilities/lulVariantWrapper.hpp
-    include/Lucena-Utilities/lulVersionWrapper.hpp
+file (
+	GLOB lul_public_includes
+    RELATIVE ${CMAKE_SOURCE_DIR}/
+    CONFIGURE_DEPENDS
+    ${CMAKE_SOURCE_DIR}/include/Lucena-Utilities/lul*.hpp
 )
 
 set (lul_interface_includes
     include/Lucena-Utilities/Lucena-Utilities.hpp
 )
 
-set (lul_detail_includes
-    include/Lucena-Utilities/details/lulHelperIterator.hpp
-    include/Lucena-Utilities/details/lulHelperLocale.hpp
-    include/Lucena-Utilities/details/lulHelperMemory.hpp
-    include/Lucena-Utilities/details/lulHelperTuple.hpp
-    include/Lucena-Utilities/details/lulHelperTypeTraits.hpp
-    include/Lucena-Utilities/details/lulHelperUtility.hpp
+file (
+	GLOB lul_detail_includes
+    RELATIVE ${CMAKE_SOURCE_DIR}/
+    CONFIGURE_DEPENDS
+    ${CMAKE_SOURCE_DIR}/include/Lucena-Utilities/details/lul*.hpp
 )
 
-set (lul_library_source_files
-    src/lul/Lucena-Utilities.cpp
-    src/lul/lulAny.cpp
-    src/lul/lulDirectoryIterator.cpp
-    src/lul/lulFilesystemOps.cpp
-    src/lul/lulHelperIntrinsics.cpp
-    src/lul/lulHelperLocale.cpp
-    src/lul/lulOptional.cpp
-    src/lul/lulTypes.cpp
-    src/lul/lulUnicodeUtilities_priv.cpp
-    src/lul/lulUtilities.cpp
-    src/lul/lulVariant.cpp
+file (
+	GLOB lul_library_source_files
+    RELATIVE ${CMAKE_SOURCE_DIR}/
+    CONFIGURE_DEPENDS
+    ${CMAKE_SOURCE_DIR}/src/lul/Lucena-Utilities.cpp
+    ${CMAKE_SOURCE_DIR}/src/lul/lul*.cpp
 )
 
-set (lul_library_header_files
-    src/lul/lulConfig_priv.hpp
-    src/lul/lulFilesystemCommon.hpp
-    src/lul/lulUnicodeUtilities_priv.hpp
+file (
+	GLOB lul_library_header_files
+    RELATIVE ${CMAKE_SOURCE_DIR}/
+    CONFIGURE_DEPENDS
+    ${CMAKE_SOURCE_DIR}/src/lul/lul*.hpp
 )
 
 
