@@ -18,14 +18,10 @@
 #pragma once
 
 
-//	std
-#include <Lucena-Utilities/lulVersionWrapper.hpp>
-
-
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
 #include <Lucena-Utilities/lulCompilerFlags.hpp>
-
+#include <Lucena-Utilities/lulVersion.hpp>
 
 //	SEEME This is a little hinky since the interfaces between the std and boost
 //	implementations differ in a number of places. For this reason, we have to
@@ -67,7 +63,7 @@
 	#undef LUL_TEMP_FILESYSTEM_NAMESPACE
 	#undef LUL_TEMP_ERROR_CODE_NAMESPACE
 #else
-	#include <Lucena-Utilities/lulFilesystem.hpp>
+	#include <Lucena-Utilities/details/lulFilesystem.hpp>
 
 	LUL_begin_v_namespace
 

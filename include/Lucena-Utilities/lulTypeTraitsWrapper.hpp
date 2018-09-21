@@ -27,13 +27,13 @@
 
 
 //	std
-#include <Lucena-Utilities/lulVersionWrapper.hpp>
 #include <type_traits>
 
 
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
 #include <Lucena-Utilities/lulCompilerFlags.hpp>
+#include <Lucena-Utilities/lulVersion.hpp>
 
 
 #ifdef LUL_TEMP_INCLUDE_EXPERIMENTAL_TYPE_TRAITS

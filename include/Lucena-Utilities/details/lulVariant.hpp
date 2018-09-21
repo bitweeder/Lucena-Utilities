@@ -609,9 +609,7 @@ struct __variant {
 private:
   template <class _Visitor, class... _Values>
   static constexpr void __std_visit_exhaustive_visitor_check() {
-    //	FIXME This will fail under Xcode 10+ as is_callable has been replaced
-    //	with the correct is_invocable.
-    static_assert(std::is_callable_v<_Visitor, _Values...>,
+    static_assert(std::is_invocable_v<_Visitor, _Values...>,
                   "`std::visit` requires the visitor to be exhaustive.");
   }
 

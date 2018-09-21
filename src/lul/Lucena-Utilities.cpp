@@ -14,13 +14,10 @@
 ------------------------------------------------------------------------------*/
 
 
-//	std
-#include <Lucena-Utilities/lulVersionWrapper.hpp>
-
-
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
 #include <Lucena-Utilities/lulCompilerFlags.hpp>
+#include <Lucena-Utilities/lulVersion.hpp>
 
 #include "lulConfig_priv.hpp"
 	//	SEEME Note that this must be included before Lucena-Utilities.hpp in

@@ -35,13 +35,10 @@
 #pragma once
 
 
-//	std
-#include <Lucena-Utilities/lulVersionWrapper.hpp>
-
-
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
 #include <Lucena-Utilities/lulCompilerFlags.hpp>
+#include <Lucena-Utilities/lulVersion.hpp>
 
 
 #ifdef LUL_TEMP_VARIANT_NAMESPACE
@@ -83,7 +80,7 @@
 	//	runtime doesn’t define bad_bad_variant_access_access.what() - so
 	//	simply using the proper clang implementation is nearly a drop-in
 	//	solution.
-	#include <Lucena-Utilities/lulVariant.hpp>
+	#include <Lucena-Utilities/details/lulVariant.hpp>
 
 	//	Nothing further needs to be done as our reference implementation is
 	//	already in the correct namespace with the expected names.

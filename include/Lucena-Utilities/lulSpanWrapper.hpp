@@ -17,13 +17,10 @@
 #pragma once
 
 
-//	std
-#include <Lucena-Utilities/lulVersionWrapper.hpp>
-
-
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
 #include <Lucena-Utilities/lulCompilerFlags.hpp>
+#include <Lucena-Utilities/lulVersion.hpp>
 
 
 #ifdef LUL_TEMP_SPAN_NAMESPACE
@@ -122,7 +119,7 @@
 
 	#undef LUL_TEMP_SPAN_NAMESPACE
 #else
-	#include <Lucena-Utilities/lulSpan.hpp>
+	#include <Lucena-Utilities/details/lulSpan.hpp>
 
 	//	Nothing further needs to be done as our reference implementation is
 	//	already in the correct namespace with the expected names.

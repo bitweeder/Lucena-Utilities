@@ -44,7 +44,11 @@
 
 
 //	lul
-//	Note that these are included in the STL prefix header.
+//	Note that these are included in the STL prefix header, but are generally
+//	expected to be manually included by the user to indicate a desire to
+//	provide a given Standard Library feature that is not necessarily built in.
+//	Where - and if - a LUL header includes one of these wrappers, that should
+//	be considered an implementation detail.
 //#include <Lucena-Utilities/lulAnyWrapper.hpp>
 //#include <Lucena-Utilities/lulBitWrapper.hpp>
 //#include <Lucena-Utilities/lulFilesystemWrapper.hpp>
@@ -53,7 +57,6 @@
 //#include <Lucena-Utilities/lulOptionalWrapper.hpp>
 //#include <Lucena-Utilities/lulSpanWrapper.hpp>
 //#include <Lucena-Utilities/lulVariantWrapper.hpp>
-//#include <Lucena-Utilities/lulVersionWrapper.hpp>
 
 #include <Lucena-Utilities/lulConcurrencyTypes.hpp>
 #include <Lucena-Utilities/lulEndian.hpp>
@@ -64,6 +67,7 @@
 #include <Lucena-Utilities/lulTypes.hpp>
 #include <Lucena-Utilities/lulTypeTraits.hpp>
 #include <Lucena-Utilities/lulUtilities.hpp>
+#include <Lucena-Utilities/lulVersion.hpp>
 
 
 //	prototypes

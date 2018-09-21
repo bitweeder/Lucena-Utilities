@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------
 
 	Lucena Utilities Library
-	“VersionWrapper.hpp”
+	“Version.hpp”
 	Copyright © 2018 Lucena
 	All Rights Reserved
 

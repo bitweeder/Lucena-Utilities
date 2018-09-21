@@ -22,13 +22,13 @@
 
 
 //	std
-#include <Lucena-Utilities/lulVersionWrapper.hpp>
 #include <memory>
 
 
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
 #include <Lucena-Utilities/lulCompilerFlags.hpp>
+#include <Lucena-Utilities/lulVersion.hpp>
 
 
 #ifdef LUL_TEMP_INCLUDE_EXPERIMENTAL_MEMORY
@@ -77,7 +77,7 @@
 
 	LUL_end_v_namespace
 #else
-	#include <Lucena-Utilities/lulObserverPtr.hpp>
+	#include <Lucena-Utilities/details/lulObserverPtr.hpp>
 
 	//	Nothing further needs to be done as our reference implementation is
 	//	already in the correct namespace with the expected names.

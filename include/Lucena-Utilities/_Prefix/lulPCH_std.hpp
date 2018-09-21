@@ -96,6 +96,11 @@
 #include <Lucena-Utilities/lulSpanWrapper.hpp>
 #include <Lucena-Utilities/lulTypeTraitsWrapper.hpp>
 #include <Lucena-Utilities/lulVariantWrapper.hpp>
-#include <Lucena-Utilities/lulVersionWrapper.hpp>
+
+
+//	This is actually a wrapper, but it completely subsumes the built in
+//	header - if it’s present - and is always used preferentially when working
+//	with LUL.
+#include <Lucena-Utilities/lulVersion.hpp>
 
 

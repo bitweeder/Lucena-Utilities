@@ -25,7 +25,7 @@
 #include <cstdarg>
 #include <cstdlib>
 #include <climits>
-#include <Lucena-Utilities/lulFilesystem.hpp>
+#include <Lucena-Utilities/details/lulFilesystem.hpp>
 #include <limits>
 #include <memory>
 #include <string>

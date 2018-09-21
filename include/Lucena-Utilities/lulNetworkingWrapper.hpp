@@ -24,13 +24,10 @@
 #pragma once
 
 
-//	std
-#include <Lucena-Utilities/lulVersionWrapper.hpp>
-
-
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
 #include <Lucena-Utilities/lulCompilerFlags.hpp>
+#include <Lucena-Utilities/lulVersion.hpp>
 
 
 //	SEEME This is a little hinky since the interfaces between the std and boost

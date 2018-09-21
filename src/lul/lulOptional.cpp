@@ -18,7 +18,7 @@
 
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
-#include <Lucena-Utilities/lulOptional.hpp>
+#include <Lucena-Utilities/details/lulOptional.hpp>
 
 
 LUL_begin_namespace

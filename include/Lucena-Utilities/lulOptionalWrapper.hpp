@@ -75,13 +75,10 @@
 #pragma once
 
 
-//	std
-#include <Lucena-Utilities/lulVersionWrapper.hpp>
-
-
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
 #include <Lucena-Utilities/lulCompilerFlags.hpp>
+#include <Lucena-Utilities/lulVersion.hpp>
 
 
 #ifdef LUL_TEMP_OPTIONAL_NAMESPACE
@@ -427,7 +424,7 @@
 	//	Apple’s C++ runtime prior to macOS 10.14 and equivalent OSs doesn’t
 	//	define bad_optional_access.what() - so simply using the proper clang
 	//	implementation is nearly a drop-in solution.
-	#include <Lucena-Utilities/lulOptional.hpp>
+	#include <Lucena-Utilities/details/lulOptional.hpp>
 
 	//	Nothing further needs to be done as our reference implementation is
 	//	already in the correct namespace with the expected names.

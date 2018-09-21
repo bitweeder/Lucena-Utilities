@@ -26,7 +26,7 @@
 
 #include <errno.h>
 
-#include <Lucena-Utilities/lulFilesystem.hpp>
+#include <Lucena-Utilities/details/lulFilesystem.hpp>
 #include <memory>
 #include <stack>
 #include <string_view>

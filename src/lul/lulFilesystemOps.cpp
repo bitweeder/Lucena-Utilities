@@ -26,7 +26,7 @@
 #include <array>
 #include <climits>
 #include <cstdlib>
-#include <Lucena-Utilities/lulFilesystem.hpp>
+#include <Lucena-Utilities/details/lulFilesystem.hpp>
 #include <fstream>
 #include <iterator>
 #include <memory>
