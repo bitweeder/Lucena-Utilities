@@ -400,6 +400,6 @@ LUL_end_v_namespace
 //	Diagnostic flag for indicating that we’d like to test the build environment
 //	for feature availbility. If this is defined, the tests are performed and
 //	the results are displayed as compile-time warnings. It is assumed that both
-//	lulCompilerFlags.hpp and lulVersionWrapper.hpp have been included, as
-//	otherwise the flags to be tested may not have been initialized.
+//	lulFeatureSetup.hpp and lulVersion.hpp have been included, as otherwise the
+//	flags to be tested may not have been initialized.
 #define LUL_DIAGNOSTIC_feature_detection		0

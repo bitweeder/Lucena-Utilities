@@ -28,7 +28,7 @@
 
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
-#include <Lucena-Utilities/lulCompilerFlags.hpp>
+#include <Lucena-Utilities/lulFeatureSetup.hpp>
 #include <Lucena-Utilities/lulVersion.hpp>
 
 

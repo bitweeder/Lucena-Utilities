@@ -24,9 +24,8 @@
 #include <Lucena-Utilities/lulConfig.hpp>
 
 
-//	Set up compiler-specific feature flags. These get used in conditionals
-//	throughout Lucena Utilities.
-#include <Lucena-Utilities/lulCompilerFlags.hpp>
+//	Handle feature detection and set up build environment macros.
+#include <Lucena-Utilities/lulFeatureSetup.hpp>
 
 
 //	Used to establish visibility of Lucena Utilities symbols in the headers.

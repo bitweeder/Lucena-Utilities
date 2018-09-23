@@ -13,7 +13,7 @@
 	real <version> will define SD-6 macros of the form __cpp_lib_xxx; we don’t
 	do that here. Instead, we include <version>, if it’s available, and then
 	define our own macros that extend the SD-6 offering. See the notes under
-	LUL_CPPxx in lulCompilerFlags.hpp for more information regarding macros,
+	LUL_CPPxx in lulFeatureSetup.hpp for more information regarding macros,
 	their names, and their values. Note that if __cpp_lib_xxx - or
 	__cpp_lib_experimental_xxx - is set to 0, even if the corresponding header,
 	if any, is found, we will ignore it and set the corresponding LUL_CPPxx -
@@ -47,10 +47,13 @@
 	remove the affected headers from our development tools releases for several
 	years.”
 
-	APIME Some of these depend on lulCompilerFlags.hpp being included, as
-	they may need to be overridden based on an otherwise undetectable
-	defect, e.g., Apple’s failure to include required object code for <any>
-	in most versions of its platforms’ runtime libraries.
+	APIME Some of these depend on lulFeatureSetup.hpp being included, as they
+	may need to be overridden based on an otherwise undetectable defect, e.g.,
+	Apple’s failure to include required object code for <any> in most versions
+	of its platforms’ runtime libraries.
+
+	FIXME Add __cplusplus guards to header inclusion, as simple availability
+	may be an insufficient test if an older std variant is being used.
 
 ------------------------------------------------------------------------------*/
 
@@ -60,7 +63,7 @@
 
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
-#include <Lucena-Utilities/lulCompilerFlags.hpp>
+#include <Lucena-Utilities/lulFeatureSetup.hpp>
 
 
 //	First, set up any SD-6 macros, if available.

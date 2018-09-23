@@ -33,7 +33,7 @@ Note that while there is a skeleton script to generate documentation, it doesn�
 
 ## Prerequisites
 
-LUL requires a C++17 compiler with a mostly-conforming Standard Library; it provides optional tools to plug some holes in not-quite-there Standard Library implementations. It has been tested with gcc 7.3 on Debian Buster, Microsoft Visual Studio 15.7.x on Windows, Xcode 9.4.x, and Xcode 10. Experimental support is in for clang 6+ and gcc 8+. At this time, feature detection assumes that you’ll be using your compiler’s bundled Standard Library implementation; some additional future abstraction will mitigate this limitation.
+LUL requires a C++17 compiler with a mostly-conforming Standard Library; it provides optional tools to plug some holes in not-quite-there Standard Library implementations. It has been tested with gcc 7.3 on Debian Buster, Microsoft Visual Studio 15.7.x on Windows, Xcode 9.4.x, and Xcode 10. Experimental support is in for clang 6+ and gcc 8+. All testing thus far has been with the compilers’ bundled Standard Library implementations, although LUL should support mixing them.
 
 ## Building, Installing, and Testing
 
@@ -94,7 +94,6 @@ Tests can be scripted in the usual way for CMake, for example in order to only i
 - add lulCoroutineWrapper (wrapping std, std::experimental, and boost(?))
 - add actual tests
 - beef up the compile-time diagnostic script
-- divide lulCompilerFlags into pieces devoted to platform, compiler, and library to reflect their (purported) independence
 - factor i18n string conversion and other utilities into their own libraries or simple source distributions
 - replace Status (and its dependents) with [std]::outcome and friends
 - fix symbol visibility and linker hints to support building as a dynamic library

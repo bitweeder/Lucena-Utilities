@@ -115,7 +115,8 @@ namespace std {
 
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
-#include <Lucena-Utilities/lulCompilerFlags.hpp>
+#include <Lucena-Utilities/lulFeatureSetup.hpp>
+
 #include <Lucena-Utilities/details/lulHelperMemory.hpp>
 #include <Lucena-Utilities/details/lulHelperTypeTraits.hpp>
 #include <Lucena-Utilities/details/lulHelperUtility.hpp>
