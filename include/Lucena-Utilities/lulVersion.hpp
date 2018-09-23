@@ -38,13 +38,14 @@
 	detection. Finally, note that if either macro is predefined to 0, its value
 	will not be changed, regardless of circumstances.
 
-	Note that this header should _always_ be used instead of including
-	<version> directly, even once the time comes that <version> is ubiquitous.
-	The reason is that ultimately, <version> can only document intent, but it
-	may fail to reflect reality. For example, there is no SD-6 macro for “our
-	internal policy precludes us from making changes to our C++ stdlib runtime
-	ABI between major OS releases, but our engineers forgot to remove the
-	affected headers from our development tools releases for several years.”
+	Note that this header should _always_ be used instead of - or in addition
+	to - including <version> directly, even once the time comes that <version>
+	is ubiquitous. The reason is that ultimately, <version> can only document
+	intent, but it may fail to reflect reality. For example, there is no SD-6
+	macro for “our internal policy precludes us from making changes to our C++
+	stdlib runtime ABI between major OS releases, but our engineers forgot to
+	remove the affected headers from our development tools releases for several
+	years.”
 
 	APIME Some of these depend on lulCompilerFlags.hpp being included, as
 	they may need to be overridden based on an otherwise undetectable

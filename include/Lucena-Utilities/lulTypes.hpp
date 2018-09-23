@@ -8,6 +8,9 @@
 	This file is distributed under the University of Illinois Open Source
 	License. See license/License.txt for details.
 
+	FIXME Most of this can be factored out or replaced with Standard Library
+	types; there’s a lot of dated material here.
+
 ------------------------------------------------------------------------------*/
 
 

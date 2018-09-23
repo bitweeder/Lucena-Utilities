@@ -708,10 +708,10 @@
 			wrapper actually tracks “correct” implementations only (so, for
 			example, Xcode’s false positives for <any> and friends won’t be
 			reported as support for the library feature); this behavior will be
-			carried forward, nd so, unlike other wrappers, it is recommended to
-			-always- include lulVersionWrapper.hpp in lieu of <version>, and
-			rely on the LUL_LIBCPP_xxx macros where they are available. See
-			lulVersionWrapper.hpp for details.
+			carried forward, and so, unlike other wrappers, it is recommended
+			to -always- include lulVersionWrapper.hpp, even when including
+			<version> directly, and rely on the LUL_LIBCPP_xxx macros where
+			they are available. See lulVersionWrapper.hpp for details.
 
 	C++ Technical Specifications
 	These are all taken from Technical Specifications that have not (yet?) been

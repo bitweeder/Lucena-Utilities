@@ -8,6 +8,10 @@
 	This file is distributed under the University of Illinois Open Source
 	License. See license/License.txt for details.
 
+	FIXME C++2a Update this to properly account for changes to <chrono> in
+	C++2a. Also, explicitly note which pieces are convenience features, and
+	consider factoring them out.
+
 ------------------------------------------------------------------------------*/
 
 

@@ -1,10 +1,13 @@
+
 # Lucena Utilities Library
 
 The purpose of the Lucena Utilities Library (LUL) is to abstract away portions of the build environment when working with C++17 and later Standards. It’s a foundational tool that should allow code built on top of it to remain agnostic regarding the underlying compiler, Standard Library, and aspects of the runtime. Note that LUL is specifically not a build system, but it does try to shield a project from details of the build system at the code level.
 
+**LUL 2.0 is in active development—expect breaking changes until the tagged 2.0 release!**
+
 ## Getting Started
 
-[CMake](https://cmake.org/) scripts are provided which will generate the library itself, test applications, and, later, documentation. We require at least CMake 3.11, so that will need to be [installed first](https://cmake.org/download/).
+[CMake](https://cmake.org/) scripts are provided which will generate the library itself, test applications, and, later, documentation. We require at least CMake 3.12, so that will need to be [installed first](https://cmake.org/download/).
 
 More detailed instructions are provided below, but for a quick start, simply clone the repository, open up a terminal window, change to the local repo directory, and execute the following:
 
@@ -30,13 +33,13 @@ Note that while there is a skeleton script to generate documentation, it doesn�
 
 ## Prerequisites
 
-LUL requires a C++17 compiler with a mostly-conforming Standard Library; it provides optional tools to plug some holes in not-quite-there Standard Library implementations. It has been tested with Xcode 9.4 (and later versions), Microsoft Visual Studio 15.7 (and later versions) on Windows, and gcc 7.3 on Debian Buster. Experimental support is in for clang 6+ and gcc 8+. At this time, feature detection assumes that you’ll be using your compiler’s bundled Standard Library implementation; some additional future abstraction will mitigate this limitation.
+LUL requires a C++17 compiler with a mostly-conforming Standard Library; it provides optional tools to plug some holes in not-quite-there Standard Library implementations. It has been tested with gcc 7.3 on Debian Buster, Microsoft Visual Studio 15.7.x on Windows, Xcode 9.4.x, and Xcode 10. Experimental support is in for clang 6+ and gcc 8+. At this time, feature detection assumes that you’ll be using your compiler’s bundled Standard Library implementation; some additional future abstraction will mitigate this limitation.
 
 ## Building, Installing, and Testing
 
-Currently, the project is transitioning to using CMake as the primary build system (at the same as the primary author is upping his CMake game). However, beyond basic functionality, **the CMake scripts are untested**. Originally, hand-built project files for a number of different IDEs were used, but they were dependent on a specific development environment and also didn’t lend themselves very well to automation. These project files are still available in the `proj` directory for reference, along with most of their support files, but they will be going away once the CMake transition is complete.
+Currently, the project is transitioning to using CMake as the primary build system; this work is on-going. Originally, hand-built project files for a number of different IDEs were used, but they were dependent on a specific development environment and also didn’t lend themselves very well to automation.
 
-LUL is intended to be linked as a static library; it’s actually untested as a dynamic library, though most—if not all—of the required support is there, including appropriate symbol visibility and linker hints. While it would ideally be made available as a header-only library, at minimum, many of the Standard Library reference implementations it provides can’t ship that way. One of the remaining design goals is to finish refactoring it so that it’s possible to use as a header-only library if one is will to forgo using these reference implementations. Note that there is a `LUL_CONFIG_HEADERS_ONLY` CMake option, but it doesn’t actually doanything (yet).
+LUL is intended to be linked as a static library. It’s untested as a dynamic library, and certain symbol visibility information and linker hints are known to be a bit squiffy. While LUL would ideally be a header-only library, at minimum, many of the Standard Library reference implementations it provides can’t ship that way. One of the remaining design goals is to finish refactoring it so that it’s possible to use as a header-only library if one is will to forgo using these reference implementations. Note that there is a `LUL_CONFIG_HEADERS_ONLY` CMake option, but it doesn’t currently do much.
 
 The basic build instructions are provided under **Getting Started**.  We give two different methods since, by default, macOS and Linux installs are to `/usr/local`, which requires sudo (or root) privileges, while Windows has a different model. Ignoring these differences, we have the following, with line numbers added:
 
@@ -94,6 +97,7 @@ Tests can be scripted in the usual way for CMake, for example in order to only i
 - divide lulCompilerFlags into pieces devoted to platform, compiler, and library to reflect their (purported) independence
 - factor i18n string conversion and other utilities into their own libraries or simple source distributions
 - replace Status (and its dependents) with [std]::outcome and friends
+- fix symbol visibility and linker hints to support building as a dynamic library
 
 ## Contributing
 

@@ -8,6 +8,9 @@
 	This file is distributed under the University of Illinois Open Source
 	License. See license/License.txt for details.
 
+	FIXME Look into factoring this out to its own library, or simply replacing
+	it wholesale with an implementation of one the Unicode proposals.
+
 ------------------------------------------------------------------------------*/
 
 
