@@ -19,6 +19,12 @@
 #pragma once
 
 
+//	lul
+#include <Lucena-Utilities/lulConfig.hpp>
+
+#if !LUL_CONFIG_headers_only
+
+
 //	std
 #include <array>
 #include <chrono>
@@ -40,7 +46,6 @@
 
 
 //	lul
-#include <Lucena-Utilities/lulConfig.hpp>
 #include <Lucena-Utilities/lulFeatureSetup.hpp>
 
 #include "lulConfig_priv.hpp"
@@ -449,3 +454,5 @@ bool posix_utimensat(const path& p, std::array<TimeSpec, 2> const& TS,
 } }	//	stdproxy::filesystem::detail
 
 LUL_end_v_namespace
+
+#endif	//	LUL_CONFIG_headers_only

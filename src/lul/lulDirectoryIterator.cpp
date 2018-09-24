@@ -16,9 +16,21 @@
 ------------------------------------------------------------------------------*/
 
 
+//	lul
+#include <Lucena-Utilities/lulConfig.hpp>
+
+#if !LUL_CONFIG_headers_only
+
+
 //	std
 #if LUL_TARGET_OS_WIN
-	#define WIN32_LEAN_AND_MEAN
+	//	SEEME This assumes that LUL_TARGET_OS_WIN would have been passed on
+	//	the commandline, as intended.
+
+	#ifndef WIN32_LEAN_AND_MEAN
+		#define WIN32_LEAN_AND_MEAN
+	#endif
+	
 	#include <Windows.h>
 #else
 	#include <dirent.h>
@@ -36,7 +48,6 @@
 
 
 //	lul
-#include <Lucena-Utilities/lulConfig.hpp>
 #include <Lucena-Utilities/lulFeatureSetup.hpp>
 
 #include "lulConfig_priv.hpp"
@@ -431,3 +442,5 @@ bool recursive_directory_iterator::__try_recursion(std::error_code* ec) {
 }	//	namespace stdproxy::filesystem
 
 LUL_end_v_namespace
+
+#endif	//	LUL_CONFIG_headers_only

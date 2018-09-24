@@ -11,6 +11,12 @@
 ------------------------------------------------------------------------------*/
 
 
+//	lul
+#include <Lucena-Utilities/lulConfig.hpp>
+
+#if !LUL_CONFIG_headers_only
+
+
 //	std
 #include <cstdarg>
 #include <cstdio>
@@ -22,7 +28,6 @@
 
 
 //	lul
-#include <Lucena-Utilities/lulConfig.hpp>
 #include <Lucena-Utilities/lulTypes.hpp>
 #include <Lucena-Utilities/lulUtilities.hpp>
 
@@ -484,3 +489,5 @@ UTF_Encode (
 }	//	namespace uc
 
 LUL_end_v_namespace
+
+#endif	//	LUL_CONFIG_headers_only

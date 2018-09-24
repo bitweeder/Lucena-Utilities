@@ -11,13 +11,18 @@
 ------------------------------------------------------------------------------*/
 
 
+//	lul
+#include <Lucena-Utilities/lulConfig.hpp>
+
+#if !LUL_CONFIG_headers_only
+
+
 //	std
 #include <string>
 #include <string_view>
 
 
 //	lul
-#include <Lucena-Utilities/lulConfig.hpp>
 #include <Lucena-Utilities/lulTypes.hpp>
 #include <Lucena-Utilities/lulUtilities.hpp>
 
@@ -348,3 +353,5 @@ Wide_to_UTF32 (
 /*----------------------------------------------------------------------------*/
 
 LUL_end_v_namespace
+
+#endif	//	LUL_CONFIG_headers_only

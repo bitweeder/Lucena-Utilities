@@ -18,6 +18,9 @@
 
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
+
+#if !LUL_CONFIG_headers_only
+
 #include <Lucena-Utilities/details/lulAny.hpp>
 
 
@@ -42,3 +45,5 @@ const char * bad_any_cast::what() const noexcept
 LUL_end_namespace
 
 #include <experimental/__config>
+
+#endif	//	LUL_CONFIG_headers_only

@@ -11,6 +11,12 @@
 ------------------------------------------------------------------------------*/
 
 
+//	lul
+#include <Lucena-Utilities/lulConfig.hpp>
+
+#if !LUL_CONFIG_headers_only
+
+
 //	std
 #include <cassert>
 #include <cstdarg>
@@ -22,7 +28,6 @@
 
 
 //	lul
-#include <Lucena-Utilities/lulConfig.hpp>
 #include <Lucena-Utilities/lulMemoryTypes.hpp>
 #include <Lucena-Utilities/lulTypes.hpp>
 
@@ -1307,3 +1312,5 @@ Status::Warning() const noexcept
 /*----------------------------------------------------------------------------*/
 
 LUL_end_v_namespace
+
+#endif	//	LUL_CONFIG_headers_only

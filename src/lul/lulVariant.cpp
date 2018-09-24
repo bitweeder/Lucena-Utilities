@@ -18,6 +18,9 @@
 
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
+
+#if !LUL_CONFIG_headers_only
+
 #include <Lucena-Utilities/details/lulVariant.hpp>
 
 
@@ -42,3 +45,5 @@ const char * bad_variant_access::what() const noexcept
 }	//	namespace stdproxy
 
 LUL_end_namespace
+
+#endif	//	LUL_CONFIG_headers_only

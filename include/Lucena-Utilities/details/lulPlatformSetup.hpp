@@ -224,11 +224,16 @@
 	#define LUL_FEATURE_UTF16_FILE_SYSTEM			1
 
 
-	//	WinAPI configuration
-	#define WIN32_LEAN_AND_MEAN
-		//	FIXME Maybe not super-smart to set this up globally
+	//	WinAPI configuration; these are set up to avoid stomping on any
+	//	prefix header-originated definitions that might be in use.
+	#ifndef WIN32_LEAN_AND_MEAN
+		#define WIN32_LEAN_AND_MEAN
+			//	FIXME Maybe not super-smart to set this up globally
+	#endif
 
-	#define NOMINMAX
+	#ifndef NOMINMAX
+		#define NOMINMAX
+	#endif
 
 
 	#define LUL_TARGET_OS_IDENTIFIER u8"Windows"

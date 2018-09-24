@@ -68,6 +68,10 @@
 
 	#undef LUL_TEMP_ANY_NAMESPACE
 #else
+	#if LUL_CONFIG_headers_only
+		#error "LUL_CONFIG_headers_only option is incompatible with lulAny.hpp"
+	#endif	//	LUL_CONFIG_headers_only
+
 	#include <Lucena-Utilities/details/lulAny.hpp>
 
 	//	Nothing further needs to be done as our reference implementation is

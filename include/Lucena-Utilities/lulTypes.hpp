@@ -43,6 +43,13 @@
 #include <Lucena-Utilities/lulTime.hpp>
 
 
+//	FIXME Either LUL_CONFIG_headers_only needs to be removed, or this needs to
+//	be refactored so it might conceivably work.
+#if LUL_CONFIG_headers_only
+	#error "LUL_CONFIG_headers_only option is incompatible with lulTypes.hpp"
+#endif	//	LUL_CONFIG_headers_only
+
+
 LUL_begin_v_namespace
 
 

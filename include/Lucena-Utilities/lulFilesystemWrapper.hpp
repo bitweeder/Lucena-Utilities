@@ -63,6 +63,10 @@
 	#undef LUL_TEMP_FILESYSTEM_NAMESPACE
 	#undef LUL_TEMP_ERROR_CODE_NAMESPACE
 #else
+	#if LUL_CONFIG_headers_only
+		#error "LUL_CONFIG_headers_only option is incompatible with lulFilesystem.hpp"
+	#endif	//	LUL_CONFIG_headers_only
+
 	#include <Lucena-Utilities/details/lulFilesystem.hpp>
 
 	LUL_begin_v_namespace

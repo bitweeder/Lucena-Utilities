@@ -14,12 +14,17 @@
 ------------------------------------------------------------------------------*/
 
 
+//	lul
+#include <Lucena-Utilities/lulConfig.hpp>
+
+#if !LUL_CONFIG_headers_only
+
+
 //	std
 #include <climits>
 
 
 //	lul
-#include <Lucena-Utilities/lulConfig.hpp>
 #include <Lucena-Utilities/lulFeatureSetup.hpp>
 
 
@@ -74,3 +79,5 @@ __int128_t __muloti4(__int128_t a, __int128_t b, int* overflow) {
 }
 
 #endif
+
+#endif	//	LUL_CONFIG_headers_only

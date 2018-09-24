@@ -75,6 +75,10 @@
 
 	#undef LUL_TEMP_VARIANT_NAMESPACE
 #else
+	#if LUL_CONFIG_headers_only
+		#error "LUL_CONFIG_headers_only option is incompatible with lulVariant.hpp"
+	#endif	//	LUL_CONFIG_headers_only
+
 	//	APIME Pragmatically speaking, the only platforms that hit this branch
 	//	are Apple’s - and the only reason they’re here is because Apple’s C++
 	//	runtime doesn’t define bad_bad_variant_access_access.what() - so

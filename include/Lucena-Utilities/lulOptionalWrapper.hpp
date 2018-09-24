@@ -417,6 +417,10 @@
 
 	#undef LUL_TEMP_OPTIONAL_NAMESPACE
 #else
+	#if LUL_CONFIG_headers_only
+		#error "LUL_CONFIG_headers_only option is incompatible with lulOptional.hpp"
+	#endif	//	LUL_CONFIG_headers_only
+
 	//	APIME We no longer use Andrej Krzemienski’s version of this as it’s no
 	//	longer quite in sync with where the standard went. Instead, we just use
 	//	the libc++ version. Pragmatically speaking, the only platforms that hit

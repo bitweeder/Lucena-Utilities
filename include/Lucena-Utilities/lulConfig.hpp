@@ -215,19 +215,20 @@ LUL_end_v_namespace
 //#define LUL_CONFIG_use_prefix_gsl				0
 
 
-//	Ideally, this should always be set to 1; the only reason to set it to 0 is
-//	to allow support for reference implementations of Standard Library features
-//	that require object code to work correctly, e.g., our versions of <any>,
-//	<optional>, and <variant>.
-//	FIXME This is incorrect, as currently we have a number of class and
-//	function definitions that require object code to work correctly.
-//	Additionally, there are vestigial startup and takedown functions that
-//	previously held runtime environment configuration code and that might be
-//	required again, should a future Standard Library feature reference
-//	implementation require it; disabling them conditionally may create a
-//	confusing situation for users. Most likely, we’ll just remove this switch,
-//	as it’s not actually being used now, anyway, and it may represent a
-//	pointless aspiration.
+//	Ideally, this would always be set to 1 (or not exist); the only reason to
+//	set it to 0 is to allow support for reference implementations of Standard
+//	Library features that require object code to work correctly, e.g., our
+//	versions of <any>, <filesystem>, etc.
+//
+//	SEEME There are vestigial startup and takedown functions that previously
+//	held runtime environment configuration code and that might be needed again,
+//	should a future Standard Library feature reference implementation require
+//	it.
+//
+//	FIXME In practice, this will always cause a failure if set to 1 since
+//	lulUtilities.hpp and lulTypes.hpp both depend on object files. Once these
+//	are rewritten - if possible - then LUL_CONFIG_headers_only will work as
+//	intended.
 #ifndef LUL_CONFIG_headers_only
 	#define LUL_CONFIG_headers_only				0
 #endif
@@ -400,6 +401,6 @@ LUL_end_v_namespace
 //	Diagnostic flag for indicating that we’d like to test the build environment
 //	for feature availbility. If this is defined, the tests are performed and
 //	the results are displayed as compile-time warnings. It is assumed that both
-//	lulFeatureSetup.hpp and lulVersion.hpp have been included, as otherwise the
-//	flags to be tested may not have been initialized.
+//	lulCompilerFlags.hpp and lulVersionWrapper.hpp have been included, as
+//	otherwise the flags to be tested may not have been initialized.
 #define LUL_DIAGNOSTIC_feature_detection		0

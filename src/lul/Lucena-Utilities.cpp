@@ -16,6 +16,9 @@
 
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
+
+#if !LUL_CONFIG_headers_only
+
 #include <Lucena-Utilities/lulFeatureSetup.hpp>
 #include <Lucena-Utilities/lulVersion.hpp>
 
@@ -468,3 +471,5 @@ bool Initialize()
 /*----------------------------------------------------------------------------*/
 
 LUL_end_v_namespace
+
+#endif	//	LUL_CONFIG_headers_only
