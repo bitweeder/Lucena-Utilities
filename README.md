@@ -39,7 +39,7 @@ LUL requires a C++17 compiler with a mostly-conforming Standard Library; it prov
 
 Currently, the project is transitioning to using CMake as the primary build system; this work is on-going. Originally, hand-built project files for a number of different IDEs were used, but they were dependent on a specific development environment and also didn’t lend themselves very well to automation.
 
-LUL is intended to be linked as a static library. It’s untested as a dynamic library, and certain symbol visibility information and linker hints are known to be a bit squiffy. While LUL would ideally be a header-only library, at minimum, many of the Standard Library reference implementations it provides can’t ship that way. One of the remaining design goals is to finish refactoring it so that it’s possible to use as a header-only library if one is will to forgo using these reference implementations. Note that there is a `LUL_CONFIG_HEADERS_ONLY` CMake option, but it doesn’t currently do much besides show error messages in all the places that will cause it to fail.
+LUL is intended to be linked as a static library; it’s untested as a dynamic library. While LUL would ideally be a header-only library, at minimum, many of the Standard Library reference implementations it provides can’t ship that way. One of the remaining design goals is to finish refactoring it so that it’s possible to use as a header-only library if one is will to forgo using these reference implementations. Note that there is a `LUL_CONFIG_HEADERS_ONLY` CMake option, but it doesn’t currently do much besides show error messages in all the places that will cause it to fail.
 
 The basic build instructions are provided under **Getting Started**.  We give two different methods since, by default, macOS and Linux installs are to `/usr/local`, which requires sudo (or root) privileges, while Windows has a different model. Ignoring these differences, we have the following, with line numbers added:
 
@@ -96,7 +96,7 @@ Tests can be scripted in the usual way for CMake, for example in order to only i
 - beef up the compile-time diagnostic script
 - factor i18n string conversion and other utilities into their own libraries or simple source distributions
 - replace Status (and its dependents) with [std]::outcome and friends
-- fix symbol visibility and linker hints to support building as a dynamic library
+- test building as a dynamic library
 
 ## Contributing
 

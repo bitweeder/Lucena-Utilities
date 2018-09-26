@@ -924,13 +924,10 @@
 			confusing. We’re currently going this route and relying on
 			documentation for clarity.
 
-			FIXME Currently, the implementation of this macro does the extra
-			work of LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC, as well, as the LUL
-			headers haven’t been reviewed for this particular issue, yet, and
-			so the safer options was chosen. Because of the brittle usage
-			requirements, LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC may just end up
-			getting removed and LUL_VIS_INLINE_FUNC left as it is, preserving
-			the status quo.
+			SEEME Because of the brittle usage requirements,
+			LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC may just end up
+			getting removed, with LUL_VIS_INLINE_FUNC inheriting its
+			implementation.
 
 		LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC
 			This functions identically to LUL_VIS_INLINE_FUNC except that it’s
@@ -1038,12 +1035,10 @@
 		LUL_BUILTIN_likely(LUL_expr_)
 			//	branch prediction hinting that something is most likely true;
 			//	LUL_expr_ must resolve to a boolean
-			//	FIXME C++20 this is now an attribute
 
 		LUL_BUILTIN_unlikely(LUL_expr_)
 			//	branch prediction hinting that something is most likely false;
 			//	LUL_expr_ must resolve to a boolean
-			//	FIXME C++20 this is now an attribute
 
 ------------------------------------------------------------------------------*/
 
