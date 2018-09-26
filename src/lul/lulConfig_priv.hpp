@@ -29,17 +29,3 @@
 #ifndef LUL_CONFIG_use_prefix_std
 	#define LUL_CONFIG_use_prefix_std			1
 #endif
-
-
-//	Used to establish visibility of Lucena Utilities symbols in the headers.
-#ifndef LUL_CONFIG_visible
-	#define LUL_CONFIG_visible					LUL_VIS_DEFINE
-#endif	//	LUL_CONFIG_visible
-
-#ifndef LUL_CONFIG_type_visible
-	#define LUL_CONFIG_type_visible				LUL_VIS_TYPE_DEFINE
-#endif	//	LUL_CONFIG_type_visible
-
-#ifndef LUL_CONFIG_exception_visible
-	#define LUL_CONFIG_exception_visible		LUL_VIS_EXCEPTION_DEFINE
-#endif	//	LUL_CONFIG_exception_visible

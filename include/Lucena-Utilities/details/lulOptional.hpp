@@ -182,6 +182,7 @@ namespace std {
 #include <Lucena-Utilities/details/lulHelperTuple.hpp>
 #include <Lucena-Utilities/details/lulHelperTypeTraits.hpp>
 #include <Lucena-Utilities/details/lulHelperUtility.hpp>
+#include <Lucena-Utilities/details/lulVisibility.hpp>
 
 
 //	purposefully avoiding versioned namespace
@@ -189,7 +190,7 @@ LUL_begin_namespace
 
 namespace stdproxy {
 
-class LUL_VIS_EXCEPTION_DEFINE bad_optional_access
+class LUL_VIS_EXCEPTION bad_optional_access
 	: public std::exception
 {
 public:
@@ -208,8 +209,8 @@ namespace stdproxy {
 
 struct nullopt_t
 {
-	struct LUL_secret_tag { LUL_VIS_INLINE explicit LUL_secret_tag() = default; };
-	LUL_VIS_INLINE constexpr explicit nullopt_t(LUL_secret_tag, LUL_secret_tag) noexcept {}
+	struct LUL_secret_tag { LUL_VIS_INLINE_FUNC explicit LUL_secret_tag() = default; };
+	LUL_VIS_INLINE_FUNC constexpr explicit nullopt_t(LUL_secret_tag, LUL_secret_tag) noexcept {}
 };
 
 inline constexpr nullopt_t nullopt{nullopt_t::LUL_secret_tag{}, nullopt_t::LUL_secret_tag{}};
@@ -231,25 +232,25 @@ struct __optional_destruct_base<_Tp, false>
 	};
 	bool __engaged_;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	~__optional_destruct_base()
 	{
 		if (__engaged_)
 			__val_.~value_type();
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr __optional_destruct_base() noexcept
 		:  __null_state_(),
 		   __engaged_(false) {}
 
 	template <class... _Args>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr explicit __optional_destruct_base(std::in_place_t, _Args&&... __args)
 		:  __val_(std::forward<_Args>(__args)...),
 		   __engaged_(true) {}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void reset() noexcept
 	{
 		if (__engaged_)
@@ -273,18 +274,18 @@ struct __optional_destruct_base<_Tp, true>
 	};
 	bool __engaged_;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr __optional_destruct_base() noexcept
 		:  __null_state_(),
 		   __engaged_(false) {}
 
 	template <class... _Args>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr explicit __optional_destruct_base(std::in_place_t, _Args&&... __args)
 		:  __val_(std::forward<_Args>(__args)...),
 		   __engaged_(true) {}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void reset() noexcept
 	{
 		if (__engaged_)
@@ -301,35 +302,35 @@ struct __optional_storage_base : __optional_destruct_base<_Tp>
 	using value_type = _Tp;
 	using __base::__base;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr bool has_value() const noexcept
 	{
 		return this->__engaged_;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr value_type& __get() & noexcept
 	{
 		return this->__val_;
 	}
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr const value_type& __get() const& noexcept
 	{
 		return this->__val_;
 	}
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr value_type&& __get() && noexcept
 	{
 		return std::move(this->__val_);
 	}
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr const value_type&& __get() const&& noexcept
 	{
 		return std::move(this->__val_);
 	}
 
 	template <class... _Args>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void __construct(_Args&&... __args)
 	{
 		//	C++2a
@@ -339,7 +340,7 @@ struct __optional_storage_base : __optional_destruct_base<_Tp>
 	}
 
 	template <class _That>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void __construct_from(_That&& __opt)
 	{
 		if (__opt.has_value())
@@ -347,7 +348,7 @@ struct __optional_storage_base : __optional_destruct_base<_Tp>
 	}
 
 	template <class _That>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void __assign_from(_That&& __opt)
 	{
 		if (this->__engaged_ == __opt.has_value())
@@ -391,12 +392,12 @@ struct __optional_storage_base<_Tp, true>
 				std::is_convertible<_UpPtr, _TpPtr>::value);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr __optional_storage_base() noexcept
 		:  __value_(nullptr) {}
 
 	template <class _UArg>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr explicit __optional_storage_base(std::in_place_t, _UArg&& __uarg)
 		:  __value_(std::addressof(__uarg))
 	{
@@ -405,23 +406,23 @@ struct __optional_storage_base<_Tp, true>
 		"possible temporary");
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void reset() noexcept { __value_ = nullptr; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr bool has_value() const noexcept
 	  { return __value_ != nullptr; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr value_type& __get() const& noexcept
 	  { return *__value_; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr value_type&& __get() const&& noexcept
 	  { return std::forward<value_type>(*__value_); }
 
 	template <class _UArg>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void __construct(_UArg&& __val)
 	{
 		assert (!has_value());
@@ -432,7 +433,7 @@ struct __optional_storage_base<_Tp, true>
 	}
 
 	template <class _That>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void __construct_from(_That&& __opt)
 	{
 		if (__opt.has_value())
@@ -440,7 +441,7 @@ struct __optional_storage_base<_Tp, true>
 	}
 
 	template <class _That>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void __assign_from(_That&& __opt)
 	{
 		if (has_value() == __opt.has_value())
@@ -469,20 +470,20 @@ struct __optional_copy_base<_Tp, false> : __optional_storage_base<_Tp>
 {
 	using __optional_storage_base<_Tp>::__optional_storage_base;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_copy_base() = default;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_copy_base(const __optional_copy_base& __opt)
 	{
 		this->__construct_from(__opt);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_copy_base(__optional_copy_base&&) = default;
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_copy_base& operator=(const __optional_copy_base&) = default;
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_copy_base& operator=(__optional_copy_base&&) = default;
 };
 
@@ -498,21 +499,21 @@ struct __optional_move_base<_Tp, false> : __optional_copy_base<_Tp>
 	using value_type = _Tp;
 	using __optional_copy_base<_Tp>::__optional_copy_base;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_move_base() = default;
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_move_base(const __optional_move_base&) = default;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_move_base(__optional_move_base&& __opt)
 		noexcept(std::is_nothrow_move_constructible_v<value_type>)
 	{
 		this->__construct_from(std::move(__opt));
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_move_base& operator=(const __optional_move_base&) = default;
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_move_base& operator=(__optional_move_base&&) = default;
 };
 
@@ -530,21 +531,21 @@ struct __optional_copy_assign_base<_Tp, false> : __optional_move_base<_Tp>
 {
 	using __optional_move_base<_Tp>::__optional_move_base;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_copy_assign_base() = default;
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_copy_assign_base(const __optional_copy_assign_base&) = default;
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_copy_assign_base(__optional_copy_assign_base&&) = default;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_copy_assign_base& operator=(const __optional_copy_assign_base& __opt)
 	{
 		this->__assign_from(__opt);
 		return *this;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_copy_assign_base& operator=(__optional_copy_assign_base&&) = default;
 };
 
@@ -563,16 +564,16 @@ struct __optional_move_assign_base<_Tp, false> : __optional_copy_assign_base<_Tp
 	using value_type = _Tp;
 	using __optional_copy_assign_base<_Tp>::__optional_copy_assign_base;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_move_assign_base() = default;
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_move_assign_base(const __optional_move_assign_base& __opt) = default;
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_move_assign_base(__optional_move_assign_base&&) = default;
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_move_assign_base& operator=(const __optional_move_assign_base&) = default;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__optional_move_assign_base& operator=(__optional_move_assign_base&& __opt)
 		noexcept(std::is_nothrow_move_assignable_v<value_type> &&
 				 std::is_nothrow_move_constructible_v<value_type>)
@@ -696,36 +697,36 @@ private:
 	>;
 public:
 
-	LUL_VIS_INLINE constexpr optional() noexcept {}
-	LUL_VIS_INLINE constexpr optional(const optional&) = default;
-	LUL_VIS_INLINE constexpr optional(optional&&) = default;
-	LUL_VIS_INLINE constexpr optional(nullopt_t) noexcept {}
+	LUL_VIS_INLINE_FUNC constexpr optional() noexcept {}
+	LUL_VIS_INLINE_FUNC constexpr optional(const optional&) = default;
+	LUL_VIS_INLINE_FUNC constexpr optional(optional&&) = default;
+	LUL_VIS_INLINE_FUNC constexpr optional(nullopt_t) noexcept {}
 
 	template <class... _Args, class = std::enable_if_t<
 		std::is_constructible_v<value_type, _Args...>>
 	>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr explicit optional(std::in_place_t, _Args&&... __args)
 		: __base(std::in_place, std::forward<_Args>(__args)...) {}
 
 	template <class _Up, class... _Args, class = std::enable_if_t<
 		std::is_constructible_v<value_type, std::initializer_list<_Up>&, _Args...>>
 	>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr explicit optional(std::in_place_t, std::initializer_list<_Up> __il, _Args&&... __args)
 		: __base(std::in_place, __il, std::forward<_Args>(__args)...) {}
 
 	template <class _Up = value_type, std::enable_if_t<
 		_CheckOptionalArgsCtor<_Up>::template __enable_implicit<_Up>()
 	, int> = 0>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr optional(_Up&& __v)
 		: __base(std::in_place, std::forward<_Up>(__v)) {}
 
 	template <class _Up, std::enable_if_t<
 		_CheckOptionalArgsCtor<_Up>::template __enable_explicit<_Up>()
 	, int> = 0>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr explicit optional(_Up&& __v)
 		: __base(std::in_place, std::forward<_Up>(__v)) {}
 
@@ -733,7 +734,7 @@ public:
 	template <class _Up, std::enable_if_t<
 		_CheckOptionalLikeCtor<_Up, _Up const&>::template __enable_implicit<_Up>()
 	, int> = 0>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	optional(const optional<_Up>& __v)
 	{
 		this->__construct_from(__v);
@@ -741,7 +742,7 @@ public:
 	template <class _Up, std::enable_if_t<
 		_CheckOptionalLikeCtor<_Up, _Up const&>::template __enable_explicit<_Up>()
 	, int> = 0>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	explicit optional(const optional<_Up>& __v)
 	{
 		this->__construct_from(__v);
@@ -751,7 +752,7 @@ public:
 	template <class _Up, std::enable_if_t<
 		_CheckOptionalLikeCtor<_Up, _Up &&>::template __enable_implicit<_Up>()
 	, int> = 0>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	optional(optional<_Up>&& __v)
 	{
 		this->__construct_from(std::move(__v));
@@ -759,21 +760,21 @@ public:
 	template <class _Up, std::enable_if_t<
 		_CheckOptionalLikeCtor<_Up, _Up &&>::template __enable_explicit<_Up>()
 	, int> = 0>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	explicit optional(optional<_Up>&& __v)
 	{
 		this->__construct_from(std::move(__v));
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	optional& operator=(nullopt_t) noexcept
 	{
 		reset();
 		return *this;
 	}
 
-	LUL_VIS_INLINE optional& operator=(const optional&) = default;
-	LUL_VIS_INLINE optional& operator=(optional&&) = default;
+	LUL_VIS_INLINE_FUNC optional& operator=(const optional&) = default;
+	LUL_VIS_INLINE_FUNC optional& operator=(optional&&) = default;
 
 	// LWG2756
 	template <class _Up = value_type,
@@ -787,7 +788,7 @@ public:
 						  std::is_assignable<value_type&, _Up>
 					  >::value>
 			 >
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	optional&
 	operator=(_Up&& __v)
 	{
@@ -802,7 +803,7 @@ public:
 	template <class _Up, std::enable_if_t<
 		_CheckOptionalLikeAssign<_Up, _Up const&>::template __enable_assign<_Up>()
 	, int> = 0>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	optional&
 	operator=(const optional<_Up>& __v)
 	{
@@ -814,7 +815,7 @@ public:
 	template <class _Up, std::enable_if_t<
 		_CheckOptionalLikeCtor<_Up, _Up &&>::template __enable_assign<_Up>()
 	, int> = 0>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	optional&
 	operator=(optional<_Up>&& __v)
 	{
@@ -828,7 +829,7 @@ public:
 						  std::is_constructible_v<value_type, _Args...>
 					  >
 			 >
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	_Tp &
 	emplace(_Args&&... __args)
 	{
@@ -843,7 +844,7 @@ public:
 						  std::is_constructible_v<value_type, std::initializer_list<_Up>&, _Args...>
 					  >
 			 >
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	_Tp &
 	emplace(std::initializer_list<_Up> __il, _Args&&... __args)
 	{
@@ -852,7 +853,7 @@ public:
 		return this->__get();
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void swap(optional& __opt)
 		noexcept(std::is_nothrow_move_constructible_v<value_type> &&
 				 std::is_nothrow_swappable_v<value_type>)
@@ -878,7 +879,7 @@ public:
 		}
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr
 	std::add_pointer_t<value_type const>
 	operator->() const
@@ -888,7 +889,7 @@ public:
 		return std::addressof(this->__get());
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr
 	std::add_pointer_t<value_type>
 	operator->()
@@ -898,7 +899,7 @@ public:
 		return std::addressof(this->__get());
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr
 	const value_type&
 	operator*() const&
@@ -907,7 +908,7 @@ public:
 	   return this->__get();
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr
 	value_type&
 	operator*() &
@@ -916,7 +917,7 @@ public:
 		return this->__get();
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr
 	value_type&&
 	operator*() &&
@@ -925,7 +926,7 @@ public:
 		return std::move(this->__get());
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr
 	const value_type&&
 	operator*() const&&
@@ -934,13 +935,13 @@ public:
 		return std::move(this->__get());
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr explicit operator bool() const noexcept { return has_value(); }
 
 	using __base::has_value;
 	using __base::__get;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr value_type const& value() const&
 	{
 		if (!this->has_value())
@@ -948,7 +949,7 @@ public:
 		return this->__get();
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr value_type& value() &
 	{
 		if (!this->has_value())
@@ -956,7 +957,7 @@ public:
 		return this->__get();
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr value_type&& value() &&
 	{
 		if (!this->has_value())
@@ -964,7 +965,7 @@ public:
 		return std::move(this->__get());
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr value_type const&& value() const&&
 	{
 		if (!this->has_value())
@@ -973,7 +974,7 @@ public:
 	}
 
 	template <class _Up>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr value_type value_or(_Up&& __v) const&
 	{
 		static_assert(std::is_copy_constructible_v<value_type>,
@@ -985,7 +986,7 @@ public:
 	}
 
 	template <class _Up>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	constexpr value_type value_or(_Up&& __v) &&
 	{
 		static_assert(std::is_move_constructible_v<value_type>,
@@ -1000,7 +1001,7 @@ public:
 
 private:
 	template <class _Up>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	static _Up*
 	__operator_arrow(std::true_type, _Up& __x)
 	{
@@ -1008,7 +1009,7 @@ private:
 	}
 
 	template <class _Up>
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	static constexpr _Up*
 	__operator_arrow(std::false_type, _Up& __x)
 	{
@@ -1018,7 +1019,7 @@ private:
 
 // Comparisons between optionals
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() ==
 		std::declval<const _Up&>()), bool>,
@@ -1034,7 +1035,7 @@ operator==(const optional<_Tp>& __x, const optional<_Up>& __y)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() !=
 		std::declval<const _Up&>()), bool>,
@@ -1050,7 +1051,7 @@ operator!=(const optional<_Tp>& __x, const optional<_Up>& __y)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() <
 		std::declval<const _Up&>()), bool>,
@@ -1066,7 +1067,7 @@ operator<(const optional<_Tp>& __x, const optional<_Up>& __y)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() >
 		std::declval<const _Up&>()), bool>,
@@ -1082,7 +1083,7 @@ operator>(const optional<_Tp>& __x, const optional<_Up>& __y)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() <=
 		std::declval<const _Up&>()), bool>,
@@ -1098,7 +1099,7 @@ operator<=(const optional<_Tp>& __x, const optional<_Up>& __y)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() >=
 		std::declval<const _Up&>()), bool>,
@@ -1115,7 +1116,7 @@ operator>=(const optional<_Tp>& __x, const optional<_Up>& __y)
 
 // Comparisons with nullopt
 template <class _Tp>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 bool
 operator==(const optional<_Tp>& __x, nullopt_t) noexcept
 {
@@ -1123,7 +1124,7 @@ operator==(const optional<_Tp>& __x, nullopt_t) noexcept
 }
 
 template <class _Tp>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 bool
 operator==(nullopt_t, const optional<_Tp>& __x) noexcept
 {
@@ -1131,7 +1132,7 @@ operator==(nullopt_t, const optional<_Tp>& __x) noexcept
 }
 
 template <class _Tp>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 bool
 operator!=(const optional<_Tp>& __x, nullopt_t) noexcept
 {
@@ -1139,7 +1140,7 @@ operator!=(const optional<_Tp>& __x, nullopt_t) noexcept
 }
 
 template <class _Tp>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 bool
 operator!=(nullopt_t, const optional<_Tp>& __x) noexcept
 {
@@ -1147,7 +1148,7 @@ operator!=(nullopt_t, const optional<_Tp>& __x) noexcept
 }
 
 template <class _Tp>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 bool
 operator<(const optional<_Tp>&, nullopt_t) noexcept
 {
@@ -1155,7 +1156,7 @@ operator<(const optional<_Tp>&, nullopt_t) noexcept
 }
 
 template <class _Tp>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 bool
 operator<(nullopt_t, const optional<_Tp>& __x) noexcept
 {
@@ -1163,7 +1164,7 @@ operator<(nullopt_t, const optional<_Tp>& __x) noexcept
 }
 
 template <class _Tp>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 bool
 operator<=(const optional<_Tp>& __x, nullopt_t) noexcept
 {
@@ -1171,7 +1172,7 @@ operator<=(const optional<_Tp>& __x, nullopt_t) noexcept
 }
 
 template <class _Tp>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 bool
 operator<=(nullopt_t, const optional<_Tp>&) noexcept
 {
@@ -1179,7 +1180,7 @@ operator<=(nullopt_t, const optional<_Tp>&) noexcept
 }
 
 template <class _Tp>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 bool
 operator>(const optional<_Tp>& __x, nullopt_t) noexcept
 {
@@ -1187,7 +1188,7 @@ operator>(const optional<_Tp>& __x, nullopt_t) noexcept
 }
 
 template <class _Tp>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 bool
 operator>(nullopt_t, const optional<_Tp>&) noexcept
 {
@@ -1195,7 +1196,7 @@ operator>(nullopt_t, const optional<_Tp>&) noexcept
 }
 
 template <class _Tp>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 bool
 operator>=(const optional<_Tp>&, nullopt_t) noexcept
 {
@@ -1203,7 +1204,7 @@ operator>=(const optional<_Tp>&, nullopt_t) noexcept
 }
 
 template <class _Tp>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 bool
 operator>=(nullopt_t, const optional<_Tp>& __x) noexcept
 {
@@ -1212,7 +1213,7 @@ operator>=(nullopt_t, const optional<_Tp>& __x) noexcept
 
 // Comparisons with T
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() ==
 		std::declval<const _Up&>()), bool>,
@@ -1224,7 +1225,7 @@ operator==(const optional<_Tp>& __x, const _Up& __v)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() ==
 		std::declval<const _Up&>()), bool>,
@@ -1236,7 +1237,7 @@ operator==(const _Tp& __v, const optional<_Up>& __x)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() !=
 		std::declval<const _Up&>()), bool>,
@@ -1248,7 +1249,7 @@ operator!=(const optional<_Tp>& __x, const _Up& __v)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() !=
 		std::declval<const _Up&>()), bool>,
@@ -1260,7 +1261,7 @@ operator!=(const _Tp& __v, const optional<_Up>& __x)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() <
 		std::declval<const _Up&>()), bool>,
@@ -1272,7 +1273,7 @@ operator<(const optional<_Tp>& __x, const _Up& __v)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() <
 		std::declval<const _Up&>()), bool>,
@@ -1284,7 +1285,7 @@ operator<(const _Tp& __v, const optional<_Up>& __x)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() <=
 		std::declval<const _Up&>()), bool>,
@@ -1296,7 +1297,7 @@ operator<=(const optional<_Tp>& __x, const _Up& __v)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() <=
 		std::declval<const _Up&>()), bool>,
@@ -1308,7 +1309,7 @@ operator<=(const _Tp& __v, const optional<_Up>& __x)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() >
 		std::declval<const _Up&>()), bool>,
@@ -1320,7 +1321,7 @@ operator>(const optional<_Tp>& __x, const _Up& __v)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() >
 		std::declval<const _Up&>()), bool>,
@@ -1332,7 +1333,7 @@ operator>(const _Tp& __v, const optional<_Up>& __x)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() >=
 		std::declval<const _Up&>()), bool>,
@@ -1344,7 +1345,7 @@ operator>=(const optional<_Tp>& __x, const _Up& __v)
 }
 
 template <class _Tp, class _Up>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 std::enable_if_t<
 	std::is_convertible_v<decltype(std::declval<const _Tp&>() >=
 		std::declval<const _Up&>()), bool>,
@@ -1357,7 +1358,7 @@ operator>=(const _Tp& __v, const optional<_Up>& __x)
 
 
 template <class _Tp>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 std::enable_if_t<
 	std::is_move_constructible_v<_Tp> && std::is_swappable_v<_Tp>,
 	void
@@ -1368,21 +1369,21 @@ swap(optional<_Tp>& __x, optional<_Tp>& __y) noexcept(noexcept(__x.swap(__y)))
 }
 
 template <class _Tp>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 optional<std::decay_t<_Tp>> make_optional(_Tp&& __v)
 {
 	return optional<std::decay_t<_Tp>>(std::forward<_Tp>(__v));
 }
 
 template <class _Tp, class... _Args>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 optional<_Tp> make_optional(_Args&&... __args)
 {
 	return optional<_Tp>(std::in_place, std::forward<_Args>(__args)...);
 }
 
 template <class _Tp, class _Up, class... _Args>
-LUL_VIS_INLINE constexpr
+LUL_VIS_INLINE_FUNC constexpr
 optional<_Tp> make_optional(std::initializer_list<_Up> __il,  _Args&&... __args)
 {
 	return optional<_Tp>(std::in_place, __il, std::forward<_Args>(__args)...);
@@ -1399,14 +1400,14 @@ namespace std {
 //	Note the explicit use of a versioned namespace when referring to optional;
 //	this is needed to avoid potential collisions.
 template <class _Tp>
-struct LUL_VIS_TYPE_DEFINE hash<
+struct LUL_VIS_CLASS_TEMPLATE hash<
 	LUL_::stdproxy::details::__enable_hash_helper<LUL_v_::stdproxy::optional<_Tp>, remove_const_t<_Tp>>
 >
 {
 	typedef LUL_v_::stdproxy::optional<_Tp> argument_type;
 	typedef size_t		  result_type;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	result_type operator()(const argument_type& __opt) const
 	{
 		return static_cast<bool>(__opt) ? hash<remove_const_t<_Tp>>()(*__opt) : 0;

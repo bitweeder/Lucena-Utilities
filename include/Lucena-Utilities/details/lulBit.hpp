@@ -27,6 +27,9 @@
 
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
+#include <Lucena-Utilities/lulFeatureSetup.hpp>
+
+#include <Lucena-Utilities/details/lulVisibility.hpp>
 
 
 LUL_begin_v_namespace
@@ -64,7 +67,7 @@ template <typename To, typename From,
 		//		sizeof (To) == sizeof (From) &&
     	//		std::is_trivially_copyable_v <To> &&
     	//		std::is_trivially_copyable_v <From>
-LUL_VIS_INLINE inline constexpr To bit_cast (const From& from) noexcept
+LUL_VIS_INLINE_FUNC inline constexpr To bit_cast (const From& from) noexcept
 {
 	//	APIME Note that it is illegal in C++17 to simply reinterpret_cast
 	//	from a float (or float *) to an int (or int *), even if the sizes are

@@ -172,6 +172,7 @@
 #include <Lucena-Utilities/lulFeatureSetup.hpp>
 
 #include <Lucena-Utilities/details/lulHelperIterator.hpp>
+#include <Lucena-Utilities/details/lulVisibility.hpp>
 
 
 LUL_begin_v_namespace
@@ -225,7 +226,7 @@ struct __is_span_compatible_container<_Tp, _ElementType,
 
 
 template <typename _Tp, ptrdiff_t _Extent>
-class LUL_VIS_TYPE_DEFINE span {
+class LUL_VIS_CLASS_TEMPLATE span {
 public:
 //  constants and types
     using element_type           = _Tp;
@@ -245,29 +246,29 @@ public:
     static_assert (_Extent >= 0, "Can't have a span with an extent < 0");
 
 // [span.cons], span constructors, copy, assignment, and destructor
-    LUL_VIS_INLINE constexpr span() noexcept : __data{nullptr}
+    LUL_VIS_INLINE_FUNC constexpr span() noexcept : __data{nullptr}
     { static_assert(_Extent == 0, "Can't default construct a statically sized span with size > 0"); }
 
     constexpr span           (const span&) noexcept = default;
     constexpr span& operator=(const span&) noexcept = default;
 
-    LUL_VIS_INLINE constexpr span(pointer __ptr, index_type __count) : __data{__ptr}
+    LUL_VIS_INLINE_FUNC constexpr span(pointer __ptr, index_type __count) : __data{__ptr}
         { (void)__count;
         //	C++2a
 //      [[assert: _Extent == __count]];
 		}
-    LUL_VIS_INLINE constexpr span(pointer __f, pointer __l) : __data{__f}
+    LUL_VIS_INLINE_FUNC constexpr span(pointer __f, pointer __l) : __data{__f}
         { (void)__l;
         //	C++2a
 //      [[assert: _Extent == std::distance(__f, __l)]];
 		}
 
-    LUL_VIS_INLINE constexpr span(element_type (&__arr)[_Extent])          noexcept : __data{__arr} {}
-    LUL_VIS_INLINE constexpr span(      std::array<value_type, _Extent>& __arr) noexcept : __data{__arr.data()} {}
-    LUL_VIS_INLINE constexpr span(const std::array<value_type, _Extent>& __arr) noexcept : __data{__arr.data()} {}
+    LUL_VIS_INLINE_FUNC constexpr span(element_type (&__arr)[_Extent])          noexcept : __data{__arr} {}
+    LUL_VIS_INLINE_FUNC constexpr span(      std::array<value_type, _Extent>& __arr) noexcept : __data{__arr.data()} {}
+    LUL_VIS_INLINE_FUNC constexpr span(const std::array<value_type, _Extent>& __arr) noexcept : __data{__arr.data()} {}
 
     template <class _Container>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr span(      _Container& __c,
             std::enable_if_t<__is_span_compatible_container<_Container, _Tp>::value, std::nullptr_t> = nullptr)
         : __data{std::data(__c)}
@@ -277,7 +278,7 @@ public:
 		}
 
     template <class _Container>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr span(const _Container& __c,
             std::enable_if_t<__is_span_compatible_container<const _Container, _Tp>::value, std::nullptr_t> = nullptr)
         : __data{std::data(__c)}
@@ -287,7 +288,7 @@ public:
 		}
 
     template <class _OtherElementType>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr span(const span<_OtherElementType, _Extent>& __other,
                        std::enable_if_t<
                           std::is_convertible_v<_OtherElementType(*)[], element_type (*)[]>,
@@ -295,7 +296,7 @@ public:
         : __data{__other.data()} {}
 
     template <class _OtherElementType>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr span(const span<_OtherElementType, dynamic_extent>& __other,
                        std::enable_if_t<
                           std::is_convertible_v<_OtherElementType(*)[], element_type (*)[]>,
@@ -310,7 +311,7 @@ public:
 //  ~span() noexcept = default;
 
     template <ptrdiff_t _Count>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr span<element_type, _Count> first() const noexcept
     {
         static_assert(_Count >= 0, "Count must be >= 0 in span::first()");
@@ -319,7 +320,7 @@ public:
     }
 
     template <ptrdiff_t _Count>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr span<element_type, _Count> last() const noexcept
     {
         static_assert(_Count >= 0, "Count must be >= 0 in span::last()");
@@ -327,7 +328,7 @@ public:
         return {data() + size() - _Count, _Count};
     }
 
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     constexpr span<element_type, dynamic_extent> first(index_type __count) const noexcept
     {
 		//	C++2a
@@ -335,7 +336,7 @@ public:
         return {data(), __count};
     }
 
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     constexpr span<element_type, dynamic_extent> last(index_type __count) const noexcept
     {
 		//	C++2a
@@ -344,7 +345,7 @@ public:
     }
 
     template <ptrdiff_t _Offset, ptrdiff_t _Count = dynamic_extent>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr auto subspan() const noexcept
         -> span<element_type, _Count != dynamic_extent ? _Count : _Extent - _Offset>
     {
@@ -354,7 +355,7 @@ public:
     }
 
 
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
     constexpr span<element_type, dynamic_extent>
        subspan(index_type __offset, index_type __count = dynamic_extent) const noexcept
     {
@@ -368,47 +369,47 @@ public:
         return {data() + __offset, __count};
     }
 
-    LUL_VIS_INLINE constexpr index_type size()       const noexcept { return _Extent; }
-    LUL_VIS_INLINE constexpr index_type size_bytes() const noexcept { return _Extent * sizeof(element_type); }
-    LUL_VIS_INLINE constexpr bool empty()            const noexcept { return _Extent == 0; }
+    LUL_VIS_INLINE_FUNC constexpr index_type size()       const noexcept { return _Extent; }
+    LUL_VIS_INLINE_FUNC constexpr index_type size_bytes() const noexcept { return _Extent * sizeof(element_type); }
+    LUL_VIS_INLINE_FUNC constexpr bool empty()            const noexcept { return _Extent == 0; }
 
-    LUL_VIS_INLINE constexpr reference operator[](index_type __idx) const noexcept
+    LUL_VIS_INLINE_FUNC constexpr reference operator[](index_type __idx) const noexcept
     {
 		//	C++2a
 //      [[assert: __idx >= 0 && __idx < size()]];
 		return __data[__idx];
 	}
 
-    LUL_VIS_INLINE constexpr reference operator()(index_type __idx) const noexcept
+    LUL_VIS_INLINE_FUNC constexpr reference operator()(index_type __idx) const noexcept
     {
 		//	C++2a
 //      [[assert: __idx >= 0 && __idx < size()]];
 		return __data[__idx];
 	}
 
-    LUL_VIS_INLINE constexpr pointer data()                         const noexcept { return __data; }
+    LUL_VIS_INLINE_FUNC constexpr pointer data()                         const noexcept { return __data; }
 
 // [span.iter], span iterator support
-    LUL_VIS_INLINE constexpr iterator                 begin() const noexcept { return iterator(data()); }
-    LUL_VIS_INLINE constexpr iterator                   end() const noexcept { return iterator(data() + size()); }
-    LUL_VIS_INLINE constexpr const_iterator          cbegin() const noexcept { return const_iterator(data()); }
-    LUL_VIS_INLINE constexpr const_iterator            cend() const noexcept { return const_iterator(data() + size()); }
-    LUL_VIS_INLINE constexpr reverse_iterator        rbegin() const noexcept { return reverse_iterator(end()); }
-    LUL_VIS_INLINE constexpr reverse_iterator          rend() const noexcept { return reverse_iterator(begin()); }
-    LUL_VIS_INLINE constexpr const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(cend()); }
-    LUL_VIS_INLINE constexpr const_reverse_iterator   crend() const noexcept { return const_reverse_iterator(cbegin()); }
+    LUL_VIS_INLINE_FUNC constexpr iterator                 begin() const noexcept { return iterator(data()); }
+    LUL_VIS_INLINE_FUNC constexpr iterator                   end() const noexcept { return iterator(data() + size()); }
+    LUL_VIS_INLINE_FUNC constexpr const_iterator          cbegin() const noexcept { return const_iterator(data()); }
+    LUL_VIS_INLINE_FUNC constexpr const_iterator            cend() const noexcept { return const_iterator(data() + size()); }
+    LUL_VIS_INLINE_FUNC constexpr reverse_iterator        rbegin() const noexcept { return reverse_iterator(end()); }
+    LUL_VIS_INLINE_FUNC constexpr reverse_iterator          rend() const noexcept { return reverse_iterator(begin()); }
+    LUL_VIS_INLINE_FUNC constexpr const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(cend()); }
+    LUL_VIS_INLINE_FUNC constexpr const_reverse_iterator   crend() const noexcept { return const_reverse_iterator(cbegin()); }
 
-    LUL_VIS_INLINE constexpr void swap(span &__other) noexcept
+    LUL_VIS_INLINE_FUNC constexpr void swap(span &__other) noexcept
     {
         pointer __p = __data;
         __data = __other.__data;
         __other.__data = __p;
     }
 
-    LUL_VIS_INLINE span<const std::byte, _Extent * sizeof(element_type)> __as_bytes() const noexcept
+    LUL_VIS_INLINE_FUNC span<const std::byte, _Extent * sizeof(element_type)> __as_bytes() const noexcept
     { return {reinterpret_cast<const std::byte *>(data()), size_bytes()}; }
 
-    LUL_VIS_INLINE span<std::byte, _Extent * sizeof(element_type)> __as_writeable_bytes() const noexcept
+    LUL_VIS_INLINE_FUNC span<std::byte, _Extent * sizeof(element_type)> __as_writeable_bytes() const noexcept
     { return {reinterpret_cast<std::byte *>(data()), size_bytes()}; }
 
 private:
@@ -418,7 +419,7 @@ private:
 
 
 template <typename _Tp>
-class LUL_VIS_TYPE_DEFINE span<_Tp, dynamic_extent> {
+class LUL_VIS_CLASS_TEMPLATE span<_Tp, dynamic_extent> {
 private:
 
 public:
@@ -439,41 +440,41 @@ public:
     static constexpr index_type extent = dynamic_extent;
 
 // [span.cons], span constructors, copy, assignment, and destructor
-    LUL_VIS_INLINE constexpr span() noexcept : __data{nullptr}, __size{0} {}
+    LUL_VIS_INLINE_FUNC constexpr span() noexcept : __data{nullptr}, __size{0} {}
 
     constexpr span           (const span&) noexcept = default;
     constexpr span& operator=(const span&) noexcept = default;
 
-    LUL_VIS_INLINE constexpr span(pointer __ptr, index_type __count) : __data{__ptr}, __size{__count} {}
-    LUL_VIS_INLINE constexpr span(pointer __f, pointer __l) : __data{__f}, __size{distance(__f, __l)} {}
+    LUL_VIS_INLINE_FUNC constexpr span(pointer __ptr, index_type __count) : __data{__ptr}, __size{__count} {}
+    LUL_VIS_INLINE_FUNC constexpr span(pointer __f, pointer __l) : __data{__f}, __size{distance(__f, __l)} {}
 
     template <size_t _Sz>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr span(element_type (&__arr)[_Sz]) noexcept : __data{__arr}, __size{_Sz} {}
 
     template <size_t _Sz>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr span(std::array<value_type, _Sz>& __arr)       noexcept : __data{__arr.data()}, __size{_Sz} {}
 
     template <size_t _Sz>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr span(const std::array<value_type, _Sz>& __arr) noexcept : __data{__arr.data()}, __size{_Sz} {}
 
     template <class _Container>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr span(      _Container& __c,
             std::enable_if_t<__is_span_compatible_container<_Container, _Tp>::value, std::nullptr_t> = nullptr)
         : __data{std::data(__c)}, __size{(index_type) std::size(__c)} {}
 
     template <class _Container>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr span(const _Container& __c,
             std::enable_if_t<__is_span_compatible_container<const _Container, _Tp>::value, std::nullptr_t> = nullptr)
         : __data{std::data(__c)}, __size{(index_type) std::size(__c)} {}
 
 
     template <class _OtherElementType, ptrdiff_t _OtherExtent>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr span(const span<_OtherElementType, _OtherExtent>& __other,
                        std::enable_if_t<
                           std::is_convertible_v<_OtherElementType(*)[], element_type (*)[]>,
@@ -483,7 +484,7 @@ public:
 //    ~span() noexcept = default;
 
     template <ptrdiff_t _Count>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr span<element_type, _Count> first() const noexcept
     {
         static_assert(_Count >= 0);
@@ -493,7 +494,7 @@ public:
     }
 
     template <ptrdiff_t _Count>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr span<element_type, _Count> last() const noexcept
     {
         static_assert(_Count >= 0);
@@ -502,7 +503,7 @@ public:
         return {data() + size() - _Count, _Count};
     }
 
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     constexpr span<element_type, dynamic_extent> first(index_type __count) const noexcept
     {
 		//	C++2a
@@ -510,7 +511,7 @@ public:
          return {data(), __count};
     }
 
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     constexpr span<element_type, dynamic_extent> last (index_type __count) const noexcept
     {
 		//	C++2a
@@ -519,7 +520,7 @@ public:
     }
 
     template <ptrdiff_t _Offset, ptrdiff_t _Count = dynamic_extent>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
         constexpr span<_Tp, dynamic_extent> subspan() const noexcept
     {
 		//	C++2a
@@ -529,7 +530,7 @@ public:
     }
 
     constexpr span<element_type, dynamic_extent>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
        subspan(index_type __offset, index_type __count = dynamic_extent) const noexcept
     {
 		//	C++2a
@@ -542,37 +543,37 @@ public:
         return {data() + __offset, __count};
     }
 
-    LUL_VIS_INLINE constexpr index_type size()       const noexcept { return __size; }
-    LUL_VIS_INLINE constexpr index_type size_bytes() const noexcept { return __size * sizeof(element_type); }
-    LUL_VIS_INLINE constexpr bool empty()            const noexcept { return __size == 0; }
+    LUL_VIS_INLINE_FUNC constexpr index_type size()       const noexcept { return __size; }
+    LUL_VIS_INLINE_FUNC constexpr index_type size_bytes() const noexcept { return __size * sizeof(element_type); }
+    LUL_VIS_INLINE_FUNC constexpr bool empty()            const noexcept { return __size == 0; }
 
-    LUL_VIS_INLINE constexpr reference operator[](index_type __idx) const noexcept
+    LUL_VIS_INLINE_FUNC constexpr reference operator[](index_type __idx) const noexcept
     {
 		//	C++2a
 //      [[assert: __idx >= 0 && __idx < size()]];
 		return __data[__idx];
 	}
 
-    LUL_VIS_INLINE constexpr reference operator()(index_type __idx) const noexcept
+    LUL_VIS_INLINE_FUNC constexpr reference operator()(index_type __idx) const noexcept
     {
 		//	C++2a
 //      [[assert: __idx >= 0 && __idx < size()]];
 		return __data[__idx];
 	}
 
-    LUL_VIS_INLINE constexpr pointer data()                         const noexcept { return __data; }
+    LUL_VIS_INLINE_FUNC constexpr pointer data()                         const noexcept { return __data; }
 
 // [span.iter], span iterator support
-    LUL_VIS_INLINE constexpr iterator                 begin() const noexcept { return iterator(data()); }
-    LUL_VIS_INLINE constexpr iterator                   end() const noexcept { return iterator(data() + size()); }
-    LUL_VIS_INLINE constexpr const_iterator          cbegin() const noexcept { return const_iterator(data()); }
-    LUL_VIS_INLINE constexpr const_iterator            cend() const noexcept { return const_iterator(data() + size()); }
-    LUL_VIS_INLINE constexpr reverse_iterator        rbegin() const noexcept { return reverse_iterator(end()); }
-    LUL_VIS_INLINE constexpr reverse_iterator          rend() const noexcept { return reverse_iterator(begin()); }
-    LUL_VIS_INLINE constexpr const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(cend()); }
-    LUL_VIS_INLINE constexpr const_reverse_iterator   crend() const noexcept { return const_reverse_iterator(cbegin()); }
+    LUL_VIS_INLINE_FUNC constexpr iterator                 begin() const noexcept { return iterator(data()); }
+    LUL_VIS_INLINE_FUNC constexpr iterator                   end() const noexcept { return iterator(data() + size()); }
+    LUL_VIS_INLINE_FUNC constexpr const_iterator          cbegin() const noexcept { return const_iterator(data()); }
+    LUL_VIS_INLINE_FUNC constexpr const_iterator            cend() const noexcept { return const_iterator(data() + size()); }
+    LUL_VIS_INLINE_FUNC constexpr reverse_iterator        rbegin() const noexcept { return reverse_iterator(end()); }
+    LUL_VIS_INLINE_FUNC constexpr reverse_iterator          rend() const noexcept { return reverse_iterator(begin()); }
+    LUL_VIS_INLINE_FUNC constexpr const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(cend()); }
+    LUL_VIS_INLINE_FUNC constexpr const_reverse_iterator   crend() const noexcept { return const_reverse_iterator(cbegin()); }
 
-    LUL_VIS_INLINE constexpr void swap(span &__other) noexcept
+    LUL_VIS_INLINE_FUNC constexpr void swap(span &__other) noexcept
     {
         pointer __p = __data;
         __data = __other.__data;
@@ -583,10 +584,10 @@ public:
         __other.__size = __sz;
     }
 
-    LUL_VIS_INLINE span<const std::byte, dynamic_extent> __as_bytes() const noexcept
+    LUL_VIS_INLINE_FUNC span<const std::byte, dynamic_extent> __as_bytes() const noexcept
     { return {reinterpret_cast<const std::byte *>(data()), size_bytes()}; }
 
-    LUL_VIS_INLINE span<std::byte, dynamic_extent> __as_writeable_bytes() const noexcept
+    LUL_VIS_INLINE_FUNC span<std::byte, dynamic_extent> __as_writeable_bytes() const noexcept
     { return {reinterpret_cast<std::byte *>(data()), size_bytes()}; }
 
 private:

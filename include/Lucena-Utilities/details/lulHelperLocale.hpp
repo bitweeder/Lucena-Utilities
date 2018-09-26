@@ -34,11 +34,18 @@
 #include <locale>
 
 
+//	lul
+#include <Lucena-Utilities/lulConfig.hpp>
+#include <Lucena-Utilities/lulFeatureSetup.hpp>
+
+#include <Lucena-Utilities/details/lulVisibility.hpp>
+
+
 LUL_begin_v_namespace
 
 namespace stdproxy { namespace details {
 
-[[noreturn]] LUL_VIS_DEFINE void __throw_runtime_error(const char*);
+[[noreturn]] LUL_VIS_FUNC void __throw_runtime_error(const char*);
 
 template <size_t _Np>
 struct __narrow_to_utf8
@@ -52,7 +59,7 @@ template <>
 struct __narrow_to_utf8<8>
 {
     template <class _OutputIterator, class _CharT>
-    LUL_VIS_ALWAYS_INLINE
+    LUL_VIS_INLINE_FUNC
     _OutputIterator
     operator()(_OutputIterator __s, const _CharT* __wb, const _CharT* __we) const
     {
@@ -66,13 +73,13 @@ template <>
 struct __narrow_to_utf8<16>
     : public std::codecvt<char16_t, char, std::mbstate_t>
 {
-    LUL_VIS_ALWAYS_INLINE
+    LUL_VIS_INLINE_FUNC
     __narrow_to_utf8() : std::codecvt<char16_t, char, std::mbstate_t>(1) {}
 
     ~__narrow_to_utf8();
 
     template <class _OutputIterator, class _CharT>
-    LUL_VIS_ALWAYS_INLINE
+    LUL_VIS_INLINE_FUNC
     _OutputIterator
     operator()(_OutputIterator __s, const _CharT* __wb, const _CharT* __we) const
     {
@@ -100,13 +107,13 @@ template <>
 struct __narrow_to_utf8<32>
     : public std::codecvt<char32_t, char, std::mbstate_t>
 {
-    LUL_VIS_ALWAYS_INLINE
+    LUL_VIS_INLINE_FUNC
     __narrow_to_utf8() : std::codecvt<char32_t, char, std::mbstate_t>(1) {}
 
     ~__narrow_to_utf8();
 
     template <class _OutputIterator, class _CharT>
-    LUL_VIS_ALWAYS_INLINE
+    LUL_VIS_INLINE_FUNC
     _OutputIterator
     operator()(_OutputIterator __s, const _CharT* __wb, const _CharT* __we) const
     {
@@ -142,7 +149,7 @@ template <>
 struct __widen_from_utf8<8>
 {
     template <class _OutputIterator>
-    LUL_VIS_ALWAYS_INLINE
+    LUL_VIS_INLINE_FUNC
     _OutputIterator
     operator()(_OutputIterator __s, const char* __nb, const char* __ne) const
     {
@@ -156,13 +163,13 @@ template <>
 struct __widen_from_utf8<16>
     : public std::codecvt<char16_t, char, std::mbstate_t>
 {
-    LUL_VIS_ALWAYS_INLINE
+    LUL_VIS_INLINE_FUNC
     __widen_from_utf8() : std::codecvt<char16_t, char, std::mbstate_t>(1) {}
 
     ~__widen_from_utf8();
 
     template <class _OutputIterator>
-    LUL_VIS_ALWAYS_INLINE
+    LUL_VIS_INLINE_FUNC
     _OutputIterator
     operator()(_OutputIterator __s, const char* __nb, const char* __ne) const
     {
@@ -190,13 +197,13 @@ template <>
 struct __widen_from_utf8<32>
     : public std::codecvt<char32_t, char, std::mbstate_t>
 {
-    LUL_VIS_ALWAYS_INLINE
+    LUL_VIS_INLINE_FUNC
     __widen_from_utf8() : std::codecvt<char32_t, char, std::mbstate_t>(1) {}
 
     ~__widen_from_utf8();
 
     template <class _OutputIterator>
-    LUL_VIS_ALWAYS_INLINE
+    LUL_VIS_INLINE_FUNC
     _OutputIterator
     operator()(_OutputIterator __s, const char* __nb, const char* __ne) const
     {

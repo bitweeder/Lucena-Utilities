@@ -238,6 +238,7 @@ namespace std {
 #include <Lucena-Utilities/details/lulHelperTuple.hpp>
 #include <Lucena-Utilities/details/lulHelperTypeTraits.hpp>
 #include <Lucena-Utilities/details/lulHelperUtility.hpp>
+#include <Lucena-Utilities/details/lulVisibility.hpp>
 
 
 //	purposefully avoiding versioned namespace
@@ -245,7 +246,7 @@ LUL_begin_namespace
 
 namespace stdproxy {
 
-class LUL_VIS_EXCEPTION_DEFINE bad_variant_access
+class LUL_VIS_EXCEPTION bad_variant_access
 	:	public std::exception {
 public:
 	virtual ~bad_variant_access() noexcept;
@@ -262,54 +263,54 @@ LUL_begin_v_namespace
 namespace stdproxy {
 
 [[noreturn]]
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 void __throw_bad_variant_access() {
         throw bad_variant_access();
 }
 
 template <class... _Types>
-class LUL_VIS_TYPE_ONLY variant;
+class LUL_VIS_CLASS_TEMPLATE variant;
 
 template <class _Tp>
-struct LUL_VIS_TYPE_ONLY variant_size;
+struct LUL_VIS_CLASS_TEMPLATE variant_size;
 
 template <class _Tp>
 inline constexpr size_t variant_size_v = variant_size<_Tp>::value;
 
 template <class _Tp>
-struct LUL_VIS_TYPE_DEFINE variant_size<const _Tp> : variant_size<_Tp> {};
+struct LUL_VIS_CLASS_TEMPLATE variant_size<const _Tp> : variant_size<_Tp> {};
 
 template <class _Tp>
-struct LUL_VIS_TYPE_DEFINE variant_size<volatile _Tp> : variant_size<_Tp> {};
+struct LUL_VIS_CLASS_TEMPLATE variant_size<volatile _Tp> : variant_size<_Tp> {};
 
 template <class _Tp>
-struct LUL_VIS_TYPE_DEFINE variant_size<const volatile _Tp>
+struct LUL_VIS_CLASS_TEMPLATE variant_size<const volatile _Tp>
     : variant_size<_Tp> {};
 
 template <class... _Types>
-struct LUL_VIS_TYPE_DEFINE variant_size<variant<_Types...>>
+struct LUL_VIS_CLASS_TEMPLATE variant_size<variant<_Types...>>
     : std::integral_constant<size_t, sizeof...(_Types)> {};
 
 template <size_t _Ip, class _Tp>
-struct LUL_VIS_TYPE_ONLY variant_alternative;
+struct LUL_VIS_CLASS_TEMPLATE variant_alternative;
 
 template <size_t _Ip, class _Tp>
 using variant_alternative_t = typename variant_alternative<_Ip, _Tp>::type;
 
 template <size_t _Ip, class _Tp>
-struct LUL_VIS_TYPE_DEFINE variant_alternative<_Ip, const _Tp>
+struct LUL_VIS_CLASS_TEMPLATE variant_alternative<_Ip, const _Tp>
     : std::add_const<variant_alternative_t<_Ip, _Tp>> {};
 
 template <size_t _Ip, class _Tp>
-struct LUL_VIS_TYPE_DEFINE variant_alternative<_Ip, volatile _Tp>
+struct LUL_VIS_CLASS_TEMPLATE variant_alternative<_Ip, volatile _Tp>
     : std::add_volatile<variant_alternative_t<_Ip, _Tp>> {};
 
 template <size_t _Ip, class _Tp>
-struct LUL_VIS_TYPE_DEFINE variant_alternative<_Ip, const volatile _Tp>
+struct LUL_VIS_CLASS_TEMPLATE variant_alternative<_Ip, const volatile _Tp>
     : std::add_cv<variant_alternative_t<_Ip, _Tp>> {};
 
 template <size_t _Ip, class... _Types>
-struct LUL_VIS_TYPE_DEFINE variant_alternative<_Ip, variant<_Types...>> {
+struct LUL_VIS_CLASS_TEMPLATE variant_alternative<_Ip, variant<_Types...>> {
   static_assert(_Ip < sizeof...(_Types), "Index out of bounds in std::variant_alternative<>");
   using type = __type_pack_element<_Ip, _Types...>;
 };
@@ -340,7 +341,7 @@ static constexpr size_t __not_found = -1;
 static constexpr size_t __ambiguous = __not_found - 1;
 
 template <class _Tp, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr size_t __find_index() {
   constexpr bool __matches[] = {std::is_same_v<_Tp, _Types>...};
   size_t __result = __not_found;
@@ -385,7 +386,7 @@ constexpr _Trait __trait =
         ? _Trait::_TriviallyAvailable
         : _IsAvailable<_Tp>::value ? _Trait::_Available : _Trait::_Unavailable;
 
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr _Trait __common_trait(std::initializer_list<_Trait> __traits) {
   _Trait __result = _Trait::_TriviallyAvailable;
   for (_Trait __t : __traits) {
@@ -424,13 +425,13 @@ namespace __access {
 
 struct __union {
   template <class _Vp>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr auto&& __get_alt(_Vp&& __v, std::in_place_index_t<0>) {
     return std::forward<_Vp>(__v).__head;
   }
 
   template <class _Vp, size_t _Ip>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr auto&& __get_alt(_Vp&& __v, std::in_place_index_t<_Ip>) {
     return __get_alt(std::forward<_Vp>(__v).__tail, std::in_place_index<_Ip - 1>);
   }
@@ -438,7 +439,7 @@ struct __union {
 
 struct __base {
   template <size_t _Ip, class _Vp>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr auto&& __get_alt(_Vp&& __v) {
     return __union::__get_alt(std::forward<_Vp>(__v).__data,
                               std::in_place_index<_Ip>);
@@ -447,7 +448,7 @@ struct __base {
 
 struct __variant {
   template <size_t _Ip, class _Vp>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr auto&& __get_alt(_Vp&& __v) {
     return __base::__get_alt<_Ip>(std::forward<_Vp>(__v).__impl);
   }
@@ -459,7 +460,7 @@ namespace __visitation {
 
 struct __base {
   template <class _Visitor, class... _Vs>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr decltype(auto)
   __visit_alt_at(size_t __index, _Visitor&& __visitor, _Vs&&... __vs) {
     constexpr auto __fdiagonal =
@@ -470,7 +471,7 @@ struct __base {
   }
 
   template <class _Visitor, class... _Vs>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr decltype(auto) __visit_alt(_Visitor&& __visitor,
                                               _Vs&&... __vs) {
     constexpr auto __fmatrix =
@@ -483,11 +484,11 @@ struct __base {
 
 private:
   template <class _Tp>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr const _Tp& __at(const _Tp& __elem) { return __elem; }
 
   template <class _Tp, size_t _Np, typename... _Indices>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr auto&& __at(const std::array<_Tp, _Np>& __elems,
                                size_t __index, _Indices... __indices) {
     return __at(__elems[__index], __indices...);
@@ -501,7 +502,7 @@ private:
   }
 
   template <class... _Fs>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr auto __make_farray(_Fs&&... __fs) {
     __std_visit_visitor_return_type_check<std::decay_t<_Fs>...>();
     using __result = std::array<std::common_type_t<std::decay_t<_Fs>...>, sizeof...(_Fs)>;
@@ -511,7 +512,7 @@ private:
   template <std::size_t... _Is>
   struct __dispatcher {
     template <class _Fp, class... _Vs>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
     static constexpr decltype(auto) __dispatch(_Fp __f, _Vs... __vs) {
         return __invoke_constexpr(
             static_cast<_Fp>(__f),
@@ -520,26 +521,26 @@ private:
   };
 
   template <class _Fp, class... _Vs, size_t... _Is>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr auto __make_dispatch(std::index_sequence<_Is...>) {
     return __dispatcher<_Is...>::template __dispatch<_Fp, _Vs...>;
   }
 
   template <size_t _Ip, class _Fp, class... _Vs>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr auto __make_fdiagonal_impl() {
     return __make_dispatch<_Fp, _Vs...>(
         std::index_sequence<(details::__identity<_Vs>{}, _Ip)...>{});
   }
 
   template <class _Fp, class... _Vs, size_t... _Is>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr auto __make_fdiagonal_impl(std::index_sequence<_Is...>) {
     return __base::__make_farray(__make_fdiagonal_impl<_Is, _Fp, _Vs...>()...);
   }
 
   template <class _Fp, class _Vp, class... _Vs>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr auto __make_fdiagonal() {
     constexpr size_t _Np = std::decay_t<_Vp>::__size();
     static_assert(details::__all<(_Np == std::decay_t<_Vs>::__size())...>::value);
@@ -547,13 +548,13 @@ private:
   }
 
   template <class _Fp, class... _Vs, size_t... _Is>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr auto __make_fmatrix_impl(std::index_sequence<_Is...> __is) {
     return __make_dispatch<_Fp, _Vs...>(__is);
   }
 
   template <class _Fp, class... _Vs, size_t... _Is, size_t... _Js, class... _Ls>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr auto __make_fmatrix_impl(std::index_sequence<_Is...>,
                                             std::index_sequence<_Js...>,
                                             _Ls... __ls) {
@@ -562,7 +563,7 @@ private:
   }
 
   template <class _Fp, class... _Vs>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr auto __make_fmatrix() {
     return __make_fmatrix_impl<_Fp, _Vs...>(
         std::index_sequence<>{}, std::make_index_sequence<std::decay_t<_Vs>::__size()>{}...);
@@ -571,7 +572,7 @@ private:
 
 struct __variant {
   template <class _Visitor, class... _Vs>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr decltype(auto)
   __visit_alt_at(size_t __index, _Visitor&& __visitor, _Vs&&... __vs) {
     return __base::__visit_alt_at(__index,
@@ -580,7 +581,7 @@ struct __variant {
   }
 
   template <class _Visitor, class... _Vs>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr decltype(auto) __visit_alt(_Visitor&& __visitor,
                                               _Vs&&... __vs) {
     return __base::__visit_alt(std::forward<_Visitor>(__visitor),
@@ -588,7 +589,7 @@ struct __variant {
   }
 
   template <class _Visitor, class... _Vs>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr decltype(auto)
   __visit_value_at(size_t __index, _Visitor&& __visitor, _Vs&&... __vs) {
     return __visit_alt_at(
@@ -598,7 +599,7 @@ struct __variant {
   }
 
   template <class _Visitor, class... _Vs>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr decltype(auto) __visit_value(_Visitor&& __visitor,
                                                 _Vs&&... __vs) {
     return __visit_alt(
@@ -616,7 +617,7 @@ private:
   template <class _Visitor>
   struct __value_visitor {
     template <class... _Alts>
-    inline LUL_VIS_INLINE
+    inline LUL_VIS_INLINE_FUNC
     constexpr decltype(auto) operator()(_Alts&&... __alts) const {
       __std_visit_exhaustive_visitor_check<
           _Visitor,
@@ -628,7 +629,7 @@ private:
   };
 
   template <class _Visitor>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr auto __make_value_visitor(_Visitor&& __visitor) {
     return __value_visitor<_Visitor>{std::forward<_Visitor>(__visitor)};
   }
@@ -637,11 +638,11 @@ private:
 } // namespace __visitation
 
 template <size_t _Index, class _Tp>
-struct LUL_VIS_TYPE_DEFINE __alt {
+struct LUL_VIS_CLASS_TEMPLATE __alt {
   using __value_type = _Tp;
 
   template <class... _Args>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   explicit constexpr __alt(std::in_place_t, _Args&&... __args)
       : __value(std::forward<_Args>(__args)...) {}
 
@@ -649,28 +650,28 @@ struct LUL_VIS_TYPE_DEFINE __alt {
 };
 
 template <_Trait _DestructibleTrait, size_t _Index, class... _Types>
-union LUL_VIS_TYPE_ONLY __union;
+union LUL_VIS_CLASS_TEMPLATE __union;
 
 template <_Trait _DestructibleTrait, size_t _Index>
-union LUL_VIS_TYPE_DEFINE __union<_DestructibleTrait, _Index> {};
+union LUL_VIS_CLASS_TEMPLATE __union<_DestructibleTrait, _Index> {};
 
 #define LUL_VARIANT_UNION(destructible_trait, destructor)                      \
   template <size_t _Index, class _Tp, class... _Types>                         \
-  union LUL_VIS_TYPE_DEFINE __union<destructible_trait,                        \
+  union LUL_VIS_CLASS_TEMPLATE __union<destructible_trait,                        \
                                       _Index,                                  \
                                       _Tp,                                     \
                                       _Types...> {                             \
   public:                                                                      \
-    inline LUL_VIS_INLINE                                                      \
+    inline LUL_VIS_INLINE_FUNC                                                      \
     explicit constexpr __union(__valueless_t) noexcept : __dummy{} {}          \
                                                                                \
     template <class... _Args>                                                  \
-    inline LUL_VIS_INLINE                                                      \
+    inline LUL_VIS_INLINE_FUNC                                                      \
     explicit constexpr __union(std::in_place_index_t<0>, _Args&&... __args)    \
         : __head(std::in_place, std::forward<_Args>(__args)...) {}             \
                                                                                \
     template <size_t _Ip, class... _Args>                                      \
-    inline LUL_VIS_INLINE                                                      \
+    inline LUL_VIS_INLINE_FUNC                                                      \
     explicit constexpr __union(std::in_place_index_t<_Ip>, _Args&&... __args)  \
         : __tail(std::in_place_index<_Ip - 1>, std::forward<_Args>(__args)...) {}   \
                                                                                \
@@ -697,45 +698,45 @@ LUL_VARIANT_UNION(_Trait::_Unavailable, ~__union() = delete;);
 #undef LUL_VARIANT_UNION
 
 template <_Trait _DestructibleTrait, class... _Types>
-class LUL_VIS_TYPE_DEFINE __base {
+class LUL_VIS_CLASS_TEMPLATE __base {
 public:
   using __index_t = __variant_index_t<sizeof...(_Types)>;
 
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   explicit constexpr __base(__valueless_t tag) noexcept
       : __data(tag), __index(__variant_npos<__index_t>) {}
 
   template <size_t _Ip, class... _Args>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   explicit constexpr __base(std::in_place_index_t<_Ip>, _Args&&... __args)
       :
         __data(std::in_place_index<_Ip>, std::forward<_Args>(__args)...),
         __index(_Ip) {}
 
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   constexpr bool valueless_by_exception() const noexcept {
     return index() == variant_npos;
   }
 
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   constexpr size_t index() const noexcept {
     return __index == __variant_npos<__index_t> ? variant_npos : __index;
   }
 
 protected:
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   constexpr auto&& __as_base() & { return *this; }
 
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   constexpr auto&& __as_base() && { return std::move(*this); }
 
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   constexpr auto&& __as_base() const & { return *this; }
 
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   constexpr auto&& __as_base() const && { return std::move(*this); }
 
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static constexpr size_t __size() { return sizeof...(_Types); }
 
   __union<_DestructibleTrait, 0, _Types...> __data;
@@ -746,11 +747,11 @@ protected:
 };
 
 template <class _Traits, _Trait = _Traits::__destructible_trait>
-class LUL_VIS_TYPE_ONLY __destructor;
+class LUL_VIS_CLASS_TEMPLATE __destructor;
 
 #define LUL_VARIANT_DESTRUCTOR(destructible_trait, destructor, destroy)        \
   template <class... _Types>                                                   \
-  class LUL_VIS_TYPE_DEFINE __destructor<__traits<_Types...>,                  \
+  class LUL_VIS_CLASS_TEMPLATE __destructor<__traits<_Types...>,               \
                                            destructible_trait>                 \
       : public __base<destructible_trait, _Types...> {                         \
     using __base_type = __base<destructible_trait, _Types...>;                 \
@@ -767,7 +768,7 @@ class LUL_VIS_TYPE_ONLY __destructor;
     __destructor& operator=(__destructor&&) = default;                         \
                                                                                \
   protected:                                                                   \
-    inline LUL_VIS_INLINE                                                      \
+    inline LUL_VIS_INLINE_FUNC                                                      \
     destroy                                                                    \
   }
 
@@ -799,7 +800,7 @@ LUL_VARIANT_DESTRUCTOR(
 #undef LUL_VARIANT_DESTRUCTOR
 
 template <class _Traits>
-class LUL_VIS_TYPE_DEFINE __constructor : public __destructor<_Traits> {
+class LUL_VIS_CLASS_TEMPLATE __constructor : public __destructor<_Traits> {
   using __base_type = __destructor<_Traits>;
 
 public:
@@ -808,7 +809,7 @@ public:
 
 protected:
   template <size_t _Ip, class _Tp, class... _Args>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static _Tp& __construct_alt(__alt<_Ip, _Tp>& __a, _Args&&... __args) {
     ::new ((void*)std::addressof(__a))
         __alt<_Ip, _Tp>(std::in_place, std::forward<_Args>(__args)...);
@@ -816,7 +817,7 @@ protected:
   }
 
   template <class _Rhs>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   static void __generic_construct(__constructor& __lhs, _Rhs&& __rhs) {
     __lhs.__destroy();
     if (!__rhs.valueless_by_exception()) {
@@ -834,12 +835,12 @@ protected:
 };
 
 template <class _Traits, _Trait = _Traits::__move_constructible_trait>
-class LUL_VIS_TYPE_ONLY __move_constructor;
+class LUL_VIS_CLASS_TEMPLATE __move_constructor;
 
 #define LUL_VARIANT_MOVE_CONSTRUCTOR(move_constructible_trait,                 \
                                          move_constructor)                     \
   template <class... _Types>                                                   \
-  class LUL_VIS_TYPE_DEFINE __move_constructor<__traits<_Types...>,            \
+  class LUL_VIS_CLASS_TEMPLATE __move_constructor<__traits<_Types...>,         \
                                                  move_constructible_trait>     \
       : public __constructor<__traits<_Types...>> {                            \
     using __base_type = __constructor<__traits<_Types...>>;                    \
@@ -874,12 +875,12 @@ LUL_VARIANT_MOVE_CONSTRUCTOR(
 #undef LUL_VARIANT_MOVE_CONSTRUCTOR
 
 template <class _Traits, _Trait = _Traits::__copy_constructible_trait>
-class LUL_VIS_TYPE_ONLY __copy_constructor;
+class LUL_VIS_CLASS_TEMPLATE __copy_constructor;
 
 #define LUL_VARIANT_COPY_CONSTRUCTOR(copy_constructible_trait,                 \
                                          copy_constructor)                     \
   template <class... _Types>                                                   \
-  class LUL_VIS_TYPE_DEFINE __copy_constructor<__traits<_Types...>,            \
+  class LUL_VIS_CLASS_TEMPLATE __copy_constructor<__traits<_Types...>,         \
                                                  copy_constructible_trait>     \
       : public __move_constructor<__traits<_Types...>> {                       \
     using __base_type = __move_constructor<__traits<_Types...>>;               \
@@ -913,7 +914,7 @@ LUL_VARIANT_COPY_CONSTRUCTOR(
 #undef LUL_VARIANT_COPY_CONSTRUCTOR
 
 template <class _Traits>
-class LUL_VIS_TYPE_DEFINE __assignment : public __copy_constructor<_Traits> {
+class LUL_VIS_CLASS_TEMPLATE __assignment : public __copy_constructor<_Traits> {
   using __base_type = __copy_constructor<_Traits>;
 
 public:
@@ -921,7 +922,7 @@ public:
   using __base_type::operator=;
 
   template <size_t _Ip, class... _Args>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   auto& __emplace(_Args&&... __args) {
     this->__destroy();
     auto& __res = this->__construct_alt(__access::__base::__get_alt<_Ip>(*this),
@@ -932,7 +933,7 @@ public:
 
 protected:
   template <size_t _Ip, class _Tp, class _Arg>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   void __assign_alt(__alt<_Ip, _Tp>& __a, _Arg&& __arg) {
     if (this->index() == _Ip) {
       __a.__value = std::forward<_Arg>(__arg);
@@ -953,7 +954,7 @@ protected:
   }
 
   template <class _That>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   void __generic_assign(_That&& __that) {
     if (this->valueless_by_exception() && __that.valueless_by_exception()) {
       // do nothing.
@@ -973,12 +974,12 @@ protected:
 };
 
 template <class _Traits, _Trait = _Traits::__move_assignable_trait>
-class LUL_VIS_TYPE_ONLY __move_assignment;
+class LUL_VIS_CLASS_TEMPLATE __move_assignment;
 
 #define LUL_VARIANT_MOVE_ASSIGNMENT(move_assignable_trait,                     \
                                         move_assignment)                       \
   template <class... _Types>                                                   \
-  class LUL_VIS_TYPE_DEFINE __move_assignment<__traits<_Types...>,             \
+  class LUL_VIS_CLASS_TEMPLATE __move_assignment<__traits<_Types...>,          \
                                                 move_assignable_trait>         \
       : public __assignment<__traits<_Types...>> {                             \
     using __base_type = __assignment<__traits<_Types...>>;                     \
@@ -1014,12 +1015,12 @@ LUL_VARIANT_MOVE_ASSIGNMENT(
 #undef LUL_VARIANT_MOVE_ASSIGNMENT
 
 template <class _Traits, _Trait = _Traits::__copy_assignable_trait>
-class LUL_VIS_TYPE_ONLY __copy_assignment;
+class LUL_VIS_CLASS_TEMPLATE __copy_assignment;
 
 #define LUL_VARIANT_COPY_ASSIGNMENT(copy_assignable_trait,                     \
                                         copy_assignment)                       \
   template <class... _Types>                                                   \
-  class LUL_VIS_TYPE_DEFINE __copy_assignment<__traits<_Types...>,             \
+  class LUL_VIS_CLASS_TEMPLATE __copy_assignment<__traits<_Types...>,          \
                                                 copy_assignable_trait>         \
       : public __move_assignment<__traits<_Types...>> {                        \
     using __base_type = __move_assignment<__traits<_Types...>>;                \
@@ -1053,7 +1054,7 @@ LUL_VARIANT_COPY_ASSIGNMENT(
 #undef LUL_VARIANT_COPY_ASSIGNMENT
 
 template <class... _Types>
-class LUL_VIS_TYPE_DEFINE __impl
+class LUL_VIS_CLASS_TEMPLATE __impl
     : public __copy_assignment<__traits<_Types...>> {
   using __base_type = __copy_assignment<__traits<_Types...>>;
 
@@ -1062,13 +1063,13 @@ public:
   using __base_type::operator=;
 
   template <size_t _Ip, class _Arg>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   void __assign(_Arg&& __arg) {
     this->__assign_alt(__access::__base::__get_alt<_Ip>(*this),
                        std::forward<_Arg>(__arg));
   }
 
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   void __swap(__impl& __that)  {
     if (this->valueless_by_exception() && __that.valueless_by_exception()) {
       // do nothing.
@@ -1104,7 +1105,7 @@ public:
   }
 
 private:
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   bool __move_nothrow() const {
     constexpr bool __results[] = {std::is_nothrow_move_constructible_v<_Types>...};
     return this->valueless_by_exception() || __results[this->index()];
@@ -1129,7 +1130,7 @@ using __best_match_t = typename std::result_of_t<__overload<_Types...>(_Tp&&)>::
 } // __variant_detail
 
 template <class... _Types>
-class LUL_VIS_TYPE_DEFINE variant
+class LUL_VIS_CLASS_TEMPLATE variant
     : private details::__sfinae_ctor_base<
           details::__all<std::is_copy_constructible_v<_Types>...>::value,
            details::__all<std::is_move_constructible_v<_Types>...>::value>,
@@ -1157,7 +1158,7 @@ public:
             std::enable_if_t<details::__dependent_type<std::is_default_constructible<__first_type>,
                                          _Dummy>::value,
                         int> = 0>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   constexpr variant() noexcept(std::is_nothrow_default_constructible_v<__first_type>)
       : __impl(std::in_place_index<0>) {}
 
@@ -1173,7 +1174,7 @@ public:
       size_t _Ip =
           __find_detail::__find_unambiguous_index_sfinae<_Tp, _Types...>::value,
       std::enable_if_t<std::is_constructible_v<_Tp, _Arg>, int> = 0>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   constexpr variant(_Arg&& __arg) noexcept(
       std::is_nothrow_constructible_v<_Tp, _Arg>)
       : __impl(std::in_place_index<_Ip>, std::forward<_Arg>(__arg)) {}
@@ -1182,7 +1183,7 @@ public:
             class = std::enable_if_t<(_Ip < sizeof...(_Types)), int>,
             class _Tp = variant_alternative_t<_Ip, variant<_Types...>>,
             std::enable_if_t<std::is_constructible_v<_Tp, _Args...>, int> = 0>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   explicit constexpr variant(
       std::in_place_index_t<_Ip>,
       _Args&&... __args) noexcept(std::is_nothrow_constructible_v<_Tp, _Args...>)
@@ -1196,7 +1197,7 @@ public:
       class _Tp = variant_alternative_t<_Ip, variant<_Types...>>,
       std::enable_if_t<std::is_constructible_v<_Tp, std::initializer_list<_Up>&, _Args...>,
                   int> = 0>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   explicit constexpr variant(
       std::in_place_index_t<_Ip>,
       std::initializer_list<_Up> __il,
@@ -1210,7 +1211,7 @@ public:
       size_t _Ip =
           __find_detail::__find_unambiguous_index_sfinae<_Tp, _Types...>::value,
       std::enable_if_t<std::is_constructible_v<_Tp, _Args...>, int> = 0>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   explicit constexpr variant(std::in_place_type_t<_Tp>, _Args&&... __args) noexcept(
       std::is_nothrow_constructible_v<_Tp, _Args...>)
       : __impl(std::in_place_index<_Ip>, std::forward<_Args>(__args)...) {}
@@ -1223,7 +1224,7 @@ public:
           __find_detail::__find_unambiguous_index_sfinae<_Tp, _Types...>::value,
       std::enable_if_t<std::is_constructible_v<_Tp, std::initializer_list<_Up>&, _Args...>,
                   int> = 0>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   explicit constexpr variant(
       std::in_place_type_t<_Tp>,
       std::initializer_list<_Up> __il,
@@ -1244,7 +1245,7 @@ public:
           __find_detail::__find_unambiguous_index_sfinae<_Tp, _Types...>::value,
       std::enable_if_t<std::is_assignable_v<_Tp&, _Arg> && std::is_constructible_v<_Tp, _Arg>,
                   int> = 0>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   variant& operator=(_Arg&& __arg) noexcept(
       std::is_nothrow_assignable_v<_Tp&, _Arg> &&
       std::is_nothrow_constructible_v<_Tp, _Arg>) {
@@ -1258,7 +1259,7 @@ public:
       std::enable_if_t<(_Ip < sizeof...(_Types)), int> = 0,
       class _Tp = variant_alternative_t<_Ip, variant<_Types...>>,
       std::enable_if_t<std::is_constructible_v<_Tp, _Args...>, int> = 0>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   _Tp& emplace(_Args&&... __args) {
     return __impl.template __emplace<_Ip>(std::forward<_Args>(__args)...);
   }
@@ -1271,7 +1272,7 @@ public:
       class _Tp = variant_alternative_t<_Ip, variant<_Types...>>,
       std::enable_if_t<std::is_constructible_v<_Tp, std::initializer_list<_Up>&, _Args...>,
                   int> = 0>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   _Tp& emplace(std::initializer_list<_Up> __il, _Args&&... __args) {
     return __impl.template __emplace<_Ip>(__il, std::forward<_Args>(__args)...);
   }
@@ -1282,7 +1283,7 @@ public:
       size_t _Ip =
           __find_detail::__find_unambiguous_index_sfinae<_Tp, _Types...>::value,
       std::enable_if_t<std::is_constructible_v<_Tp, _Args...>, int> = 0>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   _Tp& emplace(_Args&&... __args) {
     return __impl.template __emplace<_Ip>(std::forward<_Args>(__args)...);
   }
@@ -1295,17 +1296,17 @@ public:
           __find_detail::__find_unambiguous_index_sfinae<_Tp, _Types...>::value,
       std::enable_if_t<std::is_constructible_v<_Tp, std::initializer_list<_Up>&, _Args...>,
                   int> = 0>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   _Tp& emplace(std::initializer_list<_Up> __il, _Args&&... __args) {
     return __impl.template __emplace<_Ip>(__il, std::forward<_Args>(__args)...);
   }
 
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   constexpr bool valueless_by_exception() const noexcept {
     return __impl.valueless_by_exception();
   }
 
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   constexpr size_t index() const noexcept { return __impl.index(); }
 
   template <
@@ -1315,7 +1316,7 @@ public:
               details::__dependent_type<std::is_move_constructible<_Types>, _Dummy>::value &&
               details::__dependent_type<std::is_swappable<_Types>, _Dummy>::value)...>::value,
           int> = 0>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   void swap(variant& __that) noexcept(
       details::__all<(std::is_nothrow_move_constructible_v<_Types> &&
              std::is_nothrow_swappable_v<_Types>)...>::value) {
@@ -1330,19 +1331,19 @@ private:
 };
 
 template <size_t _Ip, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr bool __holds_alternative(const variant<_Types...>& __v) noexcept {
   return __v.index() == _Ip;
 }
 
 template <class _Tp, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr bool holds_alternative(const variant<_Types...>& __v) noexcept {
   return __holds_alternative<details::__find_exactly_one_t<_Tp, _Types...>::value>(__v);
 }
 
 template <size_t _Ip, class _Vp>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 static constexpr auto&& __generic_get(_Vp&& __v) {
   using __variant_detail::__access::__variant;
   if (!__holds_alternative<_Ip>(__v)) {
@@ -1352,7 +1353,7 @@ static constexpr auto&& __generic_get(_Vp&& __v) {
 }
 
 template <size_t _Ip, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr variant_alternative_t<_Ip, variant<_Types...>>& get(
     variant<_Types...>& __v) {
   static_assert(_Ip < sizeof...(_Types));
@@ -1361,7 +1362,7 @@ constexpr variant_alternative_t<_Ip, variant<_Types...>>& get(
 }
 
 template <size_t _Ip, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr variant_alternative_t<_Ip, variant<_Types...>>&& get(
     variant<_Types...>&& __v) {
   static_assert(_Ip < sizeof...(_Types));
@@ -1370,7 +1371,7 @@ constexpr variant_alternative_t<_Ip, variant<_Types...>>&& get(
 }
 
 template <size_t _Ip, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr const variant_alternative_t<_Ip, variant<_Types...>>& get(
     const variant<_Types...>& __v) {
   static_assert(_Ip < sizeof...(_Types));
@@ -1379,7 +1380,7 @@ constexpr const variant_alternative_t<_Ip, variant<_Types...>>& get(
 }
 
 template <size_t _Ip, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr const variant_alternative_t<_Ip, variant<_Types...>>&& get(
     const variant<_Types...>&& __v) {
   static_assert(_Ip < sizeof...(_Types));
@@ -1388,14 +1389,14 @@ constexpr const variant_alternative_t<_Ip, variant<_Types...>>&& get(
 }
 
 template <class _Tp, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr _Tp& get(variant<_Types...>& __v) {
   static_assert(!std::is_void_v<_Tp>);
   return std::get<details::__find_exactly_one_t<_Tp, _Types...>::value>(__v);
 }
 
 template <class _Tp, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr _Tp&& get(variant<_Types...>&& __v) {
   static_assert(!std::is_void_v<_Tp>);
   return std::get<details::__find_exactly_one_t<_Tp, _Types...>::value>(
@@ -1403,14 +1404,14 @@ constexpr _Tp&& get(variant<_Types...>&& __v) {
 }
 
 template <class _Tp, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr const _Tp& get(const variant<_Types...>& __v) {
   static_assert(!std::is_void_v<_Tp>);
   return std::get<details::__find_exactly_one_t<_Tp, _Types...>::value>(__v);
 }
 
 template <class _Tp, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr const _Tp&& get(const variant<_Types...>&& __v) {
   static_assert(!std::is_void_v<_Tp>);
   return std::get<details::__find_exactly_one_t<_Tp, _Types...>::value>(
@@ -1418,7 +1419,7 @@ constexpr const _Tp&& get(const variant<_Types...>&& __v) {
 }
 
 template <size_t _Ip, class _Vp>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr auto* __generic_get_if(_Vp* __v) noexcept {
   using __variant_detail::__access::__variant;
   return __v && __holds_alternative<_Ip>(*__v)
@@ -1427,7 +1428,7 @@ constexpr auto* __generic_get_if(_Vp* __v) noexcept {
 }
 
 template <size_t _Ip, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr std::add_pointer_t<variant_alternative_t<_Ip, variant<_Types...>>>
 get_if(variant<_Types...>* __v) noexcept {
   static_assert(_Ip < sizeof...(_Types));
@@ -1436,7 +1437,7 @@ get_if(variant<_Types...>* __v) noexcept {
 }
 
 template <size_t _Ip, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr std::add_pointer_t<const variant_alternative_t<_Ip, variant<_Types...>>>
 get_if(const variant<_Types...>* __v) noexcept {
   static_assert(_Ip < sizeof...(_Types));
@@ -1445,7 +1446,7 @@ get_if(const variant<_Types...>* __v) noexcept {
 }
 
 template <class _Tp, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr std::add_pointer_t<_Tp>
 get_if(variant<_Types...>* __v) noexcept {
   static_assert(!std::is_void_v<_Tp>);
@@ -1453,7 +1454,7 @@ get_if(variant<_Types...>* __v) noexcept {
 }
 
 template <class _Tp, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr std::add_pointer_t<const _Tp>
 get_if(const variant<_Types...>* __v) noexcept {
   static_assert(!std::is_void_v<_Tp>);
@@ -1461,7 +1462,7 @@ get_if(const variant<_Types...>* __v) noexcept {
 }
 
 template <class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr bool operator==(const variant<_Types...>& __lhs,
                           const variant<_Types...>& __rhs) {
   using __variant_detail::__visitation::__variant;
@@ -1471,7 +1472,7 @@ constexpr bool operator==(const variant<_Types...>& __lhs,
 }
 
 template <class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr bool operator!=(const variant<_Types...>& __lhs,
                           const variant<_Types...>& __rhs) {
   using __variant_detail::__visitation::__variant;
@@ -1482,7 +1483,7 @@ constexpr bool operator!=(const variant<_Types...>& __lhs,
 }
 
 template <class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr bool operator<(const variant<_Types...>& __lhs,
                          const variant<_Types...>& __rhs) {
   using __variant_detail::__visitation::__variant;
@@ -1494,7 +1495,7 @@ constexpr bool operator<(const variant<_Types...>& __lhs,
 }
 
 template <class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr bool operator>(const variant<_Types...>& __lhs,
                          const variant<_Types...>& __rhs) {
   using __variant_detail::__visitation::__variant;
@@ -1506,7 +1507,7 @@ constexpr bool operator>(const variant<_Types...>& __lhs,
 }
 
 template <class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr bool operator<=(const variant<_Types...>& __lhs,
                           const variant<_Types...>& __rhs) {
   using __variant_detail::__visitation::__variant;
@@ -1519,7 +1520,7 @@ constexpr bool operator<=(const variant<_Types...>& __lhs,
 }
 
 template <class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr bool operator>=(const variant<_Types...>& __lhs,
                           const variant<_Types...>& __rhs) {
   using __variant_detail::__visitation::__variant;
@@ -1532,7 +1533,7 @@ constexpr bool operator>=(const variant<_Types...>& __lhs,
 }
 
 template <class _Visitor, class... _Vs>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr decltype(auto) visit(_Visitor&& __visitor, _Vs&&... __vs) {
   using __variant_detail::__visitation::__variant;
   bool __results[] = {__vs.valueless_by_exception()...};
@@ -1545,28 +1546,28 @@ constexpr decltype(auto) visit(_Visitor&& __visitor, _Vs&&... __vs) {
                                   std::forward<_Vs>(__vs)...);
 }
 
-struct LUL_VIS_TYPE_DEFINE monostate {};
+struct LUL_VIS_CLASS monostate {};
 
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr bool operator<(monostate, monostate) noexcept { return false; }
 
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr bool operator>(monostate, monostate) noexcept { return false; }
 
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr bool operator<=(monostate, monostate) noexcept { return true; }
 
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr bool operator>=(monostate, monostate) noexcept { return true; }
 
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr bool operator==(monostate, monostate) noexcept { return true; }
 
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr bool operator!=(monostate, monostate) noexcept { return false; }
 
 template <class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 auto swap(variant<_Types...>& __lhs,
           variant<_Types...>& __rhs) noexcept(noexcept(__lhs.swap(__rhs)))
     -> decltype(__lhs.swap(__rhs)) {
@@ -1582,12 +1583,12 @@ LUL_end_v_namespace
 namespace std {
 
 template <class... _Types>
-struct LUL_VIS_TYPE_DEFINE hash<
+struct LUL_VIS_CLASS_TEMPLATE hash<
     LUL_::stdproxy::details::__enable_hash_helper<LUL_::stdproxy::variant<_Types...>, remove_const_t<_Types>...>> {
   using argument_type = LUL_::stdproxy::variant<_Types...>;
   using result_type = size_t;
 
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   result_type operator()(const argument_type& __v) const {
     using LUL_::stdproxy::__variant_detail::__visitation::__variant;
     size_t __res =
@@ -1606,11 +1607,11 @@ struct LUL_VIS_TYPE_DEFINE hash<
 };
 
 template <>
-struct LUL_VIS_TYPE_DEFINE hash<LUL_::stdproxy::monostate> {
+struct LUL_VIS_CLASS_TEMPLATE hash<LUL_::stdproxy::monostate> {
   using argument_type = LUL_::stdproxy::monostate;
   using result_type = size_t;
 
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   result_type operator()(const argument_type&) const _NOEXCEPT {
     return 66740831; // return a fundamentally attractive random value.
   }

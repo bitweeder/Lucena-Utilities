@@ -39,6 +39,8 @@
 #include <Lucena-Utilities/lulConfig.hpp>
 #include <Lucena-Utilities/lulFeatureSetup.hpp>
 
+#include <Lucena-Utilities/details/lulVisibility.hpp>
+
 
 LUL_begin_v_namespace
 
@@ -87,53 +89,53 @@ struct __is_exactly_input_iterator
 template <class _Iter> class __wrap_iter;
 
 template <class _Iter1, class _Iter2>
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 bool
 operator==(const __wrap_iter<_Iter1>&, const __wrap_iter<_Iter2>&) noexcept;
 
 template <class _Iter1, class _Iter2>
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 bool
 operator<(const __wrap_iter<_Iter1>&, const __wrap_iter<_Iter2>&) noexcept;
 
 template <class _Iter1, class _Iter2>
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 bool
 operator!=(const __wrap_iter<_Iter1>&, const __wrap_iter<_Iter2>&) noexcept;
 
 template <class _Iter1, class _Iter2>
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 bool
 operator>(const __wrap_iter<_Iter1>&, const __wrap_iter<_Iter2>&) noexcept;
 
 template <class _Iter1, class _Iter2>
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 bool
 operator>=(const __wrap_iter<_Iter1>&, const __wrap_iter<_Iter2>&) noexcept;
 
 template <class _Iter1, class _Iter2>
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 bool
 operator<=(const __wrap_iter<_Iter1>&, const __wrap_iter<_Iter2>&) noexcept;
 
 template <class _Iter1, class _Iter2>
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 auto
 operator-(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>& __y) noexcept
 -> decltype(__x.base() - __y.base());
 
 template <class _Iter>
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 __wrap_iter<_Iter>
 operator+(typename __wrap_iter<_Iter>::difference_type, __wrap_iter<_Iter>) noexcept;
 
-template <class _Ip, class _Op> _Op LUL_VIS_INLINE copy(_Ip, _Ip, _Op);
-template <class _B1, class _B2> _B2 LUL_VIS_INLINE copy_backward(_B1, _B1, _B2);
-template <class _Ip, class _Op> _Op LUL_VIS_INLINE move(_Ip, _Ip, _Op);
-template <class _B1, class _B2> _B2 LUL_VIS_INLINE move_backward(_B1, _B1, _B2);
+template <class _Ip, class _Op> _Op LUL_VIS_INLINE_FUNC copy(_Ip, _Ip, _Op);
+template <class _B1, class _B2> _B2 LUL_VIS_INLINE_FUNC copy_backward(_B1, _B1, _B2);
+template <class _Ip, class _Op> _Op LUL_VIS_INLINE_FUNC move(_Ip, _Ip, _Op);
+template <class _B1, class _B2> _B2 LUL_VIS_INLINE_FUNC move_backward(_B1, _B1, _B2);
 
 template <class _Tp>
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 typename std::enable_if
 <
     std::is_trivially_copy_assignable<_Tp>::value,
@@ -154,57 +156,57 @@ public:
 private:
     iterator_type __i;
 public:
-    LUL_VIS_INLINE __wrap_iter() noexcept
+    LUL_VIS_INLINE_FUNC __wrap_iter() noexcept
                 : __i{}
     {
     }
-    template <class _Up> LUL_VIS_INLINE __wrap_iter(const __wrap_iter<_Up>& __u,
+    template <class _Up> LUL_VIS_INLINE_FUNC __wrap_iter(const __wrap_iter<_Up>& __u,
         typename std::enable_if<std::is_convertible<_Up, iterator_type>::value>::type* = 0) noexcept
         : __i(__u.base())
     {
     }
-    LUL_VIS_INLINE reference operator*() const noexcept
+    LUL_VIS_INLINE_FUNC reference operator*() const noexcept
     {
         return *__i;
     }
-    LUL_VIS_INLINE pointer  operator->() const noexcept
+    LUL_VIS_INLINE_FUNC pointer  operator->() const noexcept
     {
         return (pointer)std::addressof(*__i);
     }
-    LUL_VIS_INLINE __wrap_iter& operator++() noexcept
+    LUL_VIS_INLINE_FUNC __wrap_iter& operator++() noexcept
     {
         ++__i;
         return *this;
     }
-    LUL_VIS_INLINE __wrap_iter  operator++(int) noexcept
+    LUL_VIS_INLINE_FUNC __wrap_iter  operator++(int) noexcept
         {__wrap_iter __tmp(*this); ++(*this); return __tmp;}
-    LUL_VIS_INLINE __wrap_iter& operator--() noexcept
+    LUL_VIS_INLINE_FUNC __wrap_iter& operator--() noexcept
     {
         --__i;
         return *this;
     }
-    LUL_VIS_INLINE __wrap_iter  operator--(int) noexcept
+    LUL_VIS_INLINE_FUNC __wrap_iter  operator--(int) noexcept
         {__wrap_iter __tmp(*this); --(*this); return __tmp;}
-    LUL_VIS_INLINE __wrap_iter  operator+ (difference_type __n) const noexcept
+    LUL_VIS_INLINE_FUNC __wrap_iter  operator+ (difference_type __n) const noexcept
         {__wrap_iter __w(*this); __w += __n; return __w;}
-    LUL_VIS_INLINE __wrap_iter& operator+=(difference_type __n) noexcept
+    LUL_VIS_INLINE_FUNC __wrap_iter& operator+=(difference_type __n) noexcept
     {
         __i += __n;
         return *this;
     }
-    LUL_VIS_INLINE __wrap_iter  operator- (difference_type __n) const noexcept
+    LUL_VIS_INLINE_FUNC __wrap_iter  operator- (difference_type __n) const noexcept
         {return *this + (-__n);}
-    LUL_VIS_INLINE __wrap_iter& operator-=(difference_type __n) noexcept
+    LUL_VIS_INLINE_FUNC __wrap_iter& operator-=(difference_type __n) noexcept
         {*this += -__n; return *this;}
-    LUL_VIS_INLINE reference        operator[](difference_type __n) const noexcept
+    LUL_VIS_INLINE_FUNC reference        operator[](difference_type __n) const noexcept
     {
         return __i[__n];
     }
 
-    LUL_VIS_INLINE iterator_type base() const noexcept {return __i;}
+    LUL_VIS_INLINE_FUNC iterator_type base() const noexcept {return __i;}
 
 private:
-    LUL_VIS_INLINE __wrap_iter(iterator_type __x) noexcept : __i(__x) {}
+    LUL_VIS_INLINE_FUNC __wrap_iter(iterator_type __x) noexcept : __i(__x) {}
 
     template <class _Up> friend class __wrap_iter;
     template <class _CharT, class _Traits, class _Alloc> friend class basic_string;
@@ -267,7 +269,7 @@ private:
 };
 
 template <class _Iter1, class _Iter2>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 bool
 operator==(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>& __y) noexcept
 {
@@ -275,7 +277,7 @@ operator==(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>& __y) noexc
 }
 
 template <class _Iter1, class _Iter2>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 bool
 operator<(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>& __y) noexcept
 {
@@ -283,7 +285,7 @@ operator<(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>& __y) noexce
 }
 
 template <class _Iter1, class _Iter2>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 bool
 operator!=(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>& __y) noexcept
 {
@@ -291,7 +293,7 @@ operator!=(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>& __y) noexc
 }
 
 template <class _Iter1, class _Iter2>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 bool
 operator>(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>& __y) noexcept
 {
@@ -299,7 +301,7 @@ operator>(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>& __y) noexce
 }
 
 template <class _Iter1, class _Iter2>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 bool
 operator>=(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>& __y) noexcept
 {
@@ -307,7 +309,7 @@ operator>=(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>& __y) noexc
 }
 
 template <class _Iter1, class _Iter2>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 bool
 operator<=(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>& __y) noexcept
 {
@@ -315,7 +317,7 @@ operator<=(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>& __y) noexc
 }
 
 template <class _Iter1>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 bool
 operator!=(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter1>& __y) noexcept
 {
@@ -323,7 +325,7 @@ operator!=(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter1>& __y) noexc
 }
 
 template <class _Iter1>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 bool
 operator>(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter1>& __y) noexcept
 {
@@ -331,7 +333,7 @@ operator>(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter1>& __y) noexce
 }
 
 template <class _Iter1>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 bool
 operator>=(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter1>& __y) noexcept
 {
@@ -339,7 +341,7 @@ operator>=(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter1>& __y) noexc
 }
 
 template <class _Iter1>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 bool
 operator<=(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter1>& __y) noexcept
 {

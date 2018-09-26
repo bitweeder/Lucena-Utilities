@@ -215,20 +215,19 @@ LUL_end_v_namespace
 //#define LUL_CONFIG_use_prefix_gsl				0
 
 
-//	Ideally, this would always be set to 1 (or not exist); the only reason to
-//	set it to 0 is to allow support for reference implementations of Standard
-//	Library features that require object code to work correctly, e.g., our
-//	versions of <any>, <filesystem>, etc.
-//
-//	SEEME There are vestigial startup and takedown functions that previously
-//	held runtime environment configuration code and that might be needed again,
-//	should a future Standard Library feature reference implementation require
-//	it.
-//
-//	FIXME In practice, this will always cause a failure if set to 1 since
-//	lulUtilities.hpp and lulTypes.hpp both depend on object files. Once these
-//	are rewritten - if possible - then LUL_CONFIG_headers_only will work as
-//	intended.
+//	Ideally, this should always be set to 1; the only reason to set it to 0 is
+//	to allow support for reference implementations of Standard Library features
+//	that require object code to work correctly, e.g., our versions of <any>,
+//	<optional>, and <variant>.
+//	FIXME This is incorrect, as currently we have a number of class and
+//	function definitions that require object code to work correctly.
+//	Additionally, there are vestigial startup and takedown functions that
+//	previously held runtime environment configuration code and that might be
+//	required again, should a future Standard Library feature reference
+//	implementation require it; disabling them conditionally may create a
+//	confusing situation for users. Most likely, we’ll just remove this switch,
+//	as it’s not actually being used now, anyway, and it may represent a
+//	pointless aspiration.
 #ifndef LUL_CONFIG_headers_only
 	#define LUL_CONFIG_headers_only				0
 #endif

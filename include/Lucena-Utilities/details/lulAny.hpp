@@ -8,7 +8,7 @@
 	This file is distributed under the University of Illinois Open Source
 	License. See license/License.txt for details.
 
-	This is a gently hacked up copy of libc++’s <any> implementation,
+	This is a gently hacked up copy of the libc++ 7.0 <any> implementation,
 	used under the University of Illinois/NCSA Open Source License. See
 	“license/libc++ License” for details.
 
@@ -120,6 +120,7 @@ namespace std {
 #include <Lucena-Utilities/details/lulHelperMemory.hpp>
 #include <Lucena-Utilities/details/lulHelperTypeTraits.hpp>
 #include <Lucena-Utilities/details/lulHelperUtility.hpp>
+#include <Lucena-Utilities/details/lulVisibility.hpp>
 
 
 //	purposefully avoiding versioned namespace
@@ -127,7 +128,7 @@ LUL_begin_namespace
 
 namespace stdproxy {
 
-class LUL_VIS_EXCEPTION_DEFINE bad_any_cast
+class LUL_VIS_EXCEPTION bad_any_cast
 	:	public std::bad_cast
 {
 	public:
@@ -142,22 +143,22 @@ LUL_begin_v_namespace
 
 namespace stdproxy {
 
-[[noreturn]] inline LUL_VIS_ALWAYS_INLINE
+[[noreturn]] inline LUL_VIS_INLINE_FUNC
 void __throw_bad_any_cast()
 {
     throw bad_any_cast();
 }
 
 // Forward declarations
-class LUL_VIS_TYPE_DEFINE any;
+class LUL_VIS_CLASS any;
 
 template <class _ValueType>
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 std::add_pointer_t<std::add_const_t<_ValueType>>
 any_cast(any const *) noexcept;
 
 template <class _ValueType>
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 std::add_pointer_t<_ValueType> any_cast(any *) noexcept;
 
 namespace __any_imp
@@ -184,17 +185,17 @@ namespace __any_imp
   template <class _Tp> struct _LargeHandler;
 
   template <class _Tp>
-  struct  LUL_VIS_TYPE_DEFINE __unique_typeinfo { static constexpr int __id = 0; };
+  struct  LUL_VIS_CLASS_TEMPLATE __unique_typeinfo { static constexpr int __id = 0; };
   template <class _Tp> constexpr int __unique_typeinfo<_Tp>::__id;
 
   template <class _Tp>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   constexpr const void* __get_fallback_typeid() {
       return &__unique_typeinfo<std::decay_t<_Tp>>::__id;
   }
 
   template <class _Tp>
-  inline LUL_VIS_INLINE
+  inline LUL_VIS_INLINE_FUNC
   bool __compare_typeid(std::type_info const* __id, const void* __fallback_id)
   {
       if (__id && *__id == typeid(_Tp))
@@ -211,20 +212,20 @@ namespace __any_imp
 
 } // namespace __any_imp
 
-class LUL_VIS_TYPE_DEFINE any
+class LUL_VIS_CLASS_TEMPLATE any
 {
 public:
   // construct/destruct
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   constexpr any() noexcept : __h(nullptr) {}
 
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   any(any const & __other) : __h(nullptr)
   {
     if (__other.__h) __other.__call(_Action::_Copy, this);
   }
 
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   any(any && __other) noexcept : __h(nullptr)
   {
     if (__other.__h) __other.__call(_Action::_Move, this);
@@ -238,7 +239,7 @@ public:
         !details::__is_inplace_type_v<_ValueType> &&
         std::is_copy_constructible_v<_Tp>>
     >
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   any(_ValueType && __value);
 
   template <class _ValueType, class ..._Args,
@@ -248,7 +249,7 @@ public:
         std::is_copy_constructible<_Tp>::value
     >
   >
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   explicit any(std::in_place_type_t<_ValueType>, _Args&&... __args);
 
   template <class _ValueType, class _Up, class ..._Args,
@@ -257,20 +258,20 @@ public:
         std::is_constructible_v<_Tp, std::initializer_list<_Up>&, _Args...> &&
         std::is_copy_constructible_v<_Tp>>
   >
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   explicit any(std::in_place_type_t<_ValueType>, std::initializer_list<_Up>, _Args&&... __args);
 
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   ~any() { this->reset(); }
 
   // assignments
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   any & operator=(any const & __rhs) {
     any(__rhs).swap(*this);
     return *this;
   }
 
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   any & operator=(any && __rhs) noexcept {
     any(std::move(__rhs)).swap(*this);
     return *this;
@@ -283,7 +284,7 @@ public:
           !std::is_same<_Tp, any>::value
           && std::is_copy_constructible<_Tp>::value>
     >
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   any & operator=(_ValueType && __rhs);
 
   template <class _ValueType, class ..._Args,
@@ -292,7 +293,7 @@ public:
         std::is_constructible<_Tp, _Args...>::value &&
         std::is_copy_constructible<_Tp>::value>
     >
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   _Tp& emplace(_Args&&... args);
 
   template <class _ValueType, class _Up, class ..._Args,
@@ -301,21 +302,21 @@ public:
         std::is_constructible<_Tp, std::initializer_list<_Up>&, _Args...>::value &&
         std::is_copy_constructible<_Tp>::value>
   >
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   _Tp& emplace(std::initializer_list<_Up>, _Args&&...);
 
   // 6.3.3 any modifiers
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   void reset() noexcept { if (__h) this->__call(_Action::_Destroy); }
 
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   void swap(any & __rhs) noexcept;
 
   // 6.3.4 any observers
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   bool has_value() const noexcept { return __h != nullptr; }
 
-  LUL_VIS_INLINE
+  LUL_VIS_INLINE_FUNC
   const std::type_info & type() const noexcept {
     if (__h) {
         return *static_cast<std::type_info const *>(this->__call(_Action::_TypeInfo));
@@ -335,7 +336,7 @@ private:
         __any_imp::_Buffer __buf;
     };
 
-    LUL_VIS_ALWAYS_INLINE
+    LUL_VIS_INLINE_FUNC
     void * __call(_Action __a, any * __other = nullptr,
                   std::type_info const * __info = nullptr,
                    const void* __fallback_info = nullptr) const
@@ -343,7 +344,7 @@ private:
         return __h(__a, this, __other, __info, __fallback_info);
     }
 
-    LUL_VIS_ALWAYS_INLINE
+    LUL_VIS_INLINE_FUNC
     void * __call(_Action __a, any * __other = nullptr,
                   std::type_info const * __info = nullptr,
                   const void* __fallback_info = nullptr)
@@ -371,9 +372,9 @@ private:
 namespace __any_imp
 {
   template <class _Tp>
-  struct LUL_VIS_TYPE_DEFINE _SmallHandler
+  struct LUL_VIS_CLASS_TEMPLATE _SmallHandler
   {
-     LUL_VIS_INLINE
+     LUL_VIS_INLINE_FUNC
      static void* __handle(_Action __act, any const * __this, any * __other,
                            std::type_info const * __info, const void* __fallback_info)
      {
@@ -396,7 +397,7 @@ namespace __any_imp
     }
 
     template <class ..._Args>
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     static _Tp& __create(any & __dest, _Args&&... __args) {
         _Tp* __ret = ::new (static_cast<void*>(&__dest.__s.__buf)) _Tp(std::forward<_Args>(__args)...);
         __dest.__h = &_SmallHandler::__handle;
@@ -404,27 +405,27 @@ namespace __any_imp
     }
 
   private:
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     static void __destroy(any & __this) {
         _Tp & __value = *static_cast<_Tp *>(static_cast<void*>(&__this.__s.__buf));
         __value.~_Tp();
         __this.__h = nullptr;
     }
 
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     static void __copy(any const & __this, any & __dest) {
         _SmallHandler::__create(__dest, *static_cast<_Tp const *>(
             static_cast<void const *>(&__this.__s.__buf)));
     }
 
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     static void __move(any & __this, any & __dest) {
         _SmallHandler::__create(__dest, std::move(
             *static_cast<_Tp*>(static_cast<void*>(&__this.__s.__buf))));
         __destroy(__this);
     }
 
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     static void* __get(any & __this,
                        std::type_info const * __info,
                        const void* __fallback_id)
@@ -434,7 +435,7 @@ namespace __any_imp
         return nullptr;
     }
 
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     static void* __type_info()
     {
         return const_cast<void*>(static_cast<void const *>(&typeid(_Tp)));
@@ -442,9 +443,9 @@ namespace __any_imp
   };
 
   template <class _Tp>
-  struct LUL_VIS_TYPE_DEFINE _LargeHandler
+  struct LUL_VIS_CLASS_TEMPLATE _LargeHandler
   {
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     static void* __handle(_Action __act, any const * __this,
                           any * __other, std::type_info const * __info,
                           void const* __fallback_info)
@@ -468,7 +469,7 @@ namespace __any_imp
     }
 
     template <class ..._Args>
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     static _Tp& __create(any & __dest, _Args&&... __args) {
         typedef std::allocator<_Tp> _Alloc;
         typedef details::__allocator_destructor<_Alloc> _Dp;
@@ -482,25 +483,25 @@ namespace __any_imp
 
   private:
 
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     static void __destroy(any & __this){
         delete static_cast<_Tp*>(__this.__s.__ptr);
         __this.__h = nullptr;
     }
 
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     static void __copy(any const & __this, any & __dest) {
         _LargeHandler::__create(__dest, *static_cast<_Tp const *>(__this.__s.__ptr));
     }
 
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     static void __move(any & __this, any & __dest) {
       __dest.__s.__ptr = __this.__s.__ptr;
       __dest.__h = &_LargeHandler::__handle;
       __this.__h = nullptr;
     }
 
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     static void* __get(any & __this, std::type_info const * __info,
                        void const* __fallback_info)
     {
@@ -510,7 +511,7 @@ namespace __any_imp
 
     }
 
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     static void* __type_info()
     {
         return const_cast<void*>(static_cast<void const *>(&typeid(_Tp)));
@@ -537,7 +538,7 @@ any::any(std::in_place_type_t<_ValueType>, std::initializer_list<_Up> __il, _Arg
 }
 
 template <class _ValueType, class, class>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 any & any::operator=(_ValueType && __v)
 {
   any(std::forward<_ValueType>(__v)).swap(*this);
@@ -545,20 +546,20 @@ any & any::operator=(_ValueType && __v)
 }
 
 template <class _ValueType, class ..._Args, class _Tp, class>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 _Tp& any::emplace(_Args&&... __args) {
   reset();
   return __any_imp::_Handler<_Tp>::__create(*this, std::forward<_Args>(__args)...);
 }
 
 template <class _ValueType, class _Up, class ..._Args, class _Tp, class>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 _Tp& any::emplace(std::initializer_list<_Up> __il, _Args&&... __args) {
   reset();
   return __any_imp::_Handler<_Tp>::__create(*this, __il, std::forward<_Args>(__args)...);
 }
 
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 void any::swap(any & __rhs) noexcept
 {
     if (this == &__rhs)
@@ -579,26 +580,26 @@ void any::swap(any & __rhs) noexcept
 
 // 6.4 Non-member functions
 
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 void swap(any & __lhs, any & __rhs) noexcept
 {
     __lhs.swap(__rhs);
 }
 
 template <class _Tp, class ..._Args>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 any make_any(_Args&&... __args) {
     return any(std::in_place_type<_Tp>, std::forward<_Args>(__args)...);
 }
 
 template <class _Tp, class _Up, class ..._Args>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 any make_any(std::initializer_list<_Up> __il, _Args&&... __args) {
     return any(std::in_place_type<_Tp>, __il, std::forward<_Args>(__args)...);
 }
 
 template <class _ValueType>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 _ValueType any_cast(any const & __v)
 {
     using _RawValueType = details::__uncvref_t<_ValueType>;
@@ -612,7 +613,7 @@ _ValueType any_cast(any const & __v)
 }
 
 template <class _ValueType>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 _ValueType any_cast(any & __v)
 {
     using _RawValueType = details::__uncvref_t<_ValueType>;
@@ -626,7 +627,7 @@ _ValueType any_cast(any & __v)
 }
 
 template <class _ValueType>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 _ValueType any_cast(any && __v)
 {
     using _RawValueType = details::__uncvref_t<_ValueType>;
@@ -640,7 +641,7 @@ _ValueType any_cast(any && __v)
 }
 
 template <class _ValueType>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 std::add_pointer_t<std::add_const_t<_ValueType>>
 any_cast(any const * __any) noexcept
 {
@@ -650,13 +651,13 @@ any_cast(any const * __any) noexcept
 }
 
 template <class _RetType>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 _RetType __pointer_or_func_cast(void* __p, /*IsFunction*/std::false_type) noexcept {
   return static_cast<_RetType>(__p);
 }
 
 template <class _RetType>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 _RetType __pointer_or_func_cast(void*, /*IsFunction*/std::true_type) noexcept {
   return nullptr;
 }

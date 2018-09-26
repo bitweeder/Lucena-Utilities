@@ -23,23 +23,11 @@
 //	between an executable and any libraries it uses.
 #include <Lucena-Utilities/lulConfig.hpp>
 
-
 //	Handle feature detection and set up build environment macros.
 #include <Lucena-Utilities/lulFeatureSetup.hpp>
 
-
-//	Used to establish visibility of Lucena Utilities symbols in the headers.
-#ifndef LUL_CONFIG_visible
-	#define LUL_CONFIG_visible						LUL_VIS_EXTERN
-#endif	//	LUL_CONFIG_visible
-
-#ifndef LUL_CONFIG_type_visible
-	#define LUL_CONFIG_type_visible					LUL_VIS_TYPE_EXTERN
-#endif	//	LUL_CONFIG_type_visible
-
-#ifndef LUL_CONFIG_exception_visible
-	#define LUL_CONFIG_exception_visible			LUL_VIS_EXCEPTION_EXTERN
-#endif	//	LUL_CONFIG_exception_visible
+//	Set up symbol visibility macros.
+#include <Lucena-Utilities/details/lulVisibility.hpp>
 
 
 //	lul

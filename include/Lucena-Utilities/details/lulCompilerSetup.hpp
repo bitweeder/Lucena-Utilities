@@ -464,16 +464,63 @@
 
 	//	Symbol visibility macros
 	#define LUL_VIS_HIDDEN							__attribute__ ((__visibility__("hidden")))
-	#define LUL_VIS_EXTERN					extern	__attribute__ ((__visibility__("default")))
-	#define LUL_VIS_DEFINE							__attribute__ ((__visibility__("default")))
-	#define LUL_VIS_ONLY							__attribute__ ((__visibility__("default")))
-	#define LUL_VIS_TYPE_EXTERN				extern	__attribute__ ((__type_visibility__("default")))
-	#define LUL_VIS_TYPE_DEFINE						__attribute__ ((__type_visibility__("default")))
-	#define LUL_VIS_TYPE_ONLY						__attribute__ ((__type_visibility__("default")))
-	#define LUL_VIS_EXCEPTION_EXTERN		extern	__attribute__ ((__visibility__("default")))
-	#define LUL_VIS_EXCEPTION_DEFINE				__attribute__ ((__visibility__("default")))
-	#define LUL_VIS_INLINE							__attribute__ ((__visibility__("hidden"), __always_inline__))
-	#define LUL_VIS_ALWAYS_INLINE					__attribute__ ((__visibility__("hidden"), __always_inline__))
+
+	#define LUL_VIS_CLASS_EXPORT					__attribute__ ((__visibility__("default")))
+	#define LUL_VIS_CLASS_IMPORT					__attribute__ ((__visibility__("default")))
+
+	#if __has_attribute (__type_visibility__)
+		#define LUL_VIS_ENUM						__attribute__ ((__type_visibility__("default")))
+
+		#define LUL_VIS_CLASS_TEMPLATE				__attribute__ ((__type_visibility__("default")))
+
+		#define LUL_VIS_EXTERN_CLASS_TEMPLATE_EXPORT	__attribute__ ((__visibility__("default")))
+		#define LUL_VIS_EXTERN_CLASS_TEMPLATE_IMPORT	__attribute__ ((__visibility__("default")))
+	#else
+		#define LUL_VIS_ENUM
+
+		#define LUL_VIS_CLASS_TEMPLATE				__attribute__ ((__visibility__("default")))
+
+		#define LUL_VIS_EXTERN_CLASS_TEMPLATE_EXPORT
+		#define LUL_VIS_EXTERN_CLASS_TEMPLATE_IMPORT
+	#endif
+
+	#define LUL_VIS_CLASS_TEMPLATE_INSTANTIATION_EXPORT
+	#define LUL_VIS_CLASS_TEMPLATE_INSTANTIATION_IMPORT
+
+	#define LUL_VIS_MEMBER_CLASS_TEMPLATE			__attribute__ ((__visibility__("hidden")))
+
+	#define LUL_VIS_MEMBER_FUNCTION_TEMPLATE		inline __attribute__ ((__visibility__("hidden")))
+		//	SEEME The “inline” declaration is extraneous, but required due to
+		//	 a currently unaddressed clang defect (cf., the elusive PR32114).
+
+	#define LUL_VIS_FUNC_EXPORT						__attribute__ ((__visibility__("default")))
+	#define LUL_VIS_FUNC_IMPORT						__attribute__ ((__visibility__("default")))
+
+	//	SEEME The first definition is a fallback if it turns out I’ve
+	//	misunderstood the requirements on general inline functions.
+//	#define LUL_VIS_INLINE_FUNC						LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC
+	#define LUL_VIS_INLINE_FUNC						__attribute__ ((__visibility__("hidden")))
+
+	//	SEEME Using the internal_linkage attribute is equivalent to using the
+	//	static keyword in C, and is semantically preferrable to inlining.
+	//	However, what we -really- want is be able to strip this down to just
+	//	LUL_VIS_HIDDEN, but this requires linker support we don’t have, yet.
+	//	See <http://lists.llvm.org/pipermail/cfe-dev/2018-July/058450.html> and
+	//	<https://reviews.llvm.org/D49240?id=155185> for details.
+	#if __has_attribute (internal_linkage)
+		#define LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC	__attribute__ ((__visibility__("hidden"), internal_linkage))
+	#else
+		#define LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC	__attribute__ ((__visibility__("hidden"), __always_inline__))
+	#endif
+
+	#define LUL_VIS_OVERLOADABLE_FUNC_EXPORT		__attribute__ ((__visibility__("default")))
+	#define LUL_VIS_OVERLOADABLE_FUNC_IMPORT		__attribute__ ((__visibility__("default")))
+
+	#define LUL_VIS_EXTERN_EXPORT
+	#define LUL_VIS_EXTERN_IMPORT
+
+	#define LUL_VIS_EXCEPTION_EXPORT				__attribute__ ((__visibility__("default")))
+	#define LUL_VIS_EXCEPTION_IMPORT				__attribute__ ((__visibility__("default")))
 
 	#define LUL_FUNC_CALL_C(LUL_func_name_)			LUL_func_name_
 	#define LUL_FUNC_CALL_STD(LUL_func_name_)		LUL_func_name_
@@ -697,16 +744,63 @@
 
 	//	Symbol visibility macros
 	#define LUL_VIS_HIDDEN							__attribute__ ((__visibility__("hidden")))
-	#define LUL_VIS_EXTERN					extern	__attribute__ ((__visibility__("default")))
-	#define LUL_VIS_DEFINE							__attribute__ ((__visibility__("default")))
-	#define LUL_VIS_ONLY							__attribute__ ((__visibility__("default")))
-	#define LUL_VIS_TYPE_EXTERN				extern	__attribute__ ((__type_visibility__("default")))
-	#define LUL_VIS_TYPE_DEFINE						__attribute__ ((__type_visibility__("default")))
-	#define LUL_VIS_TYPE_ONLY						__attribute__ ((__type_visibility__("default")))
-	#define LUL_VIS_EXCEPTION_EXTERN		extern	__attribute__ ((__visibility__("default")))
-	#define LUL_VIS_EXCEPTION_DEFINE				__attribute__ ((__visibility__("default")))
-	#define LUL_VIS_INLINE							__attribute__ ((__visibility__("hidden"), __always_inline__))
-	#define LUL_VIS_ALWAYS_INLINE					__attribute__ ((__visibility__("hidden"), __always_inline__))
+
+	#define LUL_VIS_CLASS_EXPORT					__attribute__ ((__visibility__("default")))
+	#define LUL_VIS_CLASS_IMPORT					__attribute__ ((__visibility__("default")))
+
+	#if __has_attribute (__type_visibility__)
+		#define LUL_VIS_ENUM						__attribute__ ((__type_visibility__("default")))
+
+		#define LUL_VIS_CLASS_TEMPLATE				__attribute__ ((__type_visibility__("default")))
+
+		#define LUL_VIS_EXTERN_CLASS_TEMPLATE_EXPORT	__attribute__ ((__visibility__("default")))
+		#define LUL_VIS_EXTERN_CLASS_TEMPLATE_IMPORT	__attribute__ ((__visibility__("default")))
+	#else
+		#define LUL_VIS_ENUM
+
+		#define LUL_VIS_CLASS_TEMPLATE				__attribute__ ((__visibility__("default")))
+
+		#define LUL_VIS_EXTERN_CLASS_TEMPLATE_EXPORT
+		#define LUL_VIS_EXTERN_CLASS_TEMPLATE_IMPORT
+	#endif
+
+	#define LUL_VIS_CLASS_TEMPLATE_INSTANTIATION_EXPORT
+	#define LUL_VIS_CLASS_TEMPLATE_INSTANTIATION_IMPORT
+
+	#define LUL_VIS_MEMBER_CLASS_TEMPLATE			__attribute__ ((__visibility__("hidden")))
+
+	#define LUL_VIS_MEMBER_FUNCTION_TEMPLATE		inline __attribute__ ((__visibility__("hidden")))
+		//	SEEME The “inline” declaration is extraneous, but required due to
+		//	 a currently unaddressed clang defect (cf., the elusive PR32114).
+
+	#define LUL_VIS_FUNC_EXPORT						__attribute__ ((__visibility__("default")))
+	#define LUL_VIS_FUNC_IMPORT						__attribute__ ((__visibility__("default")))
+
+	//	SEEME The first definition is a fallback if it turns out I’ve
+	//	misunderstood the requirements on general inline functions.
+//	#define LUL_VIS_INLINE_FUNC						LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC
+	#define LUL_VIS_INLINE_FUNC						__attribute__ ((__visibility__("hidden")))
+
+	//	SEEME Using the internal_linkage attribute is equivalent to using the
+	//	static keyword in C, and is semantically preferrable to inlining.
+	//	However, what we -really- want is be able to strip this down to just
+	//	LUL_VIS_HIDDEN, but this requires linker support we don’t have, yet.
+	//	See <http://lists.llvm.org/pipermail/cfe-dev/2018-July/058450.html> and
+	//	<https://reviews.llvm.org/D49240?id=155185> for details.
+	#if __has_attribute (internal_linkage)
+		#define LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC	__attribute__ ((__visibility__("hidden"), internal_linkage))
+	#else
+		#define LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC	__attribute__ ((__visibility__("hidden"), __always_inline__))
+	#endif
+
+	#define LUL_VIS_OVERLOADABLE_FUNC_EXPORT		__attribute__ ((__visibility__("default")))
+	#define LUL_VIS_OVERLOADABLE_FUNC_IMPORT		__attribute__ ((__visibility__("default")))
+
+	#define LUL_VIS_EXTERN_EXPORT
+	#define LUL_VIS_EXTERN_IMPORT
+
+	#define LUL_VIS_EXCEPTION_EXPORT				__attribute__ ((__visibility__("default")))
+	#define LUL_VIS_EXCEPTION_IMPORT				__attribute__ ((__visibility__("default")))
 
 	#define LUL_FUNC_CALL_C(LUL_func_name_)			LUL_func_name_
 	#define LUL_FUNC_CALL_STD(LUL_func_name_)		LUL_func_name_
@@ -921,16 +1015,64 @@
 
 	//	Symbol visibility macros
 	#define LUL_VIS_HIDDEN							__attribute__ ((__visibility__("hidden")))
-	#define LUL_VIS_EXTERN					extern	__attribute__ ((__visibility__("default")))
-	#define LUL_VIS_DEFINE							__attribute__ ((__visibility__("default")))
-	#define LUL_VIS_ONLY							__attribute__ ((__visibility__("default")))
-	#define LUL_VIS_TYPE_EXTERN				extern	__attribute__ ((__type_visibility__("default")))
-	#define LUL_VIS_TYPE_DEFINE						__attribute__ ((__type_visibility__("default")))
-	#define LUL_VIS_TYPE_ONLY						__attribute__ ((__type_visibility__("default")))
-	#define LUL_VIS_EXCEPTION_EXTERN		extern	__attribute__ ((__visibility__("default")))
-	#define LUL_VIS_EXCEPTION_DEFINE				__attribute__ ((__visibility__("default")))
-	#define LUL_VIS_INLINE							__attribute__ ((__visibility__("hidden"), __always_inline__))
-	#define LUL_VIS_ALWAYS_INLINE					__attribute__ ((__visibility__("hidden"), __always_inline__))
+
+	#define LUL_VIS_CLASS_EXPORT					__attribute__ ((__visibility__("default")))
+	#define LUL_VIS_CLASS_IMPORT					__attribute__ ((__visibility__("default")))
+
+	#if __has_attribute (__type_visibility__)
+		#define LUL_VIS_ENUM						__attribute__ ((__type_visibility__("default")))
+
+		#define LUL_VIS_CLASS_TEMPLATE				__attribute__ ((__type_visibility__("default")))
+
+		#define LUL_VIS_EXTERN_CLASS_TEMPLATE_EXPORT	__attribute__ ((__visibility__("default")))
+		#define LUL_VIS_EXTERN_CLASS_TEMPLATE_IMPORT	__attribute__ ((__visibility__("default")))
+	#else
+		#define LUL_VIS_ENUM
+
+		#define LUL_VIS_CLASS_TEMPLATE				__attribute__ ((__visibility__("default")))
+
+		#define LUL_VIS_EXTERN_CLASS_TEMPLATE_EXPORT
+		#define LUL_VIS_EXTERN_CLASS_TEMPLATE_IMPORT
+	#endif
+
+	#define LUL_VIS_CLASS_TEMPLATE_INSTANTIATION_EXPORT
+	#define LUL_VIS_CLASS_TEMPLATE_INSTANTIATION_IMPORT
+
+	#define LUL_VIS_MEMBER_CLASS_TEMPLATE			__attribute__ ((__visibility__("hidden")))
+
+	#define LUL_VIS_MEMBER_FUNCTION_TEMPLATE		__attribute__ ((__visibility__("hidden")))
+		//	FIXME There is a clang defect which requires an extraneous “inline”
+		//	declaration to be prepended here; it’s currently unknown if gcc is
+		//	impacted by the same defect.
+
+	#define LUL_VIS_FUNC_EXPORT						__attribute__ ((__visibility__("default")))
+	#define LUL_VIS_FUNC_IMPORT						__attribute__ ((__visibility__("default")))
+
+	//	SEEME The first definition is a fallback if it turns out I’ve
+	//	misunderstood the requirements on general inline functions.
+//	#define LUL_VIS_INLINE_FUNC						LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC
+	#define LUL_VIS_INLINE_FUNC						__attribute__ ((__visibility__("hidden")))
+
+	//	SEEME Using the internal_linkage attribute is equivalent to using the
+	//	static keyword in C, and is semantically preferrable to inlining.
+	//	However, what we -really- want is be able to strip this down to just
+	//	LUL_VIS_HIDDEN, but this requires linker support we don’t have, yet.
+	//	See <http://lists.llvm.org/pipermail/cfe-dev/2018-July/058450.html> and
+	//	<https://reviews.llvm.org/D49240?id=155185> for details.
+	#if __has_attribute (internal_linkage)
+		#define LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC	__attribute__ ((__visibility__("hidden"), internal_linkage))
+	#else
+		#define LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC	__attribute__ ((__visibility__("hidden"), __always_inline__))
+	#endif
+
+	#define LUL_VIS_OVERLOADABLE_FUNC_EXPORT		__attribute__ ((__visibility__("default")))
+	#define LUL_VIS_OVERLOADABLE_FUNC_IMPORT		__attribute__ ((__visibility__("default")))
+
+	#define LUL_VIS_EXTERN_EXPORT
+	#define LUL_VIS_EXTERN_IMPORT
+
+	#define LUL_VIS_EXCEPTION_EXPORT				__attribute__ ((__visibility__("default")))
+	#define LUL_VIS_EXCEPTION_IMPORT				__attribute__ ((__visibility__("default")))
 
 	#define LUL_FUNC_CALL_C(LUL_func_name_)			LUL_func_name_
 	#define LUL_FUNC_CALL_STD(LUL_func_name_)		LUL_func_name_
@@ -1115,16 +1257,42 @@
 
 	//	Symbol visibility macros
 	#define LUL_VIS_HIDDEN
-	#define LUL_VIS_EXTERN					extern	__declspec(dllimport)
-	#define LUL_VIS_DEFINE							__declspec(dllexport)
-	#define LUL_VIS_ONLY
-	#define LUL_VIS_TYPE_EXTERN				extern	__declspec(dllimport)
-	#define LUL_VIS_TYPE_DEFINE						__declspec(dllexport)
-	#define LUL_VIS_TYPE_ONLY
-	#define LUL_VIS_EXCEPTION_EXTERN		extern	__declspec(dllimport)
-	#define LUL_VIS_EXCEPTION_DEFINE				__declspec(dllexport)
-	#define LUL_VIS_INLINE							__forceinline
-	#define LUL_VIS_ALWAYS_INLINE					__forceinline
+
+	#define LUL_VIS_ENUM
+
+	#define LUL_VIS_CLASS_TEMPLATE
+
+	#define LUL_VIS_CLASS_EXPORT					__declspec(dllexport)
+	#define LUL_VIS_CLASS_IMPORT					__declspec(dllimport)
+
+	#define LUL_VIS_EXTERN_CLASS_TEMPLATE_EXPORT
+	#define LUL_VIS_EXTERN_CLASS_TEMPLATE_IMPORT	__declspec(dllimport)
+
+	#define LUL_VIS_CLASS_TEMPLATE_INSTANTIATION_EXPORT	__declspec(dllexport)
+	#define LUL_VIS_CLASS_TEMPLATE_INSTANTIATION_IMPORT
+
+	#define LUL_VIS_MEMBER_CLASS_TEMPLATE
+
+	#define LUL_VIS_MEMBER_FUNCTION_TEMPLATE
+
+	#define LUL_VIS_FUNC_EXPORT						__declspec(dllexport)
+	#define LUL_VIS_FUNC_IMPORT						__declspec(dllimport)
+
+	//	SEEME These appear to be required by DLLs, as they like to save
+	//	fallback versions of inline functions as object code in case the
+	//	header version is unavailable for some reason; if not for this
+	//	requirement, these would just be LUL_VIS_HIDDEN.
+	#define LUL_VIS_INLINE_FUNC						__forceinline
+	#define LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC		__forceinline
+
+	#define LUL_VIS_OVERLOADABLE_FUNC_EXPORT		__declspec(dllexport)
+	#define LUL_VIS_OVERLOADABLE_FUNC_IMPORT
+
+	#define LUL_VIS_EXTERN_EXPORT					__declspec(dllexport)
+	#define LUL_VIS_EXTERN_IMPORT					__declspec(dllimport)
+
+	#define LUL_VIS_EXCEPTION_EXPORT				__declspec(dllexport)
+	#define LUL_VIS_EXCEPTION_IMPORT				__declspec(dllimport)
 
 
 	//	Class decorators

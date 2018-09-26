@@ -8,9 +8,9 @@
 	This file is distributed under the University of Illinois Open Source
 	License. See license/License.txt for details.
 
-	This is a gently hacked up copy of libc++’s <filesystem> implementation,
-	used under the University of Illinois/NCSA Open Source License. See
-	“license/libc++ License” for details.
+	This is a gently hacked up copy of the libc++ 7.0 <filesystem>
+	implementation, used under the University of Illinois/NCSA Open Source
+	License. See “license/libc++ License” for details.
 
 	The notable differences from the libc++ version include:
 
@@ -282,6 +282,8 @@
 
 #include <Lucena-Utilities/details/lulHelperIterator.hpp>
 #include <Lucena-Utilities/details/lulHelperLocale.hpp>
+#include <Lucena-Utilities/details/lulVisibility.hpp>
+
 
 
 LUL_begin_v_namespace
@@ -305,16 +307,16 @@ struct _FilesystemClock {
 
 	static constexpr bool is_steady = false;
 
-	LUL_VIS_DEFINE static time_point now() noexcept;
+	LUL_VIS_FUNC static time_point now() noexcept;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	static std::time_t to_time_t(const time_point& __t) noexcept {
 	typedef std::chrono::duration<rep> __secs;
 	return std::time_t(
 		std::chrono::duration_cast<__secs>(__t.time_since_epoch()).count());
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	static time_point from_time_t(std::time_t __t) noexcept {
 	typedef std::chrono::duration<rep> __secs;
 	return time_point(__secs(__t));
@@ -323,13 +325,13 @@ struct _FilesystemClock {
 
 typedef std::chrono::time_point<_FilesystemClock> file_time_type;
 
-struct LUL_VIS_TYPE_DEFINE space_info {
+struct LUL_VIS_CLASS space_info {
 	uintmax_t capacity;
 	uintmax_t free;
 	uintmax_t available;
 };
 
-enum class LUL_VIS_TYPE_ONLY file_type : signed char {
+enum class LUL_VIS_ENUM file_type : signed char {
 	none = 0,
 	not_found = -1,
 	regular = 1,
@@ -342,7 +344,7 @@ enum class LUL_VIS_TYPE_ONLY file_type : signed char {
 	unknown = 8
 };
 
-enum class LUL_VIS_TYPE_ONLY perms : unsigned {
+enum class LUL_VIS_ENUM perms : unsigned {
 	none = 0,
 
 	owner_read = 0400,
@@ -369,84 +371,84 @@ enum class LUL_VIS_TYPE_ONLY perms : unsigned {
 	unknown = 0xFFFF,
 };
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr perms operator&(perms _LHS, perms _RHS) {
 	return static_cast<perms>(static_cast<unsigned>(_LHS) &
 							static_cast<unsigned>(_RHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr perms operator|(perms _LHS, perms _RHS) {
 	return static_cast<perms>(static_cast<unsigned>(_LHS) |
 							static_cast<unsigned>(_RHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr perms operator^(perms _LHS, perms _RHS) {
 	return static_cast<perms>(static_cast<unsigned>(_LHS) ^
 							static_cast<unsigned>(_RHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr perms operator~(perms _LHS) {
 	return static_cast<perms>(~static_cast<unsigned>(_LHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline perms& operator&=(perms& _LHS, perms _RHS) { return _LHS = _LHS & _RHS; }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline perms& operator|=(perms& _LHS, perms _RHS) { return _LHS = _LHS | _RHS; }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline perms& operator^=(perms& _LHS, perms _RHS) { return _LHS = _LHS ^ _RHS; }
 
-enum class LUL_VIS_TYPE_ONLY perm_options : unsigned char {
+enum class LUL_VIS_ENUM perm_options : unsigned char {
 	replace = 1,
 	add = 2,
 	remove = 4,
 	nofollow = 8
 };
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr perm_options operator&(perm_options _LHS, perm_options _RHS) {
 	return static_cast<perm_options>(static_cast<unsigned>(_LHS) &
 									 static_cast<unsigned>(_RHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr perm_options operator|(perm_options _LHS, perm_options _RHS) {
 	return static_cast<perm_options>(static_cast<unsigned>(_LHS) |
 									 static_cast<unsigned>(_RHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr perm_options operator^(perm_options _LHS, perm_options _RHS) {
 	return static_cast<perm_options>(static_cast<unsigned>(_LHS) ^
 									 static_cast<unsigned>(_RHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr perm_options operator~(perm_options _LHS) {
 	return static_cast<perm_options>(~static_cast<unsigned>(_LHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline perm_options& operator&=(perm_options& _LHS, perm_options _RHS) {
 	return _LHS = _LHS & _RHS;
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline perm_options& operator|=(perm_options& _LHS, perm_options _RHS) {
 	return _LHS = _LHS | _RHS;
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline perm_options& operator^=(perm_options& _LHS, perm_options _RHS) {
 	return _LHS = _LHS ^ _RHS;
 }
 
-enum class LUL_VIS_TYPE_ONLY copy_options : unsigned short {
+enum class LUL_VIS_ENUM copy_options : unsigned short {
 	none = 0,
 	skip_existing = 1,
 	overwrite_existing = 2,
@@ -460,100 +462,100 @@ enum class LUL_VIS_TYPE_ONLY copy_options : unsigned short {
 	__in_recursive_copy = 512,
 };
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr copy_options operator&(copy_options _LHS, copy_options _RHS) {
 	return static_cast<copy_options>(static_cast<unsigned short>(_LHS) &
 									 static_cast<unsigned short>(_RHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr copy_options operator|(copy_options _LHS, copy_options _RHS) {
 	return static_cast<copy_options>(static_cast<unsigned short>(_LHS) |
 									 static_cast<unsigned short>(_RHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr copy_options operator^(copy_options _LHS, copy_options _RHS) {
 	return static_cast<copy_options>(static_cast<unsigned short>(_LHS) ^
 									 static_cast<unsigned short>(_RHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr copy_options operator~(copy_options _LHS) {
 	return static_cast<copy_options>(~static_cast<unsigned short>(_LHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline copy_options& operator&=(copy_options& _LHS, copy_options _RHS) {
 	return _LHS = _LHS & _RHS;
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline copy_options& operator|=(copy_options& _LHS, copy_options _RHS) {
 	return _LHS = _LHS | _RHS;
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline copy_options& operator^=(copy_options& _LHS, copy_options _RHS) {
 	return _LHS = _LHS ^ _RHS;
 }
 
-enum class LUL_VIS_TYPE_ONLY directory_options : unsigned char {
+enum class LUL_VIS_ENUM directory_options : unsigned char {
 	none = 0,
 	follow_directory_symlink = 1,
 	skip_permission_denied = 2
 };
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr directory_options operator&(directory_options _LHS,
 											 directory_options _RHS) {
 	return static_cast<directory_options>(static_cast<unsigned char>(_LHS) &
 										static_cast<unsigned char>(_RHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr directory_options operator|(directory_options _LHS,
 											 directory_options _RHS) {
 	return static_cast<directory_options>(static_cast<unsigned char>(_LHS) |
 										static_cast<unsigned char>(_RHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr directory_options operator^(directory_options _LHS,
 											 directory_options _RHS) {
 	return static_cast<directory_options>(static_cast<unsigned char>(_LHS) ^
 										static_cast<unsigned char>(_RHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline constexpr directory_options operator~(directory_options _LHS) {
 	return static_cast<directory_options>(~static_cast<unsigned char>(_LHS));
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline directory_options& operator&=(directory_options& _LHS,
 									 directory_options _RHS) {
 	return _LHS = _LHS & _RHS;
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline directory_options& operator|=(directory_options& _LHS,
 									 directory_options _RHS) {
 	return _LHS = _LHS | _RHS;
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline directory_options& operator^=(directory_options& _LHS,
 									 directory_options _RHS) {
 	return _LHS = _LHS ^ _RHS;
 }
 
-class LUL_VIS_TYPE_DEFINE file_status {
+class LUL_VIS_CLASS file_status {
 public:
 	// constructors
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	file_status() noexcept : file_status(file_type::none) {}
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	explicit file_status(file_type __ft, perms __prms = perms::unknown) noexcept
 		: __ft_(__ft),
 		__prms_(__prms) {}
@@ -561,24 +563,24 @@ public:
 	file_status(const file_status&) noexcept = default;
 	file_status(file_status&&) noexcept = default;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	~file_status() {}
 
 	file_status& operator=(const file_status&) noexcept = default;
 	file_status& operator=(file_status&&) noexcept = default;
 
 	// observers
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	file_type type() const noexcept { return __ft_; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	perms permissions() const noexcept { return __prms_; }
 
 	// modifiers
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void type(file_type __ft) noexcept { __ft_ = __ft; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void permissions(perms __p) noexcept { __prms_ = __p; }
 
 private:
@@ -586,7 +588,7 @@ private:
 	perms __prms_;
 };
 
-class LUL_VIS_TYPE_DEFINE directory_entry;
+class LUL_VIS_CLASS directory_entry;
 
 template <class _Tp>
 struct __can_convert_char {
@@ -796,7 +798,7 @@ struct _PathCVT<char> {
 	}
 };
 
-class LUL_VIS_TYPE_DEFINE path {
+class LUL_VIS_CLASS path {
 	template <class _SourceOrIter, class _Tp = path&>
 	using _EnableIfPathable =
 		typename std::enable_if<__is_pathable<_SourceOrIter>::value, _Tp>::type;
@@ -813,19 +815,19 @@ public:
 	typedef std::string_view __string_view;
 	static constexpr value_type preferred_separator = '/';
 
-	enum class LUL_VIS_TYPE_ONLY format : unsigned char {
+	enum class LUL_VIS_ENUM format : unsigned char {
 	auto_format,
 	native_format,
 	generic_format
 	};
 
 	// constructors and destructor
-	LUL_VIS_INLINE path() noexcept {}
-	LUL_VIS_INLINE path(const path& __p) : __pn_(__p.__pn_) {}
-	LUL_VIS_INLINE path(path&& __p) noexcept
+	LUL_VIS_INLINE_FUNC path() noexcept {}
+	LUL_VIS_INLINE_FUNC path(const path& __p) : __pn_(__p.__pn_) {}
+	LUL_VIS_INLINE_FUNC path(path&& __p) noexcept
 		: __pn_(std::move(__p.__pn_)) {}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	path(string_type&& __s, format = format::auto_format) noexcept
 		: __pn_(std::move(__s)) {}
 
@@ -847,36 +849,36 @@ public:
 	path(_InputIt __first, _InputIt _last, const std::locale& __loc,
 		 format = format::auto_format);
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	~path() = default;
 
 	// assignments
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	path& operator=(const path& __p) {
 	__pn_ = __p.__pn_;
 	return *this;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	path& operator=(path&& __p) noexcept {
 	__pn_ = std::move(__p.__pn_);
 	return *this;
 	}
 
 	template <class = void>
-	LUL_VIS_INLINE path& operator=(string_type&& __s) noexcept {
+	LUL_VIS_INLINE_FUNC path& operator=(string_type&& __s) noexcept {
 	__pn_ = std::move(__s);
 	return *this;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	path& assign(string_type&& __s) noexcept {
 	__pn_ = std::move(__s);
 	return *this;
 	}
 
 	template <class _Source>
-	LUL_VIS_INLINE _EnableIfPathable<_Source>
+	LUL_VIS_INLINE_FUNC _EnableIfPathable<_Source>
 	operator=(const _Source& __src) {
 	return this->assign(__src);
 	}
@@ -919,7 +921,7 @@ public:
 	//	since the user almost certainly intended to append a separator instead
 	//	of overwriting the path with "/"
 	template <class _Source>
-	LUL_VIS_INLINE _EnableIfPathable<_Source>
+	LUL_VIS_INLINE_FUNC _EnableIfPathable<_Source>
 	operator/=(const _Source& __src)
 		//	FIXME C++2a need a generic string comparison here
 //		[[expects: __src != "/"]]
@@ -953,31 +955,31 @@ public:
 	}
 
 	// concatenation
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	path& operator+=(const path& __x) {
 	__pn_ += __x.__pn_;
 	return *this;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	path& operator+=(const string_type& __x) {
 	__pn_ += __x;
 	return *this;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	path& operator+=(__string_view __x) {
 	__pn_ += __x;
 	return *this;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	path& operator+=(const value_type* __x) {
 	__pn_ += __x;
 	return *this;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	path& operator+=(value_type __x) {
 	__pn_ += __x;
 	return *this;
@@ -1011,12 +1013,12 @@ public:
 	}
 
 	// modifiers
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void clear() noexcept { __pn_.clear(); }
 
 	path& make_preferred() { return *this; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	path& remove_filename() {
 	auto __fname = __filename();
 	if (!__fname.empty())
@@ -1031,21 +1033,21 @@ public:
 
 	path& replace_extension(const path& __replacement = path());
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void swap(path& __rhs) noexcept { __pn_.swap(__rhs.__pn_); }
 
 	// private helper to allow reserving memory in the path
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void __reserve(size_t __s) { __pn_.reserve(__s); }
 
 	// native format observers
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	const string_type& native() const noexcept { return __pn_; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	const value_type* c_str() const noexcept { return __pn_.c_str(); }
 
-	LUL_VIS_INLINE operator string_type() const { return __pn_; }
+	LUL_VIS_INLINE_FUNC operator string_type() const { return __pn_; }
 
 	template <class _ECharT, class _Traits = std::char_traits<_ECharT>,
 			class _Allocator = std::allocator<_ECharT> >
@@ -1059,15 +1061,15 @@ public:
 	return __s;
 	}
 
-	LUL_VIS_INLINE std::string string() const { return __pn_; }
-	LUL_VIS_INLINE std::wstring wstring() const {
+	LUL_VIS_INLINE_FUNC std::string string() const { return __pn_; }
+	LUL_VIS_INLINE_FUNC std::wstring wstring() const {
 	return string<wchar_t>();
 	}
-	LUL_VIS_INLINE std::string u8string() const { return __pn_; }
-	LUL_VIS_INLINE std::u16string u16string() const {
+	LUL_VIS_INLINE_FUNC std::string u8string() const { return __pn_; }
+	LUL_VIS_INLINE_FUNC std::u16string u16string() const {
 	return string<char16_t>();
 	}
-	LUL_VIS_INLINE std::u32string u32string() const {
+	LUL_VIS_INLINE_FUNC std::u32string u32string() const {
 	return string<char32_t>();
 	}
 
@@ -1098,82 +1100,82 @@ private:
 
 public:
 	// compare
-	LUL_VIS_INLINE int compare(const path& __p) const noexcept {
+	LUL_VIS_INLINE_FUNC int compare(const path& __p) const noexcept {
 	return __compare(__p.__pn_);
 	}
-	LUL_VIS_INLINE int compare(const string_type& __s) const {
+	LUL_VIS_INLINE_FUNC int compare(const string_type& __s) const {
 	return __compare(__s);
 	}
-	LUL_VIS_INLINE int compare(__string_view __s) const {
+	LUL_VIS_INLINE_FUNC int compare(__string_view __s) const {
 	return __compare(__s);
 	}
-	LUL_VIS_INLINE int compare(const value_type* __s) const {
+	LUL_VIS_INLINE_FUNC int compare(const value_type* __s) const {
 	return __compare(__s);
 	}
 
 	// decomposition
-	LUL_VIS_INLINE path root_name() const {
+	LUL_VIS_INLINE_FUNC path root_name() const {
 	return string_type(__root_name());
 	}
-	LUL_VIS_INLINE path root_directory() const {
+	LUL_VIS_INLINE_FUNC path root_directory() const {
 	return string_type(__root_directory());
 	}
-	LUL_VIS_INLINE path root_path() const {
+	LUL_VIS_INLINE_FUNC path root_path() const {
 	return root_name().append(string_type(__root_directory()));
 	}
-	LUL_VIS_INLINE path relative_path() const {
+	LUL_VIS_INLINE_FUNC path relative_path() const {
 	return string_type(__relative_path());
 	}
-	LUL_VIS_INLINE path parent_path() const {
+	LUL_VIS_INLINE_FUNC path parent_path() const {
 	return string_type(__parent_path());
 	}
-	LUL_VIS_INLINE path filename() const {
+	LUL_VIS_INLINE_FUNC path filename() const {
 	return string_type(__filename());
 	}
-	LUL_VIS_INLINE path stem() const { return string_type(__stem()); }
-	LUL_VIS_INLINE path extension() const {
+	LUL_VIS_INLINE_FUNC path stem() const { return string_type(__stem()); }
+	LUL_VIS_INLINE_FUNC path extension() const {
 	return string_type(__extension());
 	}
 
 	// query
-	[[nodiscard]] LUL_VIS_INLINE bool
+	[[nodiscard]] LUL_VIS_INLINE_FUNC bool
 	empty() const noexcept {
 	return __pn_.empty();
 	}
 
-	LUL_VIS_INLINE bool has_root_name() const {
+	LUL_VIS_INLINE_FUNC bool has_root_name() const {
 	return !__root_name().empty();
 	}
-	LUL_VIS_INLINE bool has_root_directory() const {
+	LUL_VIS_INLINE_FUNC bool has_root_directory() const {
 	return !__root_directory().empty();
 	}
-	LUL_VIS_INLINE bool has_root_path() const {
+	LUL_VIS_INLINE_FUNC bool has_root_path() const {
 	return !__root_path_raw().empty();
 	}
-	LUL_VIS_INLINE bool has_relative_path() const {
+	LUL_VIS_INLINE_FUNC bool has_relative_path() const {
 	return !__relative_path().empty();
 	}
-	LUL_VIS_INLINE bool has_parent_path() const {
+	LUL_VIS_INLINE_FUNC bool has_parent_path() const {
 	return !__parent_path().empty();
 	}
-	LUL_VIS_INLINE bool has_filename() const {
+	LUL_VIS_INLINE_FUNC bool has_filename() const {
 	return !__filename().empty();
 	}
-	LUL_VIS_INLINE bool has_stem() const { return !__stem().empty(); }
-	LUL_VIS_INLINE bool has_extension() const {
+	LUL_VIS_INLINE_FUNC bool has_stem() const { return !__stem().empty(); }
+	LUL_VIS_INLINE_FUNC bool has_extension() const {
 	return !__extension().empty();
 	}
 
-	LUL_VIS_INLINE bool is_absolute() const {
+	LUL_VIS_INLINE_FUNC bool is_absolute() const {
 	return has_root_directory();
 	}
-	LUL_VIS_INLINE bool is_relative() const { return !is_absolute(); }
+	LUL_VIS_INLINE_FUNC bool is_relative() const { return !is_absolute(); }
 
 	// relative paths
 	path lexically_normal() const;
 	path lexically_relative(const path& __base) const;
 
-	LUL_VIS_INLINE path lexically_proximate(const path& __base) const {
+	LUL_VIS_INLINE_FUNC path lexically_proximate(const path& __base) const {
 	path __result = this->lexically_relative(__base);
 	if (__result.native().empty())
 		return *this;
@@ -1181,14 +1183,14 @@ public:
 	}
 
 	// iterators
-	class LUL_VIS_TYPE_DEFINE iterator;
+	class LUL_VIS_CLASS iterator;
 	typedef iterator const_iterator;
 
 	iterator begin() const;
 	iterator end() const;
 
 	template <class _CharT, class _Traits>
-	LUL_VIS_INLINE friend
+	LUL_VIS_INLINE_FUNC friend
 		typename std::enable_if<std::is_same<_CharT, char>::value &&
 							 std::is_same<_Traits, std::char_traits<char> >::value,
 						 std::basic_ostream<_CharT, _Traits>&>::type
@@ -1198,7 +1200,7 @@ public:
 	}
 
 	template <class _CharT, class _Traits>
-	LUL_VIS_INLINE friend
+	LUL_VIS_INLINE_FUNC friend
 		typename std::enable_if<!std::is_same<_CharT, char>::value ||
 							 !std::is_same<_Traits, std::char_traits<char> >::value,
 						 std::basic_ostream<_CharT, _Traits>&>::type
@@ -1208,7 +1210,7 @@ public:
 	}
 
 	template <class _CharT, class _Traits>
-	LUL_VIS_INLINE friend std::basic_istream<_CharT, _Traits>&
+	LUL_VIS_INLINE_FUNC friend std::basic_istream<_CharT, _Traits>&
 	operator>>(std::basic_istream<_CharT, _Traits>& __is, path& __p) {
 	std::basic_string<_CharT, _Traits> __tmp;
 	__is >> __quoted(__tmp);
@@ -1217,7 +1219,7 @@ public:
 	}
 
 private:
-	inline LUL_VIS_INLINE path&
+	inline LUL_VIS_INLINE_FUNC path&
 	__assign_view(__string_view const& __s) noexcept {
 	__pn_ = string_type(__s);
 	return *this;
@@ -1225,44 +1227,44 @@ private:
 	string_type __pn_;
 };
 
-inline LUL_VIS_INLINE void swap(path& __lhs, path& __rhs) noexcept {
+inline LUL_VIS_INLINE_FUNC void swap(path& __lhs, path& __rhs) noexcept {
 	__lhs.swap(__rhs);
 }
 
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 size_t hash_value(const path& __p) noexcept;
 
-inline LUL_VIS_INLINE bool operator==(const path& __lhs,
+inline LUL_VIS_INLINE_FUNC bool operator==(const path& __lhs,
 												 const path& __rhs) noexcept {
 	return __lhs.compare(__rhs) == 0;
 }
 
-inline LUL_VIS_INLINE bool operator!=(const path& __lhs,
+inline LUL_VIS_INLINE_FUNC bool operator!=(const path& __lhs,
 												 const path& __rhs) noexcept {
 	return __lhs.compare(__rhs) != 0;
 }
 
-inline LUL_VIS_INLINE bool operator<(const path& __lhs,
+inline LUL_VIS_INLINE_FUNC bool operator<(const path& __lhs,
 												const path& __rhs) noexcept {
 	return __lhs.compare(__rhs) < 0;
 }
 
-inline LUL_VIS_INLINE bool operator<=(const path& __lhs,
+inline LUL_VIS_INLINE_FUNC bool operator<=(const path& __lhs,
 												 const path& __rhs) noexcept {
 	return __lhs.compare(__rhs) <= 0;
 }
 
-inline LUL_VIS_INLINE bool operator>(const path& __lhs,
+inline LUL_VIS_INLINE_FUNC bool operator>(const path& __lhs,
 												const path& __rhs) noexcept {
 	return __lhs.compare(__rhs) > 0;
 }
 
-inline LUL_VIS_INLINE bool operator>=(const path& __lhs,
+inline LUL_VIS_INLINE_FUNC bool operator>=(const path& __lhs,
 												 const path& __rhs) noexcept {
 	return __lhs.compare(__rhs) >= 0;
 }
 
-inline LUL_VIS_INLINE path operator/(const path& __lhs,
+inline LUL_VIS_INLINE_FUNC path operator/(const path& __lhs,
 												const path& __rhs) {
 	path __result(__lhs);
 	__result /= __rhs;
@@ -1270,7 +1272,7 @@ inline LUL_VIS_INLINE path operator/(const path& __lhs,
 }
 
 template <class _Source>
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 	typename std::enable_if<__is_pathable<_Source>::value, path>::type
 	u8path(const _Source& __s) {
 	static_assert(
@@ -1281,7 +1283,7 @@ LUL_VIS_INLINE
 }
 
 template <class _InputIt>
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 	typename std::enable_if<__is_pathable<_InputIt>::value, path>::type
 	u8path(_InputIt __f, _InputIt __l) {
 	static_assert(
@@ -1290,7 +1292,7 @@ LUL_VIS_INLINE
 	return path(__f, __l);
 }
 
-class LUL_VIS_TYPE_DEFINE path::iterator {
+class LUL_VIS_CLASS path::iterator {
 public:
 	enum _ParserState : unsigned char {
 	_Singular,
@@ -1314,7 +1316,7 @@ public:
 		__stashing_iterator_tag; // See reverse_iterator and __is_stashing_iterator
 
 public:
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	iterator()
 		: __stashed_elem_(), __path_ptr_(nullptr), __entry_(),
 		__state_(_Singular) {}
@@ -1324,13 +1326,13 @@ public:
 
 	iterator& operator=(const iterator&) = default;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	reference operator*() const { return __stashed_elem_; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	pointer operator->() const { return &__stashed_elem_; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	iterator& operator++() {
 	//	FIXME C++2a possibly illegal
 //	[[assert: __state_ != _Singular]];
@@ -1338,14 +1340,14 @@ public:
 	return __increment();
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	iterator operator++(int) {
 	iterator __it(*this);
 	this->operator++();
 	return __it;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	iterator& operator--() {
 	//	FIXME C++2a possibly illegal
 //	[[assert: __state_ != _Singular]];
@@ -1353,7 +1355,7 @@ public:
 	return __decrement();
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	iterator operator--(int) {
 	iterator __it(*this);
 	this->operator--();
@@ -1363,7 +1365,7 @@ public:
 private:
 	friend class path;
 
-	inline LUL_VIS_INLINE friend bool operator==(const iterator&,
+	inline LUL_VIS_INLINE_FUNC friend bool operator==(const iterator&,
 															const iterator&);
 
 	iterator& __increment();
@@ -1375,34 +1377,34 @@ private:
 	_ParserState __state_;
 };
 
-inline LUL_VIS_INLINE bool operator==(const path::iterator& __lhs,
+inline LUL_VIS_INLINE_FUNC bool operator==(const path::iterator& __lhs,
 												 const path::iterator& __rhs) {
 	return __lhs.__path_ptr_ == __rhs.__path_ptr_ &&
 		 __lhs.__entry_.data() == __rhs.__entry_.data();
 }
 
-inline LUL_VIS_INLINE bool operator!=(const path::iterator& __lhs,
+inline LUL_VIS_INLINE_FUNC bool operator!=(const path::iterator& __lhs,
 												 const path::iterator& __rhs) {
 	return !(__lhs == __rhs);
 }
 
-class LUL_VIS_EXCEPTION_DEFINE filesystem_error : public std::system_error {
+class LUL_VIS_EXCEPTION filesystem_error : public std::system_error {
 public:
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	filesystem_error(const std::string& __what, std::error_code __ec)
 		: system_error(__ec, __what),
 		__storage_(std::make_shared<_Storage>(path(), path())) {
 	__create_what(0);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	filesystem_error(const std::string& __what, const path& __p1, std::error_code __ec)
 		: system_error(__ec, __what),
 		__storage_(std::make_shared<_Storage>(__p1, path())) {
 	__create_what(1);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	filesystem_error(const std::string& __what, const path& __p1, const path& __p2,
 					 std::error_code __ec)
 		: std::system_error(__ec, __what),
@@ -1410,25 +1412,25 @@ public:
 	__create_what(2);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	const path& path1() const noexcept { return __storage_->__p1_; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	const path& path2() const noexcept { return __storage_->__p2_; }
 
 	~filesystem_error() override; // key function
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	const char* what() const noexcept override {
 	return __storage_->__what_.c_str();
 	}
 
-	LUL_VIS_DEFINE
+	LUL_VIS_FUNC
 	void __create_what(int __num_paths);
 
 private:
 	struct _Storage {
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	_Storage(const path& __p1, const path& __p2) : __p1_(__p1), __p2_(__p2) {}
 
 	path __p1_;
@@ -1439,7 +1441,7 @@ private:
 };
 
 template <class... _Args>
-[[noreturn]] inline LUL_VIS_INLINE
+[[noreturn]] inline LUL_VIS_INLINE_FUNC
 	void
 	__throw_filesystem_error(_Args&&... __args) {
 	throw filesystem_error(std::forward<_Args>(__args)...);
@@ -1447,239 +1449,239 @@ template <class... _Args>
 
 // operational functions
 
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 path __absolute(const path&, std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 path __canonical(const path&, std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 void __copy(const path& __from, const path& __to, copy_options __opt,
 			std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 bool __copy_file(const path& __from, const path& __to, copy_options __opt,
 				 std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 void __copy_symlink(const path& __existing_symlink, const path& __new_symlink,
 					std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 bool __create_directories(const path& p, std::error_code* ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 bool __create_directory(const path& p, std::error_code* ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 bool __create_directory(const path& p, const path& attributes,
 						std::error_code* ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 void __create_directory_symlink(const path& __to, const path& __new_symlink,
 								std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 void __create_hard_link(const path& __to, const path& __new_hard_link,
 						std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 void __create_symlink(const path& __to, const path& __new_symlink,
 						std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 path __current_path(std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 void __current_path(const path&, std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 bool __equivalent(const path&, const path&, std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 uintmax_t __file_size(const path&, std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 uintmax_t __hard_link_count(const path&, std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 bool __fs_is_empty(const path& p, std::error_code* ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 file_time_type __last_write_time(const path& p, std::error_code* ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 void __last_write_time(const path& p, file_time_type new_time,
 						 std::error_code* ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 void __permissions(const path&, perms, perm_options, std::error_code* = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 path __read_symlink(const path& p, std::error_code* ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 bool __remove(const path& p, std::error_code* ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 uintmax_t __remove_all(const path& p, std::error_code* ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 void __rename(const path& from, const path& to, std::error_code* ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 void __resize_file(const path& p, uintmax_t size, std::error_code* ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 space_info __space(const path&, std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 file_status __status(const path&, std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 file_status __symlink_status(const path&, std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 path __system_complete(const path&, std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 path __temp_directory_path(std::error_code* __ec = nullptr);
-LUL_VIS_DEFINE
+LUL_VIS_FUNC
 path __weakly_canonical(path const& __p, std::error_code* __ec = nullptr);
 
-inline LUL_VIS_INLINE path current_path() {
+inline LUL_VIS_INLINE_FUNC path current_path() {
 	return __current_path();
 }
 
-inline LUL_VIS_INLINE path current_path(std::error_code& __ec) {
+inline LUL_VIS_INLINE_FUNC path current_path(std::error_code& __ec) {
 	return __current_path(&__ec);
 }
 
-inline LUL_VIS_INLINE void current_path(const path& __p) {
+inline LUL_VIS_INLINE_FUNC void current_path(const path& __p) {
 	__current_path(__p);
 }
 
-inline LUL_VIS_INLINE void current_path(const path& __p,
+inline LUL_VIS_INLINE_FUNC void current_path(const path& __p,
 													 std::error_code& __ec) noexcept {
 	__current_path(__p, &__ec);
 }
 
-inline LUL_VIS_INLINE path absolute(const path& __p) {
+inline LUL_VIS_INLINE_FUNC path absolute(const path& __p) {
 	return __absolute(__p);
 }
 
-inline LUL_VIS_INLINE path absolute(const path& __p,
+inline LUL_VIS_INLINE_FUNC path absolute(const path& __p,
 												 std::error_code& __ec) {
 	return __absolute(__p, &__ec);
 }
 
-inline LUL_VIS_INLINE path canonical(const path& __p) {
+inline LUL_VIS_INLINE_FUNC path canonical(const path& __p) {
 	return __canonical(__p);
 }
 
-inline LUL_VIS_INLINE path canonical(const path& __p,
+inline LUL_VIS_INLINE_FUNC path canonical(const path& __p,
 												std::error_code& __ec) {
 	return __canonical(__p, &__ec);
 }
 
-inline LUL_VIS_INLINE void copy(const path& __from,
+inline LUL_VIS_INLINE_FUNC void copy(const path& __from,
 											 const path& __to) {
 	__copy(__from, __to, copy_options::none);
 }
 
-inline LUL_VIS_INLINE void copy(const path& __from, const path& __to,
+inline LUL_VIS_INLINE_FUNC void copy(const path& __from, const path& __to,
 											 std::error_code& __ec) {
 	__copy(__from, __to, copy_options::none, &__ec);
 }
 
-inline LUL_VIS_INLINE void copy(const path& __from, const path& __to,
+inline LUL_VIS_INLINE_FUNC void copy(const path& __from, const path& __to,
 											 copy_options __opt) {
 	__copy(__from, __to, __opt);
 }
 
-inline LUL_VIS_INLINE void copy(const path& __from, const path& __to,
+inline LUL_VIS_INLINE_FUNC void copy(const path& __from, const path& __to,
 											 copy_options __opt,
 											 std::error_code& __ec) {
 	__copy(__from, __to, __opt, &__ec);
 }
 
-inline LUL_VIS_INLINE bool copy_file(const path& __from,
+inline LUL_VIS_INLINE_FUNC bool copy_file(const path& __from,
 												const path& __to) {
 	return __copy_file(__from, __to, copy_options::none);
 }
 
-inline LUL_VIS_INLINE bool
+inline LUL_VIS_INLINE_FUNC bool
 copy_file(const path& __from, const path& __to, std::error_code& __ec) {
 	return __copy_file(__from, __to, copy_options::none, &__ec);
 }
 
-inline LUL_VIS_INLINE bool
+inline LUL_VIS_INLINE_FUNC bool
 copy_file(const path& __from, const path& __to, copy_options __opt) {
 	return __copy_file(__from, __to, __opt);
 }
 
-inline LUL_VIS_INLINE bool copy_file(const path& __from,
+inline LUL_VIS_INLINE_FUNC bool copy_file(const path& __from,
 												const path& __to,
 												copy_options __opt,
 												std::error_code& __ec) {
 	return __copy_file(__from, __to, __opt, &__ec);
 }
 
-inline LUL_VIS_INLINE void copy_symlink(const path& __existing,
+inline LUL_VIS_INLINE_FUNC void copy_symlink(const path& __existing,
 													 const path& __new) {
 	__copy_symlink(__existing, __new);
 }
 
-inline LUL_VIS_INLINE void
+inline LUL_VIS_INLINE_FUNC void
 copy_symlink(const path& __ext, const path& __new, std::error_code& __ec) noexcept {
 	__copy_symlink(__ext, __new, &__ec);
 }
 
-inline LUL_VIS_INLINE bool create_directories(const path& __p) {
+inline LUL_VIS_INLINE_FUNC bool create_directories(const path& __p) {
 	return __create_directories(__p);
 }
 
-inline LUL_VIS_INLINE bool create_directories(const path& __p,
+inline LUL_VIS_INLINE_FUNC bool create_directories(const path& __p,
 														 std::error_code& __ec) {
 	return __create_directories(__p, &__ec);
 }
 
-inline LUL_VIS_INLINE bool create_directory(const path& __p) {
+inline LUL_VIS_INLINE_FUNC bool create_directory(const path& __p) {
 	return __create_directory(__p);
 }
 
-inline LUL_VIS_INLINE bool
+inline LUL_VIS_INLINE_FUNC bool
 create_directory(const path& __p, std::error_code& __ec) noexcept {
 	return __create_directory(__p, &__ec);
 }
 
-inline LUL_VIS_INLINE bool create_directory(const path& __p,
+inline LUL_VIS_INLINE_FUNC bool create_directory(const path& __p,
 														 const path& __attrs) {
 	return __create_directory(__p, __attrs);
 }
 
-inline LUL_VIS_INLINE bool
+inline LUL_VIS_INLINE_FUNC bool
 create_directory(const path& __p, const path& __attrs,
 				 std::error_code& __ec) noexcept {
 	return __create_directory(__p, __attrs, &__ec);
 }
 
-inline LUL_VIS_INLINE void
+inline LUL_VIS_INLINE_FUNC void
 create_directory_symlink(const path& __to, const path& __new) {
 	__create_directory_symlink(__to, __new);
 }
 
-inline LUL_VIS_INLINE void
+inline LUL_VIS_INLINE_FUNC void
 create_directory_symlink(const path& __to, const path& __new,
 						 std::error_code& __ec) noexcept {
 	__create_directory_symlink(__to, __new, &__ec);
 }
 
-inline LUL_VIS_INLINE void create_hard_link(const path& __to,
+inline LUL_VIS_INLINE_FUNC void create_hard_link(const path& __to,
 														 const path& __new) {
 	__create_hard_link(__to, __new);
 }
 
-inline LUL_VIS_INLINE void
+inline LUL_VIS_INLINE_FUNC void
 create_hard_link(const path& __to, const path& __new,
 				 std::error_code& __ec) noexcept {
 	__create_hard_link(__to, __new, &__ec);
 }
 
-inline LUL_VIS_INLINE void create_symlink(const path& __to,
+inline LUL_VIS_INLINE_FUNC void create_symlink(const path& __to,
 													 const path& __new) {
 	__create_symlink(__to, __new);
 }
 
-inline LUL_VIS_INLINE void
+inline LUL_VIS_INLINE_FUNC void
 create_symlink(const path& __to, const path& __new, std::error_code& __ec) noexcept {
 	return __create_symlink(__to, __new, &__ec);
 }
 
-inline LUL_VIS_INLINE bool status_known(file_status __s) noexcept {
+inline LUL_VIS_INLINE_FUNC bool status_known(file_status __s) noexcept {
 	return __s.type() != file_type::none;
 }
 
-inline LUL_VIS_INLINE bool exists(file_status __s) noexcept {
+inline LUL_VIS_INLINE_FUNC bool exists(file_status __s) noexcept {
 	return status_known(__s) && __s.type() != file_type::not_found;
 }
 
-inline LUL_VIS_INLINE bool exists(const path& __p) {
+inline LUL_VIS_INLINE_FUNC bool exists(const path& __p) {
 	return exists(__status(__p));
 }
 
-inline LUL_VIS_INLINE bool exists(const path& __p,
+inline LUL_VIS_INLINE_FUNC bool exists(const path& __p,
 											 std::error_code& __ec) noexcept {
 	auto __s = __status(__p, &__ec);
 	if (status_known(__s))
@@ -1687,188 +1689,188 @@ inline LUL_VIS_INLINE bool exists(const path& __p,
 	return exists(__s);
 }
 
-inline LUL_VIS_INLINE bool equivalent(const path& __p1,
+inline LUL_VIS_INLINE_FUNC bool equivalent(const path& __p1,
 												 const path& __p2) {
 	return __equivalent(__p1, __p2);
 }
 
-inline LUL_VIS_INLINE bool
+inline LUL_VIS_INLINE_FUNC bool
 equivalent(const path& __p1, const path& __p2, std::error_code& __ec) noexcept {
 	return __equivalent(__p1, __p2, &__ec);
 }
 
-inline LUL_VIS_INLINE uintmax_t file_size(const path& __p) {
+inline LUL_VIS_INLINE_FUNC uintmax_t file_size(const path& __p) {
 	return __file_size(__p);
 }
 
-inline LUL_VIS_INLINE uintmax_t
+inline LUL_VIS_INLINE_FUNC uintmax_t
 file_size(const path& __p, std::error_code& __ec) noexcept {
 	return __file_size(__p, &__ec);
 }
 
-inline LUL_VIS_INLINE uintmax_t hard_link_count(const path& __p) {
+inline LUL_VIS_INLINE_FUNC uintmax_t hard_link_count(const path& __p) {
 	return __hard_link_count(__p);
 }
 
-inline LUL_VIS_INLINE uintmax_t
+inline LUL_VIS_INLINE_FUNC uintmax_t
 hard_link_count(const path& __p, std::error_code& __ec) noexcept {
 	return __hard_link_count(__p, &__ec);
 }
 
-inline LUL_VIS_INLINE bool is_block_file(file_status __s) noexcept {
+inline LUL_VIS_INLINE_FUNC bool is_block_file(file_status __s) noexcept {
 	return __s.type() == file_type::block;
 }
 
-inline LUL_VIS_INLINE bool is_block_file(const path& __p) {
+inline LUL_VIS_INLINE_FUNC bool is_block_file(const path& __p) {
 	return is_block_file(__status(__p));
 }
 
-inline LUL_VIS_INLINE bool is_block_file(const path& __p,
+inline LUL_VIS_INLINE_FUNC bool is_block_file(const path& __p,
 													std::error_code& __ec) noexcept {
 	return is_block_file(__status(__p, &__ec));
 }
 
-inline LUL_VIS_INLINE bool
+inline LUL_VIS_INLINE_FUNC bool
 is_character_file(file_status __s) noexcept {
 	return __s.type() == file_type::character;
 }
 
-inline LUL_VIS_INLINE bool is_character_file(const path& __p) {
+inline LUL_VIS_INLINE_FUNC bool is_character_file(const path& __p) {
 	return is_character_file(__status(__p));
 }
 
-inline LUL_VIS_INLINE bool
+inline LUL_VIS_INLINE_FUNC bool
 is_character_file(const path& __p, std::error_code& __ec) noexcept {
 	return is_character_file(__status(__p, &__ec));
 }
 
-inline LUL_VIS_INLINE bool is_directory(file_status __s) noexcept {
+inline LUL_VIS_INLINE_FUNC bool is_directory(file_status __s) noexcept {
 	return __s.type() == file_type::directory;
 }
 
-inline LUL_VIS_INLINE bool is_directory(const path& __p) {
+inline LUL_VIS_INLINE_FUNC bool is_directory(const path& __p) {
 	return is_directory(__status(__p));
 }
 
-inline LUL_VIS_INLINE bool is_directory(const path& __p,
+inline LUL_VIS_INLINE_FUNC bool is_directory(const path& __p,
 													 std::error_code& __ec) noexcept {
 	return is_directory(__status(__p, &__ec));
 }
 
-inline LUL_VIS_INLINE bool is_empty(const path& __p) {
+inline LUL_VIS_INLINE_FUNC bool is_empty(const path& __p) {
 	return __fs_is_empty(__p);
 }
 
-inline LUL_VIS_INLINE bool is_empty(const path& __p,
+inline LUL_VIS_INLINE_FUNC bool is_empty(const path& __p,
 												 std::error_code& __ec) {
 	return __fs_is_empty(__p, &__ec);
 }
 
-inline LUL_VIS_INLINE bool is_fifo(file_status __s) noexcept {
+inline LUL_VIS_INLINE_FUNC bool is_fifo(file_status __s) noexcept {
 	return __s.type() == file_type::fifo;
 }
-inline LUL_VIS_INLINE bool is_fifo(const path& __p) {
+inline LUL_VIS_INLINE_FUNC bool is_fifo(const path& __p) {
 	return is_fifo(__status(__p));
 }
 
-inline LUL_VIS_INLINE bool is_fifo(const path& __p,
+inline LUL_VIS_INLINE_FUNC bool is_fifo(const path& __p,
 												std::error_code& __ec) noexcept {
 	return is_fifo(__status(__p, &__ec));
 }
 
-inline LUL_VIS_INLINE bool
+inline LUL_VIS_INLINE_FUNC bool
 is_regular_file(file_status __s) noexcept {
 	return __s.type() == file_type::regular;
 }
 
-inline LUL_VIS_INLINE bool is_regular_file(const path& __p) {
+inline LUL_VIS_INLINE_FUNC bool is_regular_file(const path& __p) {
 	return is_regular_file(__status(__p));
 }
 
-inline LUL_VIS_INLINE bool
+inline LUL_VIS_INLINE_FUNC bool
 is_regular_file(const path& __p, std::error_code& __ec) noexcept {
 	return is_regular_file(__status(__p, &__ec));
 }
 
-inline LUL_VIS_INLINE bool is_socket(file_status __s) noexcept {
+inline LUL_VIS_INLINE_FUNC bool is_socket(file_status __s) noexcept {
 	return __s.type() == file_type::socket;
 }
 
-inline LUL_VIS_INLINE bool is_socket(const path& __p) {
+inline LUL_VIS_INLINE_FUNC bool is_socket(const path& __p) {
 	return is_socket(__status(__p));
 }
 
-inline LUL_VIS_INLINE bool is_socket(const path& __p,
+inline LUL_VIS_INLINE_FUNC bool is_socket(const path& __p,
 												std::error_code& __ec) noexcept {
 	return is_socket(__status(__p, &__ec));
 }
 
-inline LUL_VIS_INLINE bool is_symlink(file_status __s) noexcept {
+inline LUL_VIS_INLINE_FUNC bool is_symlink(file_status __s) noexcept {
 	return __s.type() == file_type::symlink;
 }
 
-inline LUL_VIS_INLINE bool is_symlink(const path& __p) {
+inline LUL_VIS_INLINE_FUNC bool is_symlink(const path& __p) {
 	return is_symlink(__symlink_status(__p));
 }
 
-inline LUL_VIS_INLINE bool is_symlink(const path& __p,
+inline LUL_VIS_INLINE_FUNC bool is_symlink(const path& __p,
 												 std::error_code& __ec) noexcept {
 	return is_symlink(__symlink_status(__p, &__ec));
 }
 
-inline LUL_VIS_INLINE bool is_other(file_status __s) noexcept {
+inline LUL_VIS_INLINE_FUNC bool is_other(file_status __s) noexcept {
 	return exists(__s) && !is_regular_file(__s) && !is_directory(__s) &&
 		 !is_symlink(__s);
 }
 
-inline LUL_VIS_INLINE bool is_other(const path& __p) {
+inline LUL_VIS_INLINE_FUNC bool is_other(const path& __p) {
 	return is_other(__status(__p));
 }
 
-inline LUL_VIS_INLINE bool is_other(const path& __p,
+inline LUL_VIS_INLINE_FUNC bool is_other(const path& __p,
 												 std::error_code& __ec) noexcept {
 	return is_other(__status(__p, &__ec));
 }
 
-inline LUL_VIS_INLINE file_time_type
+inline LUL_VIS_INLINE_FUNC file_time_type
 last_write_time(const path& __p) {
 	return __last_write_time(__p);
 }
 
-inline LUL_VIS_INLINE file_time_type
+inline LUL_VIS_INLINE_FUNC file_time_type
 last_write_time(const path& __p, std::error_code& __ec) noexcept {
 	return __last_write_time(__p, &__ec);
 }
 
-inline LUL_VIS_INLINE void last_write_time(const path& __p,
+inline LUL_VIS_INLINE_FUNC void last_write_time(const path& __p,
 														file_time_type __t) {
 	__last_write_time(__p, __t);
 }
 
-inline LUL_VIS_INLINE void
+inline LUL_VIS_INLINE_FUNC void
 last_write_time(const path& __p, file_time_type __t,
 				std::error_code& __ec) noexcept {
 	__last_write_time(__p, __t, &__ec);
 }
 
-inline LUL_VIS_INLINE void
+inline LUL_VIS_INLINE_FUNC void
 permissions(const path& __p, perms __prms,
 			perm_options __opts = perm_options::replace) {
 	__permissions(__p, __prms, __opts);
 }
 
-inline LUL_VIS_INLINE void permissions(const path& __p, perms __prms,
+inline LUL_VIS_INLINE_FUNC void permissions(const path& __p, perms __prms,
 													std::error_code& __ec) noexcept {
 	__permissions(__p, __prms, perm_options::replace, &__ec);
 }
 
-inline LUL_VIS_INLINE void permissions(const path& __p, perms __prms,
+inline LUL_VIS_INLINE_FUNC void permissions(const path& __p, perms __prms,
 													perm_options __opts,
 													std::error_code& __ec) {
 	__permissions(__p, __prms, __opts, &__ec);
 }
 
-inline LUL_VIS_INLINE path proximate(const path& __p,
+inline LUL_VIS_INLINE_FUNC path proximate(const path& __p,
 												const path& __base,
 												std::error_code& __ec) {
 	path __tmp = __weakly_canonical(__p, &__ec);
@@ -1880,27 +1882,27 @@ inline LUL_VIS_INLINE path proximate(const path& __p,
 	return __tmp.lexically_proximate(__tmp_base);
 }
 
-inline LUL_VIS_INLINE path proximate(const path& __p,
+inline LUL_VIS_INLINE_FUNC path proximate(const path& __p,
 												std::error_code& __ec) {
 	return proximate(__p, current_path(), __ec);
 }
 
-inline LUL_VIS_INLINE path
+inline LUL_VIS_INLINE_FUNC path
 proximate(const path& __p, const path& __base = current_path()) {
 	return __weakly_canonical(__p).lexically_proximate(
 		__weakly_canonical(__base));
 }
 
-inline LUL_VIS_INLINE path read_symlink(const path& __p) {
+inline LUL_VIS_INLINE_FUNC path read_symlink(const path& __p) {
 	return __read_symlink(__p);
 }
 
-inline LUL_VIS_INLINE path read_symlink(const path& __p,
+inline LUL_VIS_INLINE_FUNC path read_symlink(const path& __p,
 													 std::error_code& __ec) {
 	return __read_symlink(__p, &__ec);
 }
 
-inline LUL_VIS_INLINE path relative(const path& __p,
+inline LUL_VIS_INLINE_FUNC path relative(const path& __p,
 												 const path& __base,
 												 std::error_code& __ec) {
 	path __tmp = __weakly_canonical(__p, &__ec);
@@ -1912,94 +1914,94 @@ inline LUL_VIS_INLINE path relative(const path& __p,
 	return __tmp.lexically_relative(__tmpbase);
 }
 
-inline LUL_VIS_INLINE path relative(const path& __p,
+inline LUL_VIS_INLINE_FUNC path relative(const path& __p,
 												 std::error_code& __ec) {
 	return relative(__p, current_path(), __ec);
 }
 
-inline LUL_VIS_INLINE path
+inline LUL_VIS_INLINE_FUNC path
 relative(const path& __p, const path& __base = current_path()) {
 	return __weakly_canonical(__p).lexically_relative(__weakly_canonical(__base));
 }
 
-inline LUL_VIS_INLINE bool remove(const path& __p) {
+inline LUL_VIS_INLINE_FUNC bool remove(const path& __p) {
 	return __remove(__p);
 }
 
-inline LUL_VIS_INLINE bool remove(const path& __p,
+inline LUL_VIS_INLINE_FUNC bool remove(const path& __p,
 											 std::error_code& __ec) noexcept {
 	return __remove(__p, &__ec);
 }
 
-inline LUL_VIS_INLINE uintmax_t remove_all(const path& __p) {
+inline LUL_VIS_INLINE_FUNC uintmax_t remove_all(const path& __p) {
 	return __remove_all(__p);
 }
 
-inline LUL_VIS_INLINE uintmax_t remove_all(const path& __p,
+inline LUL_VIS_INLINE_FUNC uintmax_t remove_all(const path& __p,
 														std::error_code& __ec) {
 	return __remove_all(__p, &__ec);
 }
 
-inline LUL_VIS_INLINE void rename(const path& __from,
+inline LUL_VIS_INLINE_FUNC void rename(const path& __from,
 											 const path& __to) {
 	return __rename(__from, __to);
 }
 
-inline LUL_VIS_INLINE void
+inline LUL_VIS_INLINE_FUNC void
 rename(const path& __from, const path& __to, std::error_code& __ec) noexcept {
 	return __rename(__from, __to, &__ec);
 }
 
-inline LUL_VIS_INLINE void resize_file(const path& __p,
+inline LUL_VIS_INLINE_FUNC void resize_file(const path& __p,
 													uintmax_t __ns) {
 	return __resize_file(__p, __ns);
 }
 
-inline LUL_VIS_INLINE void
+inline LUL_VIS_INLINE_FUNC void
 resize_file(const path& __p, uintmax_t __ns, std::error_code& __ec) noexcept {
 	return __resize_file(__p, __ns, &__ec);
 }
 
-inline LUL_VIS_INLINE space_info space(const path& __p) {
+inline LUL_VIS_INLINE_FUNC space_info space(const path& __p) {
 	return __space(__p);
 }
 
-inline LUL_VIS_INLINE space_info space(const path& __p,
+inline LUL_VIS_INLINE_FUNC space_info space(const path& __p,
 													std::error_code& __ec) noexcept {
 	return __space(__p, &__ec);
 }
 
-inline LUL_VIS_INLINE file_status status(const path& __p) {
+inline LUL_VIS_INLINE_FUNC file_status status(const path& __p) {
 	return __status(__p);
 }
 
-inline LUL_VIS_INLINE file_status status(const path& __p,
+inline LUL_VIS_INLINE_FUNC file_status status(const path& __p,
 													std::error_code& __ec) noexcept {
 	return __status(__p, &__ec);
 }
 
-inline LUL_VIS_INLINE file_status symlink_status(const path& __p) {
+inline LUL_VIS_INLINE_FUNC file_status symlink_status(const path& __p) {
 	return __symlink_status(__p);
 }
 
-inline LUL_VIS_INLINE file_status
+inline LUL_VIS_INLINE_FUNC file_status
 symlink_status(const path& __p, std::error_code& __ec) noexcept {
 	return __symlink_status(__p, &__ec);
 }
 
-inline LUL_VIS_INLINE path temp_directory_path() {
+inline LUL_VIS_INLINE_FUNC path temp_directory_path() {
 	return __temp_directory_path();
 }
 
-inline LUL_VIS_INLINE path temp_directory_path(std::error_code& __ec) {
+inline LUL_VIS_INLINE_FUNC path temp_directory_path(std::error_code& __ec) {
 	return __temp_directory_path(&__ec);
 }
 
-inline LUL_VIS_INLINE path weakly_canonical(path const& __p) {
+inline LUL_VIS_INLINE_FUNC path weakly_canonical(path const& __p) {
 	return __weakly_canonical(__p);
 }
 
-inline LUL_VIS_INLINE path weakly_canonical(path const& __p,
+inline LUL_VIS_INLINE_FUNC path weakly_canonical(path const& __p,
 														 std::error_code& __ec) {
 	return __weakly_canonical(__p, &__ec);
 }
@@ -2017,13 +2019,13 @@ public:
 	directory_entry(directory_entry const&) = default;
 	directory_entry(directory_entry&&) noexcept = default;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	explicit directory_entry(_Path const& __p) : __p_(__p) {
 	std::error_code __ec;
 	__refresh(&__ec);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	directory_entry(_Path const& __p, std::error_code& __ec) : __p_(__p) {
 	__refresh(&__ec);
 	}
@@ -2033,181 +2035,181 @@ public:
 	directory_entry& operator=(directory_entry const&) = default;
 	directory_entry& operator=(directory_entry&&) noexcept = default;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void assign(_Path const& __p) {
 	__p_ = __p;
 	std::error_code __ec;
 	__refresh(&__ec);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void assign(_Path const& __p, std::error_code& __ec) {
 	__p_ = __p;
 	__refresh(&__ec);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void replace_filename(_Path const& __p) {
 	__p_.replace_filename(__p);
 	std::error_code __ec;
 	__refresh(&__ec);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void replace_filename(_Path const& __p, std::error_code& __ec) {
 	__p_ = __p_.parent_path() / __p;
 	__refresh(&__ec);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void refresh() { __refresh(); }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void refresh(std::error_code& __ec) noexcept { __refresh(&__ec); }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	_Path const& path() const noexcept { return __p_; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	operator const _Path&() const noexcept { return __p_; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool exists() const { return filesystem::exists(file_status{__get_ft()}); }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool exists(std::error_code& __ec) const noexcept {
 	return filesystem::exists(file_status{__get_ft(&__ec)});
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_block_file() const { return __get_ft() == file_type::block; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_block_file(std::error_code& __ec) const noexcept {
 	return __get_ft(&__ec) == file_type::block;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_character_file() const { return __get_ft() == file_type::character; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_character_file(std::error_code& __ec) const noexcept {
 	return __get_ft(&__ec) == file_type::character;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_directory() const { return __get_ft() == file_type::directory; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_directory(std::error_code& __ec) const noexcept {
 	return __get_ft(&__ec) == file_type::directory;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_fifo() const { return __get_ft() == file_type::fifo; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_fifo(std::error_code& __ec) const noexcept {
 	return __get_ft(&__ec) == file_type::fifo;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_other() const { return filesystem::is_other(file_status{__get_ft()}); }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_other(std::error_code& __ec) const noexcept {
 	return filesystem::is_other(file_status{__get_ft(&__ec)});
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_regular_file() const { return __get_ft() == file_type::regular; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_regular_file(std::error_code& __ec) const noexcept {
 	return __get_ft(&__ec) == file_type::regular;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_socket() const { return __get_ft() == file_type::socket; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_socket(std::error_code& __ec) const noexcept {
 	return __get_ft(&__ec) == file_type::socket;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_symlink() const { return __get_sym_ft() == file_type::symlink; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool is_symlink(std::error_code& __ec) const noexcept {
 	return __get_sym_ft(&__ec) == file_type::symlink;
 	}
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	uintmax_t file_size() const { return __get_size(); }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	uintmax_t file_size(std::error_code& __ec) const noexcept {
 	return __get_size(&__ec);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	uintmax_t hard_link_count() const { return __get_nlink(); }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	uintmax_t hard_link_count(std::error_code& __ec) const noexcept {
 	return __get_nlink(&__ec);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	file_time_type last_write_time() const { return __get_write_time(); }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	file_time_type last_write_time(std::error_code& __ec) const noexcept {
 	return __get_write_time(&__ec);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	file_status status() const { return __get_status(); }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	file_status status(std::error_code& __ec) const noexcept {
 	return __get_status(&__ec);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	file_status symlink_status() const { return __get_symlink_status(); }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	file_status symlink_status(std::error_code& __ec) const noexcept {
 	return __get_symlink_status(&__ec);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool operator<(directory_entry const& __rhs) const noexcept {
 	return __p_ < __rhs.__p_;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool operator==(directory_entry const& __rhs) const noexcept {
 	return __p_ == __rhs.__p_;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool operator!=(directory_entry const& __rhs) const noexcept {
 	return __p_ != __rhs.__p_;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool operator<=(directory_entry const& __rhs) const noexcept {
 	return __p_ <= __rhs.__p_;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool operator>(directory_entry const& __rhs) const noexcept {
 	return __p_ > __rhs.__p_;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool operator>=(directory_entry const& __rhs) const noexcept {
 	return __p_ >= __rhs.__p_;
 	}
@@ -2235,10 +2237,10 @@ private:
 	file_type __type_;
 	_CacheType __cache_type_;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__cached_data() noexcept { __reset(); }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void __reset() {
 		__cache_type_ = _Empty;
 		__type_ = file_type::none;
@@ -2248,7 +2250,7 @@ private:
 	}
 	};
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	static __cached_data __create_iter_result(file_type __ft) {
 	__cached_data __data;
 	__data.__type_ = __ft;
@@ -2265,16 +2267,16 @@ private:
 	return __data;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void __assign_iter_entry(_Path&& __p, __cached_data __dt) {
 	__p_ = std::move(__p);
 	__data_ = __dt;
 	}
 
-	LUL_VIS_DEFINE
+	LUL_VIS_FUNC
 	std::error_code __do_refresh() noexcept;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	static bool __is_dne_error(std::error_code const& __ec) {
 	if (!__ec)
 		return true;
@@ -2287,7 +2289,7 @@ private:
 	}
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void __handle_error(const char* __msg, std::error_code* __dest_ec,
 						std::error_code const& __ec, bool __allow_dne = false) const {
 	if (__dest_ec) {
@@ -2298,13 +2300,13 @@ private:
 		__throw_filesystem_error(__msg, __p_, __ec);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void __refresh(std::error_code* __ec = nullptr) {
 	__handle_error("in directory_entry::refresh", __ec, __do_refresh(),
 					 /*allow_dne*/ true);
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	file_type __get_sym_ft(std::error_code* __ec = nullptr) const {
 	switch (__data_.__cache_type_) {
 	case _Empty:
@@ -2327,7 +2329,7 @@ private:
 	//	SEEME unreachable
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	file_type __get_ft(std::error_code* __ec = nullptr) const {
 	switch (__data_.__cache_type_) {
 	case _Empty:
@@ -2348,7 +2350,7 @@ private:
 	//	SEEME unreachable
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	file_status __get_status(std::error_code* __ec = nullptr) const {
 	switch (__data_.__cache_type_) {
 	case _Empty:
@@ -2363,7 +2365,7 @@ private:
 	//	SEEME unreachable
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	file_status __get_symlink_status(std::error_code* __ec = nullptr) const {
 	switch (__data_.__cache_type_) {
 	case _Empty:
@@ -2379,7 +2381,7 @@ private:
 	//	SEEME unreachable
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	uintmax_t __get_size(std::error_code* __ec = nullptr) const {
 	switch (__data_.__cache_type_) {
 	case _Empty:
@@ -2404,7 +2406,7 @@ private:
 	//	SEEME unreachable
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	uintmax_t __get_nlink(std::error_code* __ec = nullptr) const {
 	switch (__data_.__cache_type_) {
 	case _Empty:
@@ -2423,7 +2425,7 @@ private:
 	//	SEEME unreachable
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	file_time_type __get_write_time(std::error_code* __ec = nullptr) const {
 	switch (__data_.__cache_type_) {
 	case _Empty:
@@ -2453,7 +2455,7 @@ private:
 
 class __dir_element_proxy {
 public:
-	inline LUL_VIS_INLINE directory_entry operator*() {
+	inline LUL_VIS_INLINE_FUNC directory_entry operator*() {
 	return std::move(__elem_);
 	}
 
@@ -2524,44 +2526,44 @@ public:
 	directory_iterator& increment(std::error_code& __ec) { return __increment(&__ec); }
 
 private:
-	inline LUL_VIS_INLINE friend bool
+	inline LUL_VIS_INLINE_FUNC friend bool
 	operator==(const directory_iterator& __lhs,
 			 const directory_iterator& __rhs) noexcept;
 
 	// construct the dir_stream
-	LUL_VIS_DEFINE
+	LUL_VIS_FUNC
 	directory_iterator(const path&, std::error_code*,
 					 directory_options = directory_options::none);
 
-	LUL_VIS_DEFINE
+	LUL_VIS_FUNC
 	directory_iterator& __increment(std::error_code* __ec = nullptr);
 
-	LUL_VIS_DEFINE
+	LUL_VIS_FUNC
 	const directory_entry& __dereference() const;
 
 private:
 	std::shared_ptr<__dir_stream> __imp_;
 };
 
-inline LUL_VIS_INLINE bool
+inline LUL_VIS_INLINE_FUNC bool
 operator==(const directory_iterator& __lhs,
 			 const directory_iterator& __rhs) noexcept {
 	return __lhs.__imp_ == __rhs.__imp_;
 }
 
-inline LUL_VIS_INLINE bool
+inline LUL_VIS_INLINE_FUNC bool
 operator!=(const directory_iterator& __lhs,
 			 const directory_iterator& __rhs) noexcept {
 	return !(__lhs == __rhs);
 }
 
 // enable directory_iterator range-based for statements
-inline LUL_VIS_INLINE directory_iterator
+inline LUL_VIS_INLINE_FUNC directory_iterator
 begin(directory_iterator __iter) noexcept {
 	return __iter;
 }
 
-inline LUL_VIS_INLINE directory_iterator
+inline LUL_VIS_INLINE_FUNC directory_iterator
 end(const directory_iterator&) noexcept {
 	return directory_iterator();
 }
@@ -2576,20 +2578,20 @@ public:
 
 public:
 	// constructors and destructor
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	recursive_directory_iterator() noexcept : __rec_(false) {}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	explicit recursive_directory_iterator(
 		const path& __p, directory_options __xoptions = directory_options::none)
 		: recursive_directory_iterator(__p, __xoptions, nullptr) {}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	recursive_directory_iterator(const path& __p, directory_options __xoptions,
 								 std::error_code& __ec)
 		: recursive_directory_iterator(__p, __xoptions, &__ec) {}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	recursive_directory_iterator(const path& __p, std::error_code& __ec)
 		: recursive_directory_iterator(__p, directory_options::none, &__ec) {}
 
@@ -2599,7 +2601,7 @@ public:
 	recursive_directory_iterator&
 	operator=(const recursive_directory_iterator&) = default;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	recursive_directory_iterator&
 	operator=(recursive_directory_iterator&& __o) noexcept {
 	// non-default implementation provided to support self-move assign.
@@ -2612,61 +2614,61 @@ public:
 
 	~recursive_directory_iterator() = default;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	const directory_entry& operator*() const { return __dereference(); }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	const directory_entry* operator->() const { return &__dereference(); }
 
 	recursive_directory_iterator& operator++() { return __increment(); }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	__dir_element_proxy operator++(int) {
 	__dir_element_proxy __p(**this);
 	__increment();
 	return __p;
 	}
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	recursive_directory_iterator& increment(std::error_code& __ec) {
 	return __increment(&__ec);
 	}
 
-	LUL_VIS_DEFINE directory_options options() const;
-	LUL_VIS_DEFINE int depth() const;
+	LUL_VIS_FUNC directory_options options() const;
+	LUL_VIS_FUNC int depth() const;
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void pop() { __pop(); }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void pop(std::error_code& __ec) { __pop(&__ec); }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	bool recursion_pending() const { return __rec_; }
 
-	LUL_VIS_INLINE
+	LUL_VIS_INLINE_FUNC
 	void disable_recursion_pending() { __rec_ = false; }
 
 private:
 	recursive_directory_iterator(const path& __p, directory_options __opt,
 								 std::error_code* __ec);
 
-	LUL_VIS_DEFINE
+	LUL_VIS_FUNC
 	const directory_entry& __dereference() const;
 
-	LUL_VIS_DEFINE
+	LUL_VIS_FUNC
 	bool __try_recursion(std::error_code* __ec);
 
-	LUL_VIS_DEFINE
+	LUL_VIS_FUNC
 	void __advance(std::error_code* __ec = nullptr);
 
-	LUL_VIS_DEFINE
+	LUL_VIS_FUNC
 	recursive_directory_iterator& __increment(std::error_code* __ec = nullptr);
 
-	LUL_VIS_DEFINE
+	LUL_VIS_FUNC
 	void __pop(std::error_code* __ec = nullptr);
 
-	inline LUL_VIS_INLINE friend bool
+	inline LUL_VIS_INLINE_FUNC friend bool
 	operator==(const recursive_directory_iterator&,
 			 const recursive_directory_iterator&) noexcept;
 
@@ -2675,24 +2677,24 @@ private:
 	bool __rec_;
 }; // class recursive_directory_iterator
 
-inline LUL_VIS_INLINE bool
+inline LUL_VIS_INLINE_FUNC bool
 operator==(const recursive_directory_iterator& __lhs,
 			 const recursive_directory_iterator& __rhs) noexcept {
 	return __lhs.__imp_ == __rhs.__imp_;
 }
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline bool operator!=(const recursive_directory_iterator& __lhs,
 						 const recursive_directory_iterator& __rhs) noexcept {
 	return !(__lhs == __rhs);
 }
 // enable recursive_directory_iterator range-based for statements
-inline LUL_VIS_INLINE recursive_directory_iterator
+inline LUL_VIS_INLINE_FUNC recursive_directory_iterator
 begin(recursive_directory_iterator __iter) noexcept {
 	return __iter;
 }
 
-inline LUL_VIS_INLINE recursive_directory_iterator
+inline LUL_VIS_INLINE_FUNC recursive_directory_iterator
 end(const recursive_directory_iterator&) noexcept {
 	return recursive_directory_iterator();
 }

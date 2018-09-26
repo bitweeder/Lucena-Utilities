@@ -121,7 +121,7 @@
 	//	SEEME We don’t perfect-forward these in order to avoid ambiguity
 	//	due to symmetry when resolving functions.
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator == (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator == (
 		const optional<T> & lhs,
 		const optional<U> & rhs)
 	{
@@ -129,7 +129,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator != (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator != (
 		const optional<T> & lhs,
 		const optional<U> & rhs)
 	{
@@ -137,7 +137,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator < (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator < (
 		const optional<T> & lhs,
 		const optional<U> & rhs)
 	{
@@ -145,7 +145,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator > (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator > (
 		const optional<T> & lhs,
 		const optional<U> & rhs)
 	{
@@ -153,7 +153,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator <= (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator <= (
 		const optional<T> & lhs,
 		const optional<U> & rhs)
 	{
@@ -161,7 +161,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator >= (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator >= (
 		const optional<T> & lhs,
 		const optional<U> & rhs)
 	{
@@ -174,7 +174,7 @@
 	//	nullopt comparisons are always noexcept while T comparisons are
 	//	not; the extra genericity doesn’t save us any work.
 	template <class T>
-	LUL_VIS_INLINE inline constexpr bool operator == (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator == (
 		const optional<T> & lhs,
 		nullupt_t rhs) noexcept
 	{
@@ -182,7 +182,7 @@
 	}
 
 	template <class T>
-	LUL_VIS_INLINE inline constexpr bool operator == (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator == (
 		nullupt_t lhs,
 		const optional<U> & rhs) noexcept
 	{
@@ -190,7 +190,7 @@
 	}
 
 	template <class T>
-	LUL_VIS_INLINE inline constexpr bool operator != (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator != (
 		const optional<T> & lhs,
 		nullupt_t rhs) noexcept
 	{
@@ -198,7 +198,7 @@
 	}
 
 	template <class T>
-	LUL_VIS_INLINE inline constexpr bool operator != (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator != (
 		nullupt_t lhs,
 		const optional<U> & rhs) noexcept
 	{
@@ -206,7 +206,7 @@
 	}
 
 	template <class T>
-	LUL_VIS_INLINE inline constexpr bool operator < (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator < (
 		const optional<T> & lhs,
 		nullupt_t rhs) noexcept
 	{
@@ -214,7 +214,7 @@
 	}
 
 	template <class T>
-	LUL_VIS_INLINE inline constexpr bool operator < (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator < (
 		nullupt_t lhs,
 		const optional<U> & rhs) noexcept
 	{
@@ -222,7 +222,7 @@
 	}
 
 	template <class T>
-	LUL_VIS_INLINE inline constexpr bool operator <= (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator <= (
 		const optional<T> & lhs,
 		nullupt_t rhs) noexcept
 	{
@@ -230,7 +230,7 @@
 	}
 
 	template <class T>
-	LUL_VIS_INLINE inline constexpr bool operator <= (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator <= (
 		nullupt_t lhs,
 		const optional<U> & rhs) noexcept
 	{
@@ -238,7 +238,7 @@
 	}
 
 	template <class T>
-	LUL_VIS_INLINE inline constexpr bool operator > (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator > (
 		const optional<T> & lhs,
 		nullupt_t rhs) noexcept
 	{
@@ -246,7 +246,7 @@
 	}
 
 	template <class T>
-	LUL_VIS_INLINE inline constexpr bool operator > (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator > (
 		nullupt_t lhs,
 		const optional<U> & rhs) noexcept
 	{
@@ -254,7 +254,7 @@
 	}
 
 	template <class T>
-	LUL_VIS_INLINE inline constexpr bool operator >= (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator >= (
 		const optional<T> & lhs,
 		nullupt_t rhs) noexcept
 	{
@@ -262,7 +262,7 @@
 	}
 
 	template <class T>
-	LUL_VIS_INLINE inline constexpr bool operator >= (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator >= (
 		nullupt_t lhs,
 		const optional<U> & rhs) noexcept
 	{
@@ -277,7 +277,7 @@
 	//	APIME We don’t bother to SFINAE out many of these since we rely on
 	//	the real functions to do that.
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator == (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator == (
 		const optional<T> & lhs,
 		const U & rhs)
 	{
@@ -285,7 +285,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator == (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator == (
 		const T & lhs,
 		const optional<U> & rhs)
 	{
@@ -293,7 +293,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator != (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator != (
 		const optional<T> & lhs,
 		const U & rhs)
 	{
@@ -301,7 +301,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator != (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator != (
 		const T & lhs,
 		const optional<U> & rhs)
 	{
@@ -309,7 +309,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator < (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator < (
 		const optional<T> & lhs,
 		const U & rhs)
 	{
@@ -317,7 +317,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator < (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator < (
 		const T & lhs,
 		const optional<U> & rhs)
 	{
@@ -325,7 +325,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator <= (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator <= (
 		const optional<T> & lhs,
 		const U & rhs)
 	{
@@ -333,7 +333,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator <= (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator <= (
 		const T & lhs,
 		const optional<U> & rhs)
 	{
@@ -341,7 +341,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator > (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator > (
 		const optional<T> & lhs,
 		const U & rhs)
 	{
@@ -349,7 +349,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator > (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator > (
 		const T & lhs,
 		const optional<U> & rhs)
 	{
@@ -357,7 +357,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator >= (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator >= (
 		const optional<T> & lhs,
 		const U & rhs)
 	{
@@ -365,7 +365,7 @@
 	}
 
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr bool operator >= (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator >= (
 		const T & lhs,
 		const optional<U> & rhs)
 	{
@@ -377,7 +377,7 @@
 	//	APIME Simple passthroughs. We don’t bother to SFINAE out any of
 	//	these since we rely on the real functions to do that.
 	template <class T>
-	LUL_VIS_INLINE inline void swap (
+	LUL_VIS_INLINE_FUNC inline void swap (
 		optional<T> & lhs,
 		optional<T> & rhs) noexcept (
 			noexcept (LUL_TEMP_OPTIONAL_NAMESPACE::swap (lhs, rhs)))
@@ -386,7 +386,7 @@
 	}
 
 	template <class T>
-	LUL_VIS_INLINE inline constexpr auto make_optional (
+	LUL_VIS_INLINE_FUNC inline constexpr auto make_optional (
 		T && v)
 	{
 		return LUL_TEMP_OPTIONAL_NAMESPACE::make_optional (
@@ -394,7 +394,7 @@
 	}
 
 	template <class T, class... Args>
-	LUL_VIS_INLINE inline constexpr auto make_optional (
+	LUL_VIS_INLINE_FUNC inline constexpr auto make_optional (
 		Args &&... args)
 	{
 		return LUL_TEMP_OPTIONAL_NAMESPACE::make_optional <T, Args> (
@@ -402,7 +402,7 @@
 	}
 
 	template <class T, class U, class... Args>
-	LUL_VIS_INLINE inline constexpr auto make_optional (
+	LUL_VIS_INLINE_FUNC inline constexpr auto make_optional (
 		std::initializer_list <U> il, Args &&... args)
 	{
 		return LUL_TEMP_OPTIONAL_NAMESPACE::make_optional <T, U, Args> (

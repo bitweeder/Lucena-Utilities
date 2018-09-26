@@ -34,6 +34,13 @@
 #include <memory>
 
 
+//	lul
+#include <Lucena-Utilities/lulConfig.hpp>
+#include <Lucena-Utilities/lulFeatureSetup.hpp>
+
+#include <Lucena-Utilities/details/lulVisibility.hpp>
+
+
 LUL_begin_v_namespace
 
 namespace stdproxy { namespace details {
@@ -49,9 +56,9 @@ private:
     _Alloc& __alloc_;
     size_type __s_;
 public:
-    LUL_VIS_INLINE __allocator_destructor(_Alloc& __a, size_type __s) noexcept
+    LUL_VIS_INLINE_FUNC __allocator_destructor(_Alloc& __a, size_type __s) noexcept
         : __alloc_(__a), __s_(__s) {}
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     void operator()(pointer __p) noexcept
         {__alloc_traits::deallocate(__alloc_, __p, __s_);}
 };

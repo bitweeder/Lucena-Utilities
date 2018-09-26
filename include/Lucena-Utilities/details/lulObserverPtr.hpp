@@ -27,6 +27,9 @@
 
 //	lul
 #include <Lucena-Utilities/lulConfig.hpp>
+#include <Lucena-Utilities/lulFeatureSetup.hpp>
+
+#include <Lucena-Utilities/details/lulVisibility.hpp>
 
 
 LUL_begin_v_namespace

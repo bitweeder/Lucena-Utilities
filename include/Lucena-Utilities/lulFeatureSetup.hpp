@@ -757,69 +757,225 @@
 
 
 	LUL_VIS_xxx
-	These describe different levels of symbol visibility. By default, all
-	symbols are hidden. LUL_VIS_[ALWAYS_]INLINE functions are always hidden in
-	the symbol table, regardless of whether or not the affected function is
-	actually inlined.
-	SEEME Conceivably, these may need to be subdivided further, as we might be
-	lacking sufficient granularity. One factor that could necessitate
-	subdivision is module support, and the form it takes, which could require
-	differentation between types and templates in their visibility handling.
+	These describe different levels of symbol visibility as it pertains to the
+	ABI, allowing explicit control over what gets exported - and subsequently
+	imported - by the linker. This task is somewhat complicated by different
+	approaches on each platform towards what constitutes the contents of a
+	library, e.g., whether inline functions are header-only constructs or
+	whether they contribute object code to the library itself. We’ve noted
+	usage issues to be aware of, as well as some relevant historical oddities.
+	Note that some of these macros should be used conditionally; they should
+	not be used to decorate symbols directly, but should instead be used to
+	define decorators specific to a given project. Such decorators’ values
+	should be dependent upon whether the project is being built or used; when
+	building, set the decorator to the _EXPORT version of a given macro, but
+	when using the build product, set it to the _IMPORT version. Macros that do
+	not have multiple versions are not context-dependent and can be used
+	directly - or used to define a library-specific macro unconditionally.
+
+	If there are multiple declarations of a given symbol, all declarations
+	should have the same decorators; in particular, do not leave some
+	declarations undecorated. Failing to adhere to this policy will give
+	warnings and possibly unpredictable behavior with some compilers.
+
+	Establishing visibility rules for templates is fraught; read all the notes
+	carefully before attempting to decorate templates of any kind, including
+	classes containing member templates.
+
+	SEEME LUL itself behaves as if all symbole are hidden by default, i.e.,
+	everything not decorated otherwise is treated as if it was marked with
+	LUL_VIS_HIDDEN. This behavior should be reinforced by the build system when
+	LUL is being built, but it is not required that users of the library
+	inherit this behavior in their own builds.
+
+	SEEME These have been changed to more closely approximate libc++’s usage,
+	mostly because it’s thoughfully designed for use with modules and the
+	emerging C++ ABI proposals. Note, however, that many of these designations
+	are currently only meaningful as annotations, in particular when running
+	compilers that aren’t clang; we’ve tried to note those cases. Additionally,
+	some compilers impose unexpected limitations, e.g., MSVC will not allow
+	member functions to have different explicitly declared visibility than that
+	of the class if the class itself was given an explicit visibility
+	decorator.
+
+	SEEME Without support from a static analyzer, there’s no way to know if a
+	decorator has been misused, e.g., applying LUL_VIS_FUNC_EXPORT to a class.
+	Such misuses may not be immediately obvious with a given implementation;
+	additionally, misuses that are not problematic now may become problematic
+	in the future when compilers gain new capabilities. For this reason, it’s
+	strongly advised to test code periodically with a good static analyzer - as
+	if you needed another reason.
 
 		LUL_VIS_HIDDEN
-			//	Do not export the variable/function/template/type. This is the
-			//	default, and does not generally need to be explicitly applied.
+			Do not export the symbol. If symbols are hidden by default, this
+			does not need to be explicitly applied, but will not cause problems
+			if it is.
 
-		LUL_VIS_EXTERN
-			//	Declare a constant/variable/function that is defined elsewhere.
-			//	This is specifically useful for headers that refer to library
-			//	binaries, as opposed to the same headers when they are used to
-			//	build the libraries; macros can be used to flip the meaning
-			//	depending on the usage case (see below).
+		LUL_VIS_ENUM
+			Apply this to [class] enum declarations to mark the symbols for
+			the type’s typeinfo as visible.
 
-		LUL_VIS_DEFINE
-			//	Define a constant/variable/function.
+			SEEME gcc makes enum typeinfo visible by default, and then throws
+			up warnings if a visiility attribute conflicts with this; for this
+			reason, this macro is a NOP under gcc.
 
-		LUL_VIS_ONLY
-			//	Decribe a constant/function that is completely contained in the
-			//	header and does not require a symbol to use.
+		LUL_VIS_CLASS_EXPORT
+		LUL_VIS_CLASS_IMPORT
+			Apply these to class, struct, and union declarations to mark the
+			symbols for the type’s typeinfo, vtable, and members as visible. Do
+			not use this with the various flavors of class template, and do not
+			use it if a class contains member template classes; instead, use
+			LUL_VIS_CLASS_TEMPLATE_xxx.
 
-		LUL_VIS_TYPE_EXTERN
-			//	Declare a type/template instantiation that is defined
-			//	elsewhere. In the template case, this is for explicit extern
-			//	template declarations, as opposed to explicit instantiations.
+		LUL_VIS_CLASS_TEMPLATE
+			Apply this to class template declarations to mark the symbols for
+			the type’s typeinfo and vtable as visible; members are unaffected.
+			Do not use this with classes that are not templates; instead, use
+			LUL_VIS_CLASS_EXPORT_xxx.
 
-		LUL_VIS_TYPE_DEFINE
-			//	Define a type/template. In the template case, this is intended
-			//	for use with an explicit instantiation, which is useful when
-			//	other declarations of the template are extern in order to avoid
-			//	generating multiple copies of the same template instantiation
-			//	only to have most of them discarded during linking.
+			SEEME This only works as described under clang. Under gcc, there
+			is currently no __type_visibility__ attribute, so we fall back to
+			using __visibility__, which means members inherit the class
+			visibility. For this reason, class template members should have
+			explicit decorators, in particular if visibility is supposed to
+			differ from that of the class itself. MSVC has a similar issue,
+			except that since class templates can’t have visibility decorators,
+			the macro is a NOP; once again, members require explicit visibility
+			decorators, but now they’re required for every member with
+			visibility different from the translation unit default. Failing to
+			adhere to this policy may result in exposing too many symbols or
+			not enough symbols, depending on the compiler and the compiler
+			options.
 
-		LUL_VIS_TYPE_ONLY
-			//	Decribe a type/template that is completely contained in the
-			//	header and does not require a symbol to use. Templates
-			//	declarations should always have this decoration.
+		LUL_VIS_EXTERN_CLASS_TEMPLATE_EXPORT
+		LUL_VIS_EXTERN_CLASS_TEMPLATE_IMPORT
+			Apply these to all extern class template declarations to mark the
+			symbols for the type’s typeinfo, vtable, and member functions as
+			visible. Do not use this with regular class template declarations;
+			use LUL_VIS_CLASS_TEMPLATE for those. This is intended specifically
+			to override a LUL_VIS_CLASS_TEMPLATE decorator on the primary
+			template and explicitly export the member functions of its explicit
+			instantiations. Note that there is a complementary decorator,
+			LUL_VIS_CLASS_TEMPLATE_INSTANTIATION_xxx, which must be used on the
+			actual template instantiations.
 
-		LUL_VIS_EXCEPTION_EXTERN
-		LUL_VIS_EXCEPTION_DEFINE
-			//	Usage is the same as for LUL_VIS_TYPE, except there is no “ONLY”
-			//	variant.
-			//	APIME We have this because clang does, though it’s not clear
-			//	why we’d have to differentiate exception classes from other
-			//	classes. Assume Howard knows what he’s doing.
+		LUL_VIS_CLASS_TEMPLATE_INSTANTIATION_EXPORT
+		LUL_VIS_CLASS_TEMPLATE_INSTANTIATION_IMPORT
+			Apply these to all explicit instantiations of class templates to
+			mark the symbols for the type’s typeinfo, vtable, and member
+			functions as visible. While LUL_VIS_EXTERN_CLASS_TEMPLATE_xxx is
+			intended for use in headers, this complementary decorator is
+			primarily used in source files; LUL_VIS_EXTERN_CLASS_TEMPLATE_xxx
+			can be seen as providing export support while this provides import
+			support.
 
-		LUL_VIS_INLINE
-		LUL_VIS_ALWAYS_INLINE
-			//	Declare and define an inline function.
+		LUL_VIS_MEMBER_CLASS_TEMPLATE
+			Apply this to all member class templates of all:
+				- classes decorated with LUL_VIS_CLASS_xxx
+				- class templates decorated with
+					LUL_VIS_EXTERN_CLASS_TEMPLATE_xxx
 
-	Note that LUL_VIS_EXTERN and LUL_VIS_DEFINE must be used in conjunction with
-	each other, e.g., in a header file included at build time, LUL_VIS_DEFINE
-	could establish public visibility for functions in a library which are then
-	accessed through a header with the same functions declared using
-	LUL_VIS_EXTERN. For convenience, this may even be the same header, but with
-	a wrapper macro to select LUL_VIS_DEFINE when building the library, and
-	LUL_VIS_EXTERN when linking to it.
+			This will hide symbols generated by implicit instantiations of the
+			member class template, preventing spurious symbol exports should
+			such instantiations occur in some other library which links to this
+			one. Explicit instantiations should be handled normally via
+			LUL_VIS_EXTERN_CLASS_TEMPLATE_xxx.
+
+		LUL_VIS_MEMBER_FUNCTION_TEMPLATE
+			Apply this to member function templates of:
+				- classes decorated with LUL_VIS_CLASS_xxx
+				- class templates decorated with
+					LUL_VIS_EXTERN_CLASS_TEMPLATE_xxx
+
+			This will hide symbols generated by implicit instantiations of the
+			member function template, preventing spurious symbol exports should
+			such instantiations occur in some other library which links to this
+			one. Note that if a function template is already decorated with
+			LUL_VIS_INLINE_FUNC or LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC, this
+			decorator should not be applied. Similarly, explicit instantiations
+			should be decorated normally with either LUL_VIS_INLINE_FUNC or
+			LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC, as appropriate.
+
+		LUL_VIS_FUNC_EXPORT
+		LUL_VIS_FUNC_IMPORT
+			Apply these to declarations of visible functions that are defined
+			in the library binary, i.e., not inline functions, function
+			templates, or class template member functions.
+
+		LUL_VIS_INLINE_FUNC
+			Do not export the symbol, and guarantee that it will not be subject
+			to incorrect de-duping when two incompatible functions with the
+			same symbol are linked into the same binary, e.g., in a situation
+			where two different versions of the same library end up linked into
+			one app. This can occur with inline functions when the linker
+			writes a fallback copy to a library and the fallback is used
+			instead of generating new object code from the header. This
+			decorator can be used with all inline functions, except inline
+			member functions of extern templates.
+
+			SEEME “inline” in this context means, literally, “defined in the
+			header”, and not necessarily just “functions explicitly declared
+			inline”. libc++ names their equivalent macro _LIBCPP_HIDE_FROM_ABI,
+			describing what it does, insted of how it’s used. In this case,
+			though, the “how it’s used” may be confusing because of the
+			“INLINE” part of the name, which may cause users to apply it to
+			narrowly. On the other hand, “HIDE_FROM_ABI” is basically what
+			LUL_VIS_HIDDEN does, so going the other way would also be
+			confusing. We’re currently going this route and relying on
+			documentation for clarity.
+
+			FIXME Currently, the implementation of this macro does the extra
+			work of LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC, as well, as the LUL
+			headers haven’t been reviewed for this particular issue, yet, and
+			so the safer options was chosen. Because of the brittle usage
+			requirements, LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC may just end up
+			getting removed and LUL_VIS_INLINE_FUNC left as it is, preserving
+			the status quo.
+
+		LUL_VIS_INLINE_TEMPLATE_MEMBER_FUNC
+			This functions identically to LUL_VIS_INLINE_FUNC except that it’s
+			for member functions of extern templates that have been declared
+			“inline” but are defined out-of-line. This unfortunately specific
+			decorator is needed because of differences in how different
+			compilers handle visibility in this situation.
+
+			SEEME Note that we could eliminate this macro entirely by folding
+			its extra handling into LUL_VIS_INLINE_FUNC, but this would be at
+			the cost of some symbol table bloat on certain compilers. This
+			means that a given project could choose to alias their own general-
+			purpose inline visibility decorator macro to this and just use it
+			for all inline function decorations.
+
+		LUL_VIS_OVERLOADABLE_FUNC_EXPORT
+		LUL_VIS_OVERLOADABLE_FUNC_IMPORT
+			Apply these to declarations of visible free functions that are
+			defined in the library binary but that allow user-supplied
+			overloads.
+
+			SEEME Pragmatically, this sort of customization point is a bad
+			idea. That aside, in practice, this separate designation for
+			LUL_VIS_FUNC_xxx is only needed by Windows due to how DLLs are
+			handled, namely, a function marked with dllimport cannot be
+			overloaded locally.
+
+			FIXME Our method for handling this derives from how libc++ does it:
+			they simply don’t decorate the function declaration for import. The
+			method has not been tested, and I haven’t seen examples in the
+			wild of other people using it.
+
+		LUL_VIS_EXTERN_EXPORT
+		LUL_VIS_EXTERN_IMPORT
+			Apply these to symbols marked “extern” that are required to be
+			visible. Objects that are not explicitly extern do not need this.
+			Note that this does not take the place of the “extern” decorator,
+			but rather supplements it.
+
+		LUL_VIS_EXCEPTION_EXPORT
+		LUL_VIS_EXCEPTION_IMPORT
+			Apply these to exception declarations to mark the symbols for the
+			type’s typeinfo, vtable, and members as visible. In practice, this
+			behaves identically to LUL_VIS_CLASS_xxx, but different annotations
+			may apply for static analysis purposes.
 
 
 	LUL_CLASS_xxx

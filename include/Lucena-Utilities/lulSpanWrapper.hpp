@@ -50,7 +50,7 @@
 	//	symmetry when resolving functions. Note that none of the comparisons is
 	//	noexcept.
 	template <class T, ptrdiff_t X, class U, ptrdiff_t Y>
-	LUL_VIS_INLINE inline constexpr bool operator == (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator == (
 		span <T, X> lhs,
 		span <U, Y> rhs)
 	{
@@ -58,7 +58,7 @@
 	}
 
 	template <class T, ptrdiff_t X, class U, ptrdiff_t Y>
-	LUL_VIS_INLINE inline constexpr bool operator != (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator != (
 		span <T, X> lhs,
 		span <U, Y> rhs)
 	{
@@ -66,7 +66,7 @@
 	}
 
 	template <class T, ptrdiff_t X, class U, ptrdiff_t Y>
-	LUL_VIS_INLINE inline constexpr bool operator < (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator < (
 		span <T, X> lhs,
 		span <U, Y> rhs)
 	{
@@ -74,7 +74,7 @@
 	}
 
 	template <class T, ptrdiff_t X, class U, ptrdiff_t Y>
-	LUL_VIS_INLINE inline constexpr bool operator <= (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator <= (
 		span <T, X> lhs,
 		span <U, Y> rhs)
 	{
@@ -82,7 +82,7 @@
 	}
 
 	template <class T, ptrdiff_t X, class U, ptrdiff_t Y>
-	LUL_VIS_INLINE inline constexpr bool operator > (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator > (
 		span <T, X> lhs,
 		span <U, Y> rhs)
 	{
@@ -90,7 +90,7 @@
 	}
 
 	template <class T, ptrdiff_t X, class U, ptrdiff_t Y>
-	LUL_VIS_INLINE inline constexpr bool operator >= (
+	LUL_VIS_INLINE_FUNC inline constexpr bool operator >= (
 		span <T, X> lhs,
 		span <U, Y> rhs)
 	{

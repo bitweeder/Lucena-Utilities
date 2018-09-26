@@ -37,8 +37,12 @@
 
 
 //	lul
+#include <Lucena-Utilities/lulConfig.hpp>
+#include <Lucena-Utilities/lulFeatureSetup.hpp>
+
 #include <Lucena-Utilities/details/lulHelperTuple.hpp>
 #include <Lucena-Utilities/details/lulHelperTypeTraits.hpp>
+#include <Lucena-Utilities/details/lulVisibility.hpp>
 
 
 LUL_begin_v_namespace
@@ -65,7 +69,7 @@ using __is_inplace_index = __is_inplace_index_imp<__uncvref_t<_Tp>>;
 
 
 template <class _Size>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 _Size
 __loadword(const void* __p)
 {
@@ -296,7 +300,7 @@ template <class _Tp>
 struct __scalar_hash<_Tp, 0>
     : public std::unary_function<_Tp, size_t>
 {
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     size_t operator()(_Tp __v) const _NOEXCEPT
     {
         union
@@ -314,7 +318,7 @@ template <class _Tp>
 struct __scalar_hash<_Tp, 1>
     : public std::unary_function<_Tp, size_t>
 {
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     size_t operator()(_Tp __v) const _NOEXCEPT
     {
         union
@@ -331,7 +335,7 @@ template <class _Tp>
 struct __scalar_hash<_Tp, 2>
     : public std::unary_function<_Tp, size_t>
 {
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     size_t operator()(_Tp __v) const _NOEXCEPT
     {
         union
@@ -352,7 +356,7 @@ template <class _Tp>
 struct __scalar_hash<_Tp, 3>
     : public std::unary_function<_Tp, size_t>
 {
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     size_t operator()(_Tp __v) const _NOEXCEPT
     {
         union
@@ -374,7 +378,7 @@ template <class _Tp>
 struct __scalar_hash<_Tp, 4>
     : public std::unary_function<_Tp, size_t>
 {
-    LUL_VIS_INLINE
+    LUL_VIS_INLINE_FUNC
     size_t operator()(_Tp __v) const _NOEXCEPT
     {
         union
@@ -398,7 +402,7 @@ struct _PairT {
   size_t second;
 };
 
-LUL_VIS_INLINE
+LUL_VIS_INLINE_FUNC
 inline size_t __hash_combine(size_t __lhs, size_t __rhs) _NOEXCEPT {
     typedef __scalar_hash<_PairT> _HashT;
     const _PairT __p = {__lhs, __rhs};

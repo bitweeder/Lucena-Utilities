@@ -46,7 +46,7 @@
 	//	APIME We don’t bother to SFINAE-out since we rely on the real
 	//	function to do that.
 	template <class T, class U>
-	LUL_VIS_INLINE inline constexpr T bit_cast (
+	LUL_VIS_INLINE_FUNC inline constexpr T bit_cast (
 		const U & v) noexcept
 	{
 		return LUL_TEMP_BIT_NAMESPACE::bit_cast <T, U> (v);

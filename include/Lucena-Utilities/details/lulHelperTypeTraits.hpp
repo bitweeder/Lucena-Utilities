@@ -35,6 +35,13 @@
 #include <type_traits>
 
 
+//	lul
+#include <Lucena-Utilities/lulConfig.hpp>
+#include <Lucena-Utilities/lulFeatureSetup.hpp>
+
+#include <Lucena-Utilities/details/lulVisibility.hpp>
+
+
 LUL_begin_v_namespace
 
 namespace stdproxy { namespace details {
@@ -46,7 +53,7 @@ struct __identity { typedef _Tp type; };
 
 // __dependent_type
 template <class _Tp, bool>
-struct LUL_VIS_TYPE_DEFINE __dependent_type : public _Tp {};
+struct LUL_VIS_CLASS_TEMPLATE __dependent_type : public _Tp {};
 
 
 // __lazy_and

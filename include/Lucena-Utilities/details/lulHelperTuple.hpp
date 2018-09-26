@@ -29,6 +29,13 @@
 #include <limits>
 
 
+//	lul
+#include <Lucena-Utilities/lulConfig.hpp>
+#include <Lucena-Utilities/lulFeatureSetup.hpp>
+
+#include <Lucena-Utilities/details/lulVisibility.hpp>
+
+
 LUL_begin_v_namespace
 
 namespace stdproxy { namespace details {
@@ -92,7 +99,7 @@ struct __sfinae_assign_base<false, true> {
 
 
 // __check_tuple_constructor_fail
-struct LUL_VIS_TYPE_DEFINE __check_tuple_constructor_fail {
+struct LUL_VIS_CLASS __check_tuple_constructor_fail {
     template <class ...>
     static constexpr bool __enable_default() { return false; }
     template <class ...>
@@ -118,14 +125,14 @@ namespace __find_detail {
 static constexpr size_t __not_found = std::numeric_limits <size_t>::max();
 static constexpr size_t __ambiguous = __not_found - 1;
 
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr size_t __find_idx_return(size_t __curr_i, size_t __res, bool __matches) {
     return !__matches ? __res :
         (__res == __not_found ? __curr_i : __ambiguous);
 }
 
 template <size_t _Nx>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr size_t __find_idx(size_t __i, const bool (&__matches)[_Nx]) {
   return __i == _Nx ? __not_found :
       __find_idx_return(__i, __find_idx(__i + 1, __matches), __matches[__i]);
@@ -145,7 +152,7 @@ struct __find_exactly_one_checked<_T1> {
 };
 
 template <class _Tp, class... _Types>
-inline LUL_VIS_INLINE
+inline LUL_VIS_INLINE_FUNC
 constexpr size_t __find_index() {
   constexpr bool __matches[] = {std::is_same_v<_Tp, _Types>...};
   size_t __result = __not_found;
