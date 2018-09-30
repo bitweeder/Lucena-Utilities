@@ -4,6 +4,11 @@
 /proj/
 
 
+# CMake stuff; only intended to catch accidental spills
+/CMakeFiles/
+CMakeCache.txt
+
+
 # Visual Studio build data and per-user settings
 MSVS/*.asm
 MSVS/*.ncb
