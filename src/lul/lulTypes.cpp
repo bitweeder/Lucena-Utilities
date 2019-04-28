@@ -63,7 +63,7 @@ VA_To_String (
 
 		va_start (argument_list, in_format);
 
-		chars_written = LUL_STDC99::vsnprintf (
+		chars_written = std::vsnprintf (
 			var_args,
 			k_max_string_length,
 			in_format,

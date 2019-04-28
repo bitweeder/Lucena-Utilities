@@ -45,7 +45,7 @@ endif()
 
 
 # SEEME This construct differentiates between single-config and multi-config
-# projects (apparently), as opposed to be some sort of under-handed version
+# projects (apparently), as opposed to being some sort of under-handed version
 # check.
 if (CMAKE_CONFIGURATION_TYPES)
     add_custom_target (check
@@ -103,6 +103,8 @@ file (
     set up test target
 #]]
 
+find_package (Lucena-Utilities 2.0.0 REQUIRED)
+
 include (GoogleTest)
 
 add_executable (lulTest)
@@ -129,7 +131,8 @@ target_sources (lulTest
 
 target_link_libraries (lulTest
     PUBLIC
-        Lucena-Utilities
+        Lucena-Utilities::Lucena-Utilities
+#        Lucena-Utilities
         gtest
         gtest_main
         gmock

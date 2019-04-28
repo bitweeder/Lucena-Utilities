@@ -15,23 +15,44 @@
     initialization
 #]]
 
-# This minimum is for FetchContent (3.11), CONFIGURE_DEPENDS (3.12) and more.
-cmake_minimum_required (VERSION 3.12)
+# This minimum is for FetchContent (3.11), CONFIGURE_DEPENDS (3.12),
+# target_link_options and friends (3.13), and more.
+cmake_minimum_required (VERSION 3.13 FATAL_ERROR)
 
+
+# Simplify finding our internal CMake tools and start loading them.
+set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+include (LULUtils)
+
+
+# Forbid poisoning the source tree, ’cuz we’re authoritarian that way. Note,
+# though, that CMake will have already left a few droppings at this point.
+if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
+    message (FATAL_ERROR "FATAL: In-source builds are not allowed. "
+        "You should create a separate directory for build files.")
+endif()
+
+
+# FIXME This doesn’t actually work. Arguably, we should just have a reasonable
+# default, anyway, when it’s not specified.
 if ($<PLATFORM_ID:Darwin> AND NOT CMAKE_OSX_DEPLOYMENT_TARGET)
     message (FATAL_ERROR "-DCMAKE_OSX_DEPLOYMENT_TARGET=[xx] must be an argument to CMake on Apple platforms")
 endif()
 
+
+# Versioning; propagates to headers
 set (PROJECT_VERSION_MAJOR 2)
 set (PROJECT_VERSION_MINOR 0)
 set (PROJECT_VERSION_PATCH 0)
-set (PROJECT_VERSION_TWEAK "")
+set (PROJECT_VERSION_TWEAK "2")
 
 if (${PROJECT_VERSION_TWEAK})
 	set (LUL_PROXY_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_TWEAK})
 else()
 	set (LUL_PROXY_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 endif()
+
 
 project (Lucena-Utilities
     VERSION ${LUL_PROXY_VERSION}
@@ -41,12 +62,36 @@ project (Lucena-Utilities
         "https://bitweeder.com"
     LANGUAGES CXX)
 
-# Forbid poisoning the source tree, ’cuz we’re authoritarian that way.
-if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
-    message (FATAL_ERROR "FATAL: In-source builds are not allowed. "
-        "You should create a separate directory for build files.")
+
+# Customize paths per-platform; these may or may not be relative paths, but
+# they’re guaranteed to be suitable for passing to install().
+if (UNIX)
+    include (GNUInstallDirs)
+
+    set (LUL_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/Lucena-Utilities")
+    set (LUL_RUNTIME_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
+    set (LUL_LIBRARY_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}")
+    set (LUL_ARCHIVE_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}")
+    set (LUL_FRAMEWORK_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}")
+    set (LUL_DATA_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/Lucena-Utilities")
+    set (LUL_CMAKE_CONFIG_INSTALL_DIR "${LUL_DATA_INSTALL_DIR}/cmake")
+
+elseif (WIN32)
+	# SEEME Under Windows, it’s assumed that DLLs need to be in the same folder
+	# as the .exe’s; this might be oversimplified.
+    set (LUL_INCLUDE_INSTALL_DIR "include/Lucena-Utilities")
+    set (LUL_RUNTIME_INSTALL_DIR "bin")
+    set (LUL_LIBRARY_INSTALL_DIR "bin")
+    set (LUL_ARCHIVE_INSTALL_DIR "lib")
+    set (LUL_FRAMEWORK_INSTALL_DIR "bin")
+    set (LUL_DATA_INSTALL_DIR ".")
+    set (LUL_CMAKE_CONFIG_INSTALL_DIR "${LUL_DATA_INSTALL_DIR}/cmake")
+else()
+	message (FATAL_ERROR "Failed to identify install folders for this platform.")
 endif()
 
+
+# Source file macro replacement
 configure_file (
 	${CMAKE_CURRENT_SOURCE_DIR}/cmake/lulConfig.hpp.in
 	${CMAKE_CURRENT_SOURCE_DIR}/include/Lucena-Utilities/lulConfig.hpp
@@ -217,7 +262,7 @@ file (
 )
 
 set (lul_interface_includes
-    include/Lucena-Utilities/Lucena-Utilities.hpp
+    ${CMAKE_SOURCE_DIR}/include/Lucena-Utilities/Lucena-Utilities.hpp
 )
 
 file (
@@ -458,12 +503,9 @@ endif()
 
 include (CMakePackageConfigHelpers)
 
-# FIXME It’s unclear what this path should actually be; this is for testing
-set (LUL_PACKAGE_INSTALL_DIR lib/cmake/Lucena-Utilities)
-
 write_basic_package_version_file (
     ${CMAKE_CURRENT_BINARY_DIR}/Lucena-Utilities-config-version.cmake
-    VERSION 2.0
+    VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
     COMPATIBILITY SameMajorVersion
 )
 
@@ -471,7 +513,7 @@ configure_package_config_file (
     ${PROJECT_SOURCE_DIR}/cmake/Lucena-Utilities-config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/Lucena-Utilities-config.cmake
     INSTALL_DESTINATION
-        ${LUL_PACKAGE_INSTALL_DIR}
+        ${LUL_CMAKE_CONFIG_INSTALL_DIR}
 )
 
 
@@ -487,15 +529,15 @@ configure_package_config_file (
             Lucena-Utilities-export
         ARCHIVE
             DESTINATION
-                lib
+                ${LUL_ARCHIVE_INSTALL_DIR}
             OPTIONAL
         LIBRARY
             DESTINATION
-                lib
+                ${LUL_LIBRARY_INSTALL_DIR}
             OPTIONAL
         INCLUDES
             DESTINATION
-                include/Lucena-Utilities
+                ${LUL_INCLUDE_INSTALL_DIR}
     )
 
     # SEEME For some inexplicable and no doubt completely CMake-ian reason,
@@ -504,14 +546,18 @@ configure_package_config_file (
     # option above will fail on Apple platforms - intentionally! - regardless
     # of the target type.
     install (
-        DIRECTORY ${CMAKE_SOURCE_DIR}/include/Lucena-Utilities
+        DIRECTORY ${CMAKE_SOURCE_DIR}/include
             DESTINATION
-                include
+                ${LUL_INCLUDE_INSTALL_DIR}
     )
 
     install (EXPORT Lucena-Utilities-export
+    	FILE
+    		Lucena-Utilities-export.cmake
+    	NAMESPACE
+    		Lucena-Utilities::
         DESTINATION
-            ${LUL_PACKAGE_INSTALL_DIR}
+            ${LUL_CMAKE_CONFIG_INSTALL_DIR}
     )
 
     install (
@@ -519,7 +565,7 @@ configure_package_config_file (
             ${CMAKE_CURRENT_BINARY_DIR}/Lucena-Utilities-config.cmake
             ${CMAKE_CURRENT_BINARY_DIR}/Lucena-Utilities-config-version.cmake
         DESTINATION
-            ${LUL_PACKAGE_INSTALL_DIR}
+            ${LUL_CMAKE_CONFIG_INSTALL_DIR}
     )
 #endif()
 
