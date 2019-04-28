@@ -80,8 +80,8 @@
 
 //	Begin and end the unversioned library namespace. This must be done from the
 //	global namespace.
-#define LUL_begin_namespace			namespace lucena { namespace ul {
-#define LUL_end_namespace			} }
+#define LUL_begin_namespace			namespace lucena::ul {
+#define LUL_end_namespace			}
 
 //	Enter and exit the inline versioned library namespace. This must be done
 //	from within the unversioned library namespace.
@@ -94,10 +94,10 @@
 #define LUL_end_v_namespace			LUL_exit_v_namespace LUL_end_namespace
 
 //	Versioned namespace qualifier
-#define LUL_v_						lucena::ul::LUL_abi_namespace
+#define LUL_v_						::lucena::ul::LUL_abi_namespace
 
 //	Unversioned namespace qualifier
-#define LUL_						lucena::ul
+#define LUL_						::lucena::ul
 
 //	Bring our namespace into existence.
 LUL_begin_v_namespace
@@ -160,11 +160,11 @@ LUL_end_v_namespace
 //	APIME  This is intended to track the emerging C++ ABI proposal. For now,
 //	it’s really just a placeholder; the only value is for documentation.
 #ifndef LUL_std_abi
-	#define LUL_std_abi				std
+	#define LUL_std_abi				::std
 #endif
 
 #ifndef LUL_std
-	#define LUL_std					std
+	#define LUL_std					::std
 #endif
 
 

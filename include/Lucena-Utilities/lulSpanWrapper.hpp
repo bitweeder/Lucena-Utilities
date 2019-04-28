@@ -11,6 +11,11 @@
 	Include this instead of including <span> or lulSpan.hpp directly. This
 	placeholder will select the correct headers based on availability.
 
+	FIXME Note that the C++20 <span> has been changed to support proper
+	`std::size_t`s instead of `std::ptrdiff_t`s everywhere, making it
+	generally compatible with the rest of the Standard Library. This header
+	does not yet reflect the change.
+
 ------------------------------------------------------------------------------*/
 
 
@@ -105,10 +110,10 @@
 	}
 
 	template <class ElementType, std::ptrdiff_t Extent>
-	auto inline as_writable_bytes (
+	auto inline as_writeable_bytes (
 		span <ElementType, Extent> s) noexcept
 	{
-		return LUL_TEMP_SPAN_NAMESPACE::as_writable_bytes <ElementType, Extent> (s);
+		return LUL_TEMP_SPAN_NAMESPACE::as_writeable_bytes <ElementType, Extent> (s);
 	}
 
 	}	//	namespace stdproxy

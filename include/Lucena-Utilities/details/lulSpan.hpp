@@ -64,7 +64,7 @@
 
 	template <class ElementType, ptrdiff_t Extent>
 		span<      byte, ((Extent == dynamic_extent) ? dynamic_extent :
-			(static_cast<ptrdiff_t>(sizeof(ElementType)) * Extent))> as_writable_bytes(span<ElementType, Extent> s) noexcept;
+			(static_cast<ptrdiff_t>(sizeof(ElementType)) * Extent))> as_writeable_bytes(span<ElementType, Extent> s) noexcept;
 
 
 	template <class ElementType, ptrdiff_t Extent = dynamic_extent>
