@@ -64,9 +64,9 @@
 			macros and in lulVersion.hpp.
 */
 
-#if defined (LUL_STANDARD_LIBRARY_IDENTIFIER)
-	#error "Don’t define LUL_STANDARD_LIBRARY_IDENTIFIER outside of this file."
-#endif	//	LUL_STANDARD_LIBRARY_IDENTIFIER
+#if defined (LUL_NAME_STANDARD_LIBRARY)
+	#error "Don’t define LUL_NAME_STANDARD_LIBRARY outside of this file."
+#endif	//	LUL_NAME_STANDARD_LIBRARY
 
 
 /*------------------------------------------------------------------------------
@@ -132,7 +132,7 @@
 
 
 	//	Set up identifiers
-	#define LUL_STANDARD_LIBRARY_IDENTIFIER u8"libc++ version " LUL_Stringify_ (_LIBCPP_VERSION)
+	#define LUL_NAME_STANDARD_LIBRARY u8"libc++ version " LUL_Stringify_ (_LIBCPP_VERSION)
 #elif defined (__GLIBCXX__)
 	//	SEEME Note that older iterations of libstdc++ used __GLIBCPP__
 
@@ -169,7 +169,7 @@
 
 
 	//	Set up identifiers
-	#define LUL_STANDARD_LIBRARY_IDENTIFIER u8"GNU libstdc++ version " LUL_Stringify_ (__GLIBCXX__)
+	#define LUL_NAME_STANDARD_LIBRARY u8"GNU libstdc++ version " LUL_Stringify_ (__GLIBCXX__)
 #elif defined (_MSC_VER)
 	//	SEEME Not exactly an equivalent test, but I don’t know of a documented
 	//	way to reliably identify the MSVC Standard Library.
@@ -214,9 +214,9 @@
 	#endif
 
 	//	Set up identifiers
-	#define LUL_STANDARD_LIBRARY_IDENTIFIER u8"MSVC Standard Library version" LUL_Stringify_ (_MSC_VER)
+	#define LUL_NAME_STANDARD_LIBRARY u8"MSVC Standard Library version" LUL_Stringify_ (_MSC_VER)
 #else
-	#define LUL_STANDARD_LIBRARY_IDENTIFIER u8"Unknown Standard Library implementation"
+	#define LUL_NAME_STANDARD_LIBRARY u8"Unknown Standard Library implementation"
 #endif
 
 
@@ -224,7 +224,7 @@
 	This -must- be defined by this point.
 */
 
-#if !defined (LUL_STANDARD_LIBRARY_IDENTIFIER)
-	#error "LUL_STANDARD_LIBRARY_IDENTIFIER must be defined"
-#endif	//	LUL_STANDARD_LIBRARY_IDENTIFIER
+#if !defined (LUL_NAME_STANDARD_LIBRARY)
+	#error "LUL_NAME_STANDARD_LIBRARY must be defined"
+#endif	//	LUL_NAME_STANDARD_LIBRARY
 

@@ -59,9 +59,9 @@
 	backs.
 */
 
-#if defined (LUL_COMPILER_IDENTIFIER)
-	#error "Don’t define LUL_COMPILER_IDENTIFIER outside of this file."
-#endif	//	LUL_COMPILER_IDENTIFIER
+#if defined (LUL_NAME_COMPILER)
+	#error "Don’t define LUL_NAME_COMPILER outside of this file."
+#endif	//	LUL_NAME_COMPILER
 
 #if defined (LUL_TARGET_CPU_X86) || \
 	defined (LUL_TARGET_CPU_X86_64) || \
@@ -101,19 +101,12 @@
 	#error "Don’t define LUL_TARGET_RT_xxx outside of this file."
 #endif	//	LUL_TARGET_RT check
 
-#if defined (LUL_PRAGMA_STRUCT_ALIGN) || \
-	defined (LUL_PRAGMA_STRUCT_PACKPUSH)
-
-	#error "Don’t define LUL_PRAGMA_xxx outside of this file."
-#endif	//	LUL_PRAGMA check
-
 #if defined (LUL_TYPE_HAS_INT64) || \
 	defined (LUL_TYPE_HAS_INT128) || \
 	defined (LUL_TYPE_EXACT_WIDTH_INTEGERS) || \
 	defined (LUL_TYPE_DOUBLE_GT_FLOAT) || \
 	defined (LUL_TYPE_LONG_DOUBLE_GT_DOUBLE) || \
-	defined (LUL_TYPE_WCHAR_T_IS_16_BITS) || \
-	defined (LUL_TYPE_HAS_C99_FLOATS)
+	defined (LUL_TYPE_WCHAR_T_IS_16_BITS)
 
 	#error "Don’t define LUL_TYPE_xxx outside of this file."
 #endif	//	LUL_TYPE check
@@ -336,12 +329,6 @@
 	#endif
 
 
-	#if !__LP64__
-		#define LUL_PRAGMA_STRUCT_ALIGN				1
-	#endif
-
-	#define LUL_PRAGMA_STRUCT_PACKPUSH				1
-
 	#if __SIZEOF_LONG_LONG__ == 8
 		#define LUL_TYPE_HAS_INT64					1
 	#endif
@@ -357,8 +344,6 @@
 	//	compiler, so this test doesn’t work. Since we’re requiring C++17 or
 	//	greater, we assume the following C99 features are available.
 	#define LUL_C99_PREPROCESSOR					1
-
-	#define LUL_TYPE_HAS_C99_FLOATS					1
 
 
 	//	Test for C++98 features.
@@ -529,7 +514,7 @@
 
 
 	//	Set up identifiers
-	#define LUL_COMPILER_IDENTIFIER u8"clang version " __clang_version__
+	#define LUL_NAME_COMPILER u8"clang version " __clang_version__
 
 #elif defined (__clang__) && defined (__llvm__)
 	//	generic clang-llvm compiler
@@ -629,12 +614,6 @@
 	#endif
 
 
-	#if !__LP64__
-		#define LUL_PRAGMA_STRUCT_ALIGN				1
-	#endif
-
-	#define LUL_PRAGMA_STRUCT_PACKPUSH				1
-
 	#if __SIZEOF_LONG_LONG__ == 8
 		#define LUL_TYPE_HAS_INT64					1
 	#endif
@@ -651,8 +630,6 @@
 	//	greater, we assume the following C99 features are available.
 	#if 1	//	__STDC_VERSION__ >= 199901L
 		#define LUL_C99_PREPROCESSOR				1
-
-		#define LUL_TYPE_HAS_C99_FLOATS				1
 	#else
 		#warning "D'oh!"
 	#endif	//	__STDC_VERSION__
@@ -809,7 +786,7 @@
 
 
 	//	Set up identifiers
-	#define LUL_COMPILER_IDENTIFIER u8"clang version " __clang_version__
+	#define LUL_NAME_COMPILER u8"clang version " __clang_version__
 
 #elif defined (__GNUC__)
 	//	generic gcc-based compiler
@@ -913,8 +890,6 @@
 	#endif
 
 
-	#define LUL_PRAGMA_STRUCT_PACKPUSH				1
-
 	#if __SIZEOF_LONG_LONG__ == 8
 		#define LUL_TYPE_HAS_INT64					1
 	#endif
@@ -926,7 +901,6 @@
 	#define LUL_TYPE_EXACT_WIDTH_INTEGERS			1
 
 	#define LUL_C99_PREPROCESSOR					1
-	#define LUL_TYPE_HAS_C99_FLOATS					1
 
 
 	//	Test for C++98 features.
@@ -1081,7 +1055,7 @@
 
 
 	//	Set up identifiers
-	#define LUL_COMPILER_IDENTIFIER u8"gcc version " __VERSION__
+	#define LUL_NAME_COMPILER u8"gcc version " __VERSION__
 
 #elif defined (_MSC_VER) && defined (_WIN32)
 	//	Visual C++ targeting Windows; _WIN32 is also defined for 64-bit
@@ -1168,8 +1142,6 @@
 	//	We ignore the possibility of other OS’s
 	#define LUL_TARGET_RT_COFF						1
 
-
-	#define LUL_PRAGMA_STRUCT_PACKPUSH				1
 
 	#define LUL_TYPE_HAS_INT64						1
 		//	SEEME We assume the availability of 64-bit ints under supported
@@ -1307,7 +1279,7 @@
 
 
 	//	Set up identifiers
-	#define LUL_COMPILER_IDENTIFIER u8"MSVC version " LUL_Stringify_ (_MSC_VER)
+	#define LUL_NAME_COMPILER u8"MSVC version " LUL_Stringify_ (_MSC_VER)
 #else
 	//	Unsupported compiler; we don’t bother guessing.
 	#error "Unsupported compiler"
@@ -1318,9 +1290,9 @@
 	These -must- be defined by this point.
 */
 
-#if !defined (LUL_COMPILER_IDENTIFIER)
-	#error "LUL_COMPILER_IDENTIFIER must be defined"
-#endif	//	LUL_COMPILER_IDENTIFIER
+#if !defined (LUL_NAME_COMPILER)
+	#error "LUL_NAME_COMPILER must be defined"
+#endif	//	LUL_NAME_COMPILER
 
 
 /*------------------------------------------------------------------------------
@@ -1358,17 +1330,17 @@
 
 
 #if LUL_TARGET_CPU_ARM_64
-	#define LUL_TARGET_CPU_IDENTIFIER					u8"ARM64"
+	#define LUL_NAME_TARGET_CPU					u8"ARM64"
 #elif LUL_TARGET_CPU_ARM
-	#define LUL_TARGET_CPU_IDENTIFIER					u8"ARM"
+	#define LUL_NAME_TARGET_CPU					u8"ARM"
 #elif LUL_TARGET_CPU_IA64
-	#define LUL_TARGET_CPU_IDENTIFIER					u8"ia64"
+	#define LUL_NAME_TARGET_CPU					u8"ia64"
 #elif LUL_TARGET_CPU_X86_64
-	#define LUL_TARGET_CPU_IDENTIFIER					u8"x86_64"
+	#define LUL_NAME_TARGET_CPU					u8"x86_64"
 #elif LUL_TARGET_CPU_X86
-	#define LUL_TARGET_CPU_IDENTIFIER					u8"i386"
+	#define LUL_NAME_TARGET_CPU					u8"i386"
 #else
-	#error "LUL_TARGET_CPU_IDENTIFIER must be defined"
+	#error "LUL_NAME_TARGET_CPU must be defined"
 #endif
 
 
@@ -1431,23 +1403,6 @@
 
 
 /*------------------------------------------------------------------------------
-	Set up PRAGMA values if they weren’t previously defined.
-*/
-
-#ifndef LUL_PRAGMA_STRUCT_ALIGN
-	#define LUL_PRAGMA_STRUCT_ALIGN				0
-#endif
-
-#ifndef LUL_PRAGMA_STRUCT_PACK
-	#define LUL_PRAGMA_STRUCT_PACK				0
-#endif
-
-#ifndef LUL_PRAGMA_STRUCT_PACKPUSH
-	#define LUL_PRAGMA_STRUCT_PACKPUSH			0
-#endif
-
-
-/*------------------------------------------------------------------------------
 	Set up TYPE values if they weren’t previously defined.
 */
 
@@ -1473,10 +1428,6 @@
 
 #ifndef LUL_TYPE_WCHAR_T_IS_16_BITS
 	#define LUL_TYPE_WCHAR_T_IS_16_BITS			0
-#endif
-
-#ifndef LUL_TYPE_HAS_C99_FLOATS
-	#define LUL_TYPE_HAS_C99_FLOATS				0
 #endif
 
 
@@ -1670,26 +1621,4 @@
 
 #ifndef LUL_BUILTIN_unlikely
 	#define LUL_BUILTIN_unlikely(LUL_expr_)			LUL_expr_
-#endif
-
-
-/*------------------------------------------------------------------------------
-	Determine what namespace C99 functions should be in. Of course, if the
-	function isn’t implemented even as an extension, we have a whole other
-	problem, but at least it’ll be a compile-time problem.
-
-	SEEME We lazily include C11 in this bucket. In practice, including any C
-	headers C++-style always dumps functions directly in the std namespace,
-	and so the distinction we try to make here is probably pedantic and 
-	unnecessary.
-*/
-
-#if defined (__STDC_VERSION__ ) && (__STDC_VERSION__ >= 199901L)
-	#define LUL_STDC99								std
-#else
-	//	SEEME MSVS still doesn't define this macro (for sound reasons) but it
-	//	leaves us without a meaningful test here. For now, we punt and assume
-	//	we'll always have availability in the std namespace directly if a
-	//	given C99/C11 function is available.
-	#define LUL_STDC99								std
 #endif

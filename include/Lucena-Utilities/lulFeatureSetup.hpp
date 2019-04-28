@@ -38,16 +38,41 @@
 	library is to facilitate interoperability between otherwise-conforming
 	modern compilers and their libraries.
 
-	LUL_COMPILER_IDENTIFIER
-	LUL_STANDARD_LIBRARY_IDENTIFIER
-	These  are human-readable strings which identify the tools used for
-	compilation. They may include version infrmation as part of the string, but
-	are not required to do so.
+
+	LUL_NAME
+	These macros resolve to human-readable strings that identify the specified
+	entities. If the entity has a version value associated with it, such as a
+	compiler does, the string -may- include that version, but it is not
+	required to do so. It is important to understand that since these values
+	are generated in a header at compile time, and so they will change; if it
+	is desired to cache the value, e.g., to report the compiler a library was
+	built with in an executable that links to it, it will be necessary to cache
+	it yourself, e.g., by storing the character array in a string with external
+	storage in a source file in the library and providing an accessor to it.
+
+	Note that it is not safe to use these for comparisons, either directly or
+	in parsed form, as their format is not guaranteed; they are intended
+	strictly for reporting.
+
+		LUL_NAME_TARGET_CPU
+			At a minimum, this will identify the CPU family that the code was
+			compiled for, but it may contain a much more detailed descriptor.
+
+		LUL_NAME_TARGET_OS
+			This may identify the minimum supported version of the target OS,
+			as well as the OS itself, but is not required to do so.
+
+		LUL_NAME_COMPILER
+			This identifies the compiler used to build the code.
+
+		LUL_NAME_STANDARD_LIBRARY
+			This identifies the implementation of the C++ Standard Library used
+			to build the code.
 
 	LUL_TARGET_CPU
-	LUL_TARGET_CPU_IDENTIFIER
 	These conditionals specify which microprocessor instruction set is being
 	generated.	At most one of these is 1, the rest are 0.
+
 	SEEME There used to be more of these, but they’ve been largely mooted.
 	Candidates for additions include console-specific processors/families, and
 	explicit differentiation for AMD processors/families.
@@ -60,9 +85,6 @@
 
 		LUL_TARGET_CPU_ARM_FAMILY
 		LUL_TARGET_CPU_X86_FAMILY
-
-	LUL_TARGET_CPU_IDENTIFIER is a human-readable string broadly identifying
-	the target CPU, as per the above macros.
 
 
 	LUL_TARGET_VEC
@@ -92,14 +114,15 @@
 
 
 	LUL_TARGET_OS
-	LUL_TARGET_OS_IDENTIFIER
 	These conditionals specify in which Operating System the generated code
 	will run. At most one of the these is 1, the rest are 0 (except for
 	LUL_TARGET_OS_IOS, which is set whenever LUL_TARGET_OS_IOS_SIM is set, but
 	can also be set alone).
+
 	SEEME Candidates for additions include console-specific operating systems,
 	Android, tvOS, and watchOS. BSD could conceivably have its own flag, but we
 	currently roll it in under LUL_TARGET_OS_X11.
+
 	SEEME These focus primarily on UI characteristics, as opposed to system
 	internals, which is why we have LUL_TARGET_OS_X11 and not
 	LUL_TARGET_OS_POSIX. A case could be made that we realistically need to
@@ -114,41 +137,45 @@
 		LUL_TARGET_OS_IOS
 		LUL_TARGET_OS_IOS_SIM
 
-	LUL_TARGET_OS_IDENTIFIER is a human-readable string. It may identify the
-	minimum supported version of the target OS, but is not required to do so.
-
 
 	LUL_TARGET_RT
-	These conditionals specify in which runtime the generated code will
-	run. This is needed when the OS and CPU support more than one runtime
-	(e.g. MacOS X on PPC supports CFM and Mach-O). Note that values are
-	descriptive; if the condition is met, the value will be 1, otherwise 0.
-	SEEME The executable format conditionals are somewhat arbitrary, but we’ve
-	only bothered to define them for cases we’ve encountered in practice.
-	Additional operations experience (and supported platforms) will probably
-	lead to some changes.
+	These conditionals specify the runtime environment which the generated code
+	is being compled for. This is needed when the OS and/or CPU supports more
+	than one runtime (e.g. macOS on PPC supports CFM and Mach-O). Note that
+	values are descriptive; if the condition is met, the value will be 1,
+	otherwise 0.
 
 		LUL_TARGET_RT_LITTLE_ENDIAN
 		LUL_TARGET_RT_BIG_ENDIAN
+			We don’t call out processors that can do either; all the processors
+			we support operate in one mode or the other for the duration of
+			execution, which is all we care about. Note that this is only used
+			to determine the “native” format.
 
 		LUL_TARGET_RT_32_BIT
 		LUL_TARGET_RT_64_BIT
+			This identifies whether the binary is being generated for 32-bit
+			or 64-bit execution.
 
 		LUL_TARGET_RT_COFF
 		LUL_TARGET_RT_ELF
 		LUL_TARGET_RT_MACHO
 		LUL_TARGET_RT_WASM
+			These identify the executable format. They are somewhat arbitrary,
+			but we’ve only bothered to define them for cases we’ve encountered
+			in practice. Additional operations experience (and supported
+			platforms) will probably lead to some additions.
 
 
 	LUL_TARGET_API
 	These conditionals are used to differentiate between sets of API’s on
-	the same processor under the same OS. The first section after _API_ is
-	the OS.	The second section is the API set.	Unlike LUL_TARGET_OS and
+	the same processor under the same OS. Unlike LUL_TARGET_OS and
 	LUL_TARGET_CPU, these conditionals are not mutally exclusive. This header
 	will attempt to auto-configure all LUL_TARGET_API values, but will often
-	need a LUL_TARGET_API value predefined (e.g., in a .prop or .xcconfig file)
+	need a LUL_TARGET_API value predefined, e.g., in a .prop or .xcconfig file,
 	in order to disambiguate.  Note that values are descriptive; if the
 	condition is met, the value will be 1, otherwise 0.
+
 	SEEME This is not intended to be an exhaustive list of APIs. Originally,
 	it was useful for differentiating between possible supported and available
 	Apple API (e.g., QuickDraw, Carbon, Cocoa, and whatever other flavor of the
@@ -172,42 +199,39 @@
 	be useful to indicate, for example, the NON-availability of some requisite
 	feature, such as tight struct packing.
 
-		LUL_PRAGMA_STRUCT_ALIGN					#pragma options align=mac68k/power/reset
-		LUL_PRAGMA_STRUCT_PACKPUSH				#pragma pack(push, n)/pack(pop)
+	SEEME Previously, this section contained #pragmas related to alignment
+	within structs. They’ve been mooted thanks to standardized ways of handling
+	this and widespread support. This section is being kept in as a placeholder
+	should we add more #pragma detection in the future.
 
 
 	LUL_TYPE
 	These identify characteristics of certain POD types for a given compiler;
-	preprocessor definitions are used since sizeof of other operators can’t be
-	used by the preprocessor (reliably).
+	preprocessor definitions are used since sizeof can’t be used by the
+	preprocessor (reliably). These can be defined since we have special
+	knowledge of the compile/build flags that wouldn’t necessarily be
+	available to conforming portable code.
 
 		LUL_TYPE_HAS_INT64
-			//	64-bit ints, as int64_t and uint64_t (and possibly long long)
+			native 64-bit ints - including usigned ints - as int64_t and
+			uint64_t (and possibly also long long and unsigned long long,
+			depending)
 
 		LUL_TYPE_HAS_INT128
-			//	128-bit ints, as __int128_t and __uint128_t
+			native 128-bit ints - including usigned ints - as __int128_t and
+			__uint128_t
 
 		LUL_TYPE_EXACT_WIDTH_INTEGERS
-			//	availability of C99 exact width int types
+			availability of C99 exact width int types
 
 		LUL_TYPE_DOUBLE_GT_FLOAT
-			//	double is distinct from float
+			double is distinct from float
 
 		LUL_TYPE_LONG_DOUBLE_GT_DOUBLE
-			//	long double is distinct from double
+			long double is distinct from double
 
 		LUL_TYPE_WCHAR_T_IS_16_BITS
-			//	wchar_t is assumed to be a 32-bit integer type if 0 or unset
-
-		LUL_TYPE_HAS_C99_FLOATS
-			//	availability of float_t and double_t
-
-
-	LUL_STDC99
-	For compilers that support C99, C99 functions are in the std namespace.
-	Compilers that don’t fully support C99 often have C99 functions, but keep
-	them in the global namespace. Whenever a C99 function is used, refer to it
-	as LUL_STDC99::<func_xxx>, where <func_xxx> is the function name.
+			if this is 0, wchar_t is assumed to be a 32-bit integer type
 
 
 	LUL_FEATURE
@@ -215,11 +239,13 @@
 	to work around or otherwise deal with. Those features are noted here.
 
 		LUL_FEATURE_UTF16_FILE_SYSTEM
-			//	It is assumed that the file system uses UTF-8 unless this
-			//	feature conditional is set. Really only necessary for Windows.
-			//	FIXME We can probably retire this after updating the code to
-			//	always use the relevant std::filesystem path types instead of
-			//	doing our own conversions.
+			It is assumed that the file system uses UTF-8 unless this
+			feature conditional is set. Really only necessary for Windows.
+
+			FIXME We can probably retire this after updating the code to
+			always use the relevant std::filesystem path types instead of
+			doing our own conversions.
+
 
 	LUL_CPPxx
 	LUL_Cxx
@@ -306,7 +332,7 @@
 		LUL_CPP11_THREADSAFE_STATIC_INIT
 		<http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2660.htm>
 		__cpp_threadsafe_static_init
-			Some compiler can disable this feature if asked; will be set to 0
+			Some compilers can disable this feature if asked; will be set to 0
 			if that has happened.
 
 	C++14
@@ -980,34 +1006,34 @@
 	specific.
 
 		LUL_CLASS_FORCE_EBCO
-			//	Force the use of the Empty Base (Class) Optimization. The
-			//	decorator should precede the class name in its declaration.
-			//	Note that the decorator is used specifically to indicate that
-			//	the bases of a given class are empty, not that a given class is
-			//	an Empty Base Class; this means it must be applied by the end
-			//	user in a large number of practical use cases. Also note that
-			//	the decorator must be applied in the most direct descendant to
-			//	have effect. For example:
-			//
-			//		struct Empty1 { };
-			//		struct Empty2 { };
-			//		struct Derived1 : Empty1, Empty2 { };
-			//		struct LUL_CLASS_FORCE_EBCO Derived2 : Derived 1 { };
-			//
-			//	In this example, neither Derived1 -nor- Derived2 will
-			//	necessarily benefit from the EBCO; we can’t guarantee the
-			//	behavior. However, if Derived1 -also- has the
-			//	LUL_CLASS_FORCE_EBCO applied, then any compiler that supports
-			//	the EBCO will apply it to both Derived1 -and- Derived2.
-			//
-			//	SEEME This is really only necessary when using multiple
-			//	inheritance and targeting MSVS; at least VS2015 Update 3 is
-			//	required (note that Update 2, which actually introduced the
-			//	feature, had a bug which caused it to violate the Standard).
-			//	APIME How aggravating is it that you can’t decorate the empty
-			//	base class itself instead of having to force a weird
-			//	requirement on derived classes? Sadly, we’re at the mercy of
-			//	the built-in compiler decorators, here.
+			Force the use of the Empty Base (Class) Optimization. The
+			decorator should precede the class name in its declaration.
+			Note that the decorator is used specifically to indicate that
+			the bases of a given class are empty, not that a given class is
+			an Empty Base Class; this means it must be applied by the end
+			user in a large number of practical use cases. Also note that
+			the decorator must be applied in the most direct descendant to
+			have effect. For example:
+
+				struct Empty1 { };
+				struct Empty2 { };
+				struct Derived1 : Empty1, Empty2 { };
+				struct LUL_CLASS_FORCE_EBCO Derived2 : Derived 1 { };
+
+			In this example, neither Derived1 -nor- Derived2 will
+			necessarily benefit from the EBCO; we can’t guarantee the
+			behavior. However, if Derived1 -also- has the
+			LUL_CLASS_FORCE_EBCO applied, then any compiler that supports
+			the EBCO will apply it to both Derived1 -and- Derived2.
+
+			SEEME This is really only necessary when using multiple
+			inheritance and targeting MSVS; at least VS2015 Update 3 is
+			required (note that Update 2, which actually introduced the
+			feature, had a bug which caused it to violate the Standard).
+			APIME How aggravating is it that you can’t decorate the empty
+			base class itself instead of having to force a weird
+			requirement on derived classes? Sadly, we’re at the mercy of
+			the built-in compiler decorators, here.
 
 
 	LUL_FUNC_xxx
@@ -1015,16 +1041,16 @@
 	implementation-specific.
 
 		LUL_FUNC_CALL_C(LUL_func_name_)
-			//	C calling convention; default
+			C calling convention; default
 
 		LUL_FUNC_CALL_STD(LUL_func_name_)
-			//	Std calling convention
+			Std calling convention
 
 		LUL_FUNC_CALLBACK_C(LUL_func_name_)
-			//	C-style function pointer
+			C-style function pointer
 
 		LUL_FUNC_CALLBACK_STD(LUL_func_name_)
-			//	Std-style function pointer
+			Std-style function pointer
 
 
 	LUL_BUILTIN_xxx
@@ -1033,12 +1059,12 @@
 	emulated, or simply replaced with a no-op.
 
 		LUL_BUILTIN_likely(LUL_expr_)
-			//	branch prediction hinting that something is most likely true;
-			//	LUL_expr_ must resolve to a boolean
+			branch prediction hinting that something is most likely true;
+			LUL_expr_ must resolve to a boolean
 
 		LUL_BUILTIN_unlikely(LUL_expr_)
-			//	branch prediction hinting that something is most likely false;
-			//	LUL_expr_ must resolve to a boolean
+			branch prediction hinting that something is most likely false;
+			LUL_expr_ must resolve to a boolean
 
 ------------------------------------------------------------------------------*/
 

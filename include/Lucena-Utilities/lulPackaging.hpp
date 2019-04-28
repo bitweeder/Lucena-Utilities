@@ -87,7 +87,9 @@
 	10 to 12 words or less.
 
 	LUL_PACKAGING_api identifies the system-level API primarily used for this
-	particular build, such as “Carbon” or “WinAPI”.
+	particular build, such as “Carbon” or “WinAPI”. This can be used for
+	selecting platform-specific files for various purposes, among other things;
+	the string is guaranteed to be alphanumeric and start with a letter.
 
 	LUL_PACKAGING_prefix is a naming prefix used by files in this project.
 */

@@ -155,23 +155,23 @@
 
 		//	Set up identifiers
 		#if defined (__MAC_OS_X_VERSION_MIN_REQUIRED)
-			#define LUL_TARGET_OS_IDENTIFIER u8"Min macOS version " LUL_Stringify_ (__MAC_OS_X_VERSION_MIN_REQUIRED)
+			#define LUL_NAME_TARGET_OS u8"Min macOS version " LUL_Stringify_ (__MAC_OS_X_VERSION_MIN_REQUIRED)
 		#elif defined (__IPHONE_OS_VERSION_MIN_REQUIRED)
-			#define LUL_TARGET_OS_IDENTIFIER u8"Min iOS version " LUL_Stringify_ (__IPHONE_OS_VERSION_MIN_REQUIRED)
+			#define LUL_NAME_TARGET_OS u8"Min iOS version " LUL_Stringify_ (__IPHONE_OS_VERSION_MIN_REQUIRED)
 		#elif defined (__TV_OS_VERSION_MIN_REQUIRED)
-			#define LUL_TARGET_OS_IDENTIFIER u8"Min tvOS version " LUL_Stringify_ (__TV_OS_VERSION_MIN_REQUIRED)
+			#define LUL_NAME_TARGET_OS u8"Min tvOS version " LUL_Stringify_ (__TV_OS_VERSION_MIN_REQUIRED)
 		#elif defined (__WATCH_OS_VERSION_MIN_REQUIRED)
-			#define LUL_TARGET_OS_IDENTIFIER u8"Min watchOS version " LUL_Stringify_ (__WATCH_OS_VERSION_MIN_REQUIRED)
+			#define LUL_NAME_TARGET_OS u8"Min watchOS version " LUL_Stringify_ (__WATCH_OS_VERSION_MIN_REQUIRED)
 		#else
 			#error "Unknown Apple platform"
 		#endif
 	#else
 		#if LUL_TARGET_OS_OSX
-			#define LUL_TARGET_OS_IDENTIFIER u8"macOS"
+			#define LUL_NAME_TARGET_OS u8"macOS"
 		#elif LUL_TARGET_OS_IOS
-			#define LUL_TARGET_OS_IDENTIFIER u8"iOS"
+			#define LUL_NAME_TARGET_OS u8"iOS"
 		#elif LUL_TARGET_OS_IOS_SIM
-			#define LUL_TARGET_OS_IDENTIFIER u8"iOS Simulator"
+			#define LUL_NAME_TARGET_OS u8"iOS Simulator"
 		#else
 			#error "Unknown Apple platform"
 		#endif
@@ -182,15 +182,15 @@
 	#endif
 
 	#if defined (__linux__)
-		#define LUL_TARGET_OS_IDENTIFIER u8"Linux"
+		#define LUL_NAME_TARGET_OS u8"Linux"
 	#elif defined (__FreeBSD__)
-		#define LUL_TARGET_OS_IDENTIFIER u8"FreeBSD version " LUL_Stringify_ (__FreeBSD__)
+		#define LUL_NAME_TARGET_OS u8"FreeBSD version " LUL_Stringify_ (__FreeBSD__)
 	#elif defined (__NetBSD__)
-		#define LUL_TARGET_OS_IDENTIFIER u8"NetBSD version " LUL_Stringify_ (__NetBSD__)
+		#define LUL_NAME_TARGET_OS u8"NetBSD version " LUL_Stringify_ (__NetBSD__)
 	#elif defined (__OpenBSD__)
-		#define LUL_TARGET_OS_IDENTIFIER u8"OpenBSD version " LUL_Stringify_ (__OpenBSD__)
+		#define LUL_NAME_TARGET_OS u8"OpenBSD version " LUL_Stringify_ (__OpenBSD__)
 	#elif defined (__DragonFly__)
-		#define LUL_TARGET_OS_IDENTIFIER u8"DragonFly version " LUL_Stringify_ (__DragonFly__)
+		#define LUL_NAME_TARGET_OS u8"DragonFly version " LUL_Stringify_ (__DragonFly__)
 	#else
 		#error "Unknown LUL_TARGET_OS_X11 variant; update details/lulPlatformSetup.hpp"
 	#endif
@@ -236,7 +236,7 @@
 	#endif
 
 
-	#define LUL_TARGET_OS_IDENTIFIER u8"Windows"
+	#define LUL_NAME_TARGET_OS u8"Windows"
 #else
 	#error "Unknown platform; update details/lulPlatformSetup.hpp"
 #endif
@@ -246,9 +246,9 @@
 	This -must- be defined by this point.
 */
 
-#if !defined (LUL_TARGET_OS_IDENTIFIER)
-	#error "LUL_TARGET_OS_IDENTIFIER must be defined"
-#endif	//	LUL_TARGET_OS_IDENTIFIER
+#if !defined (LUL_NAME_TARGET_OS)
+	#error "LUL_NAME_TARGET_OS must be defined"
+#endif	//	LUL_NAME_TARGET_OS
 
 
 /*------------------------------------------------------------------------------
