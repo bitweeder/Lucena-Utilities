@@ -8,18 +8,6 @@
 	This file is distributed under the University of Illinois Open Source
 	License. See license/License.txt for details.
 
-	FIXME This is only a fragment of the proposed <bit> header; amusingly, the
-	bulk of the header was created to support a number of bit-related classes
-	that had not been formally approved, while this piece got tagged in and
-	approved fairly quickly. The rest of <bit> has since been voted in, and now
-	needs to be added to this reference implemetation.
-
-	FIXME
-	Part of the LLVM Project, under the Apache License v2.0 with LLVM
-	Exceptions.
-	See https://llvm.org/LICENSE.txt for license information.
-	SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-
 ------------------------------------------------------------------------------*/
 
 
@@ -28,6 +16,7 @@
 
 //	std
 #include <cstring>
+#include <limits>
 #include <type_traits>
 
 
@@ -39,133 +28,164 @@
 
 
 //	system
-#if defined(_LIBCPP_COMPILER_MSVC)
-#include <intrin.h>
+#if LUL_TARGET_COMPILER_MSVC && LUL_TARGET_STANDARD_LIBRARY_MSVC
+	#include <intrin.h>
 #endif
 
 
 LUL_begin_v_namespace
 
-#ifndef _LIBCPP_COMPILER_MSVC
+namespace stdproxy {
 
-inline _LIBCPP_INLINE_VISIBILITY
-int __ctz(unsigned __x)           { return __builtin_ctz(__x); }
+namespace details {
 
-inline _LIBCPP_INLINE_VISIBILITY
-int __ctz(unsigned long __x)      { return __builtin_ctzl(__x); }
-
-inline _LIBCPP_INLINE_VISIBILITY
-int __ctz(unsigned long long __x) { return __builtin_ctzll(__x); }
-
-
-inline _LIBCPP_INLINE_VISIBILITY
-int __clz(unsigned __x)           { return __builtin_clz(__x); }
-
-inline _LIBCPP_INLINE_VISIBILITY
-int __clz(unsigned long __x)      { return __builtin_clzl(__x); }
-
-inline _LIBCPP_INLINE_VISIBILITY
-int __clz(unsigned long long __x) { return __builtin_clzll(__x); }
-
-
-inline _LIBCPP_INLINE_VISIBILITY
-int __popcount(unsigned __x)           { return __builtin_popcount(__x); }
-
-inline _LIBCPP_INLINE_VISIBILITY
-int __popcount(unsigned long __x)      { return __builtin_popcountl(__x); }
-
-inline _LIBCPP_INLINE_VISIBILITY
-int __popcount(unsigned long long __x) { return __builtin_popcountll(__x); }
-
-#else  // _LIBCPP_COMPILER_MSVC
-
-// Precondition:  __x != 0
-inline _LIBCPP_INLINE_VISIBILITY
-int __ctz(unsigned __x) {
-  static_assert(sizeof(unsigned) == sizeof(unsigned long), "");
-  static_assert(sizeof(unsigned long) == 4, "");
-  unsigned long __where;
-  if (_BitScanForward(&__where, __x))
-    return static_cast<int>(__where);
-  return 32;
-}
-
-inline _LIBCPP_INLINE_VISIBILITY
-int __ctz(unsigned long __x) {
-    static_assert(sizeof(unsigned long) == sizeof(unsigned), "");
-    return __ctz(static_cast<unsigned>(__x));
-}
-
-inline _LIBCPP_INLINE_VISIBILITY
-int __ctz(unsigned long long __x) {
-    unsigned long __where;
-#if defined(_LIBCPP_HAS_BITSCAN64)
-    (defined(_M_AMD64) || defined(__x86_64__))
-  if (_BitScanForward64(&__where, __x))
-    return static_cast<int>(__where);
-#else
-  // Win32 doesn't have _BitScanForward64 so emulate it with two 32 bit calls.
-  if (_BitScanForward(&__where, static_cast<unsigned long>(__x)))
-    return static_cast<int>(__where);
-  if (_BitScanForward(&__where, static_cast<unsigned long>(__x >> 32)))
-    return static_cast<int>(__where + 32);
+#ifdef LUL_CONSTEXPR_IF_CONSTEXPR_INTRINSICS
+	#error "LUL_FEATURE_CONSTEXPR_INTRINSICS should not propagate"
 #endif
-  return 64;
-}
 
-// Precondition:  __x != 0
-inline _LIBCPP_INLINE_VISIBILITY
-int __clz(unsigned __x) {
-  static_assert(sizeof(unsigned) == sizeof(unsigned long), "");
-  static_assert(sizeof(unsigned long) == 4, "");
-  unsigned long __where;
-  if (_BitScanReverse(&__where, __x))
-    return static_cast<int>(31 - __where);
-  return 32; // Undefined Behavior.
-}
-
-inline _LIBCPP_INLINE_VISIBILITY
-int __clz(unsigned long __x) {
-    static_assert(sizeof(unsigned) == sizeof(unsigned long), "");
-    return __clz(static_cast<unsigned>(__x));
-}
-
-inline _LIBCPP_INLINE_VISIBILITY
-int __clz(unsigned long long __x) {
-  unsigned long __where;
-#if defined(_LIBCPP_HAS_BITSCAN64)
-  if (_BitScanReverse64(&__where, __x))
-    return static_cast<int>(63 - __where);
-#else
-  // Win32 doesn't have _BitScanReverse64 so emulate it with two 32 bit calls.
-  if (_BitScanReverse(&__where, static_cast<unsigned long>(__x >> 32)))
-    return static_cast<int>(63 - (__where + 32));
-  if (_BitScanReverse(&__where, static_cast<unsigned long>(__x)))
-    return static_cast<int>(63 - __where);
+#ifdef LUL_INTRINSIC_HAS_CLZ
+	#error "LUL_INTRINSIC_HAS_CLZ should not propagate"
 #endif
-  return 64; // Undefined Behavior.
-}
 
-inline _LIBCPP_INLINE_VISIBILITY int __popcount(unsigned __x) {
-  static_assert(sizeof(unsigned) == 4, "");
-  return __popcnt(__x);
-}
+#ifdef LUL_INTRINSIC_HAS_POPCNT
+	#error "LUL_INTRINSIC_HAS_POPCNT should not propagate"
+#endif
 
-inline _LIBCPP_INLINE_VISIBILITY int __popcount(unsigned long __x) {
-  static_assert(sizeof(unsigned long) == 4, "");
-  return __popcnt(__x);
-}
+#if LUL_FEATURE_CONSTEXPR_INTRINSICS
+	#define LUL_CONSTEXPR_IF_CONSTEXPR_INTRINSICS constexpr
+#else
+	#define LUL_CONSTEXPR_IF_CONSTEXPR_INTRINSICS
+#endif
 
-inline _LIBCPP_INLINE_VISIBILITY int __popcount(unsigned long long __x) {
-  static_assert(sizeof(unsigned long long) == 8, "");
-  return __popcnt64(__x);
-}
+/*
+	The following pieces related to intrinsic wrappers are derived from the
+	libc++ 8.0 <bit> implementation, used under the University of
+	Illinois/NCSA Open Source License. See “license/libc++ License” for
+	details.
 
-#endif // _LIBCPP_COMPILER_MSVC
+	The notable changes from the original libc++ pieces include:
 
-_LIBCPP_END_NAMESPACE_STD
+	* namespace changes
+	* renaming of various macros to use LUL versions
+	* renaming of reserved symbols
+*/
 
-#endif // _LIBCPP_BIT
+#if LUL_TARGET_COMPILER_MSVC && LUL_TARGET_STANDARD_LIBRARY_MSVC
+	//	FIXME _BitScanReverse maps directly to the `bsr` x86 opcode (or
+	//	equivalent); for some uses, it would be more efficient to just return
+	//	the bsr result rather than translate it to a leading zero count.
+	//	Precondition:  v != 0
+	inline LUL_VIS_INLINE_FUNC
+	LUL_CONSTEXPR_IF_CONSTEXPR_INTRINSICS int clz(unsigned v)
+	{
+		static_assert (sizeof (unsigned) == sizeof (unsigned long));
+		static_assert (sizeof (unsigned long) == 4);
+
+		unsigned long w;
+
+		if (_BitScanReverse (&w, v))
+		{
+			return static_cast <int> (31 - w);
+		}
+
+		return 32;		//	Undefined Behavior.
+	}
+
+	//	Precondition:  v != 0
+	inline LUL_VIS_INLINE_FUNC
+	LUL_CONSTEXPR_IF_CONSTEXPR_INTRINSICS int clz (unsigned long v)
+	{
+		static_assert (sizeof (unsigned) == sizeof (unsigned long));
+
+		return clz (static_cast <unsigned> (v));
+	}
+
+	//	Precondition:  v != 0
+	inline LUL_VIS_INLINE_FUNC
+	LUL_CONSTEXPR_IF_CONSTEXPR_INTRINSICS int clz (unsigned long long v)
+	{
+		unsigned long w;
+
+		#if LUL_TARGET_API_WIN64
+			if (_BitScanReverse64 (&w, v))
+			{
+				return static_cast <int> (63 - w);
+			}
+		#else
+			//	Win32 doesn’t have _BitScanForward64 so emulate it with two
+			//	32-bit calls.
+			if (_BitScanReverse (&w, static_cast <unsigned long> (v >> 32)))
+			{
+				return static_cast <int> (63 - (w + 32));
+			}
+
+			if (_BitScanReverse (&w, static_cast <unsigned long> (v)))
+			{
+				return static_cast <int> (63 - w);
+			}
+		#endif
+
+		return 64;		//	Undefined Behavior.
+	}
+
+	inline LUL_VIS_INLINE_FUNC
+	LUL_CONSTEXPR_IF_CONSTEXPR_INTRINSICS int popcount (unsigned v)
+	{
+		static_assert (sizeof (unsigned) == 4);
+
+		return __popcnt (v);
+	}
+
+	inline LUL_VIS_INLINE_FUNC
+	LUL_CONSTEXPR_IF_CONSTEXPR_INTRINSICS int popcount (unsigned long v)
+	{
+		static_assert (sizeof (unsigned long) == 4);
+
+		return __popcnt (v);
+	}
+
+	inline LUL_VIS_INLINE_FUNC
+	LUL_CONSTEXPR_IF_CONSTEXPR_INTRINSICS int popcount (unsigned long long v)
+	{
+		static_assert (sizeof (unsigned long long) == 8);
+
+		return __popcnt64 (v);
+	}
+
+	#define LUL_INTRINSIC_HAS_CLZ 1
+	#define LUL_INTRINSIC_HAS_POPCNT 1
+#elif LUL_TARGET_COMPILER_CLANG || LUL_TARGET_COMPILER_GCC
+	//	Count leading zeroes
+	template <typename T,
+		typename = std::enable_if_t <std::is_integral_v <T>>,
+		typename = std::enable_if_t <std::is_unsigned_v <T>>>
+	//requires
+	//	std::is_integral_v <T> &&
+	//	std::is_unsigned_v <T>
+	inline LUL_VIS_INLINE_FUNC
+	LUL_CONSTEXPR_IF_CONSTEXPR_INTRINSICS int clz (T v)
+	{
+		return __builtin_clz(v);
+	}
+
+	//	Count 1-bits in value
+	template <typename T,
+		typename = std::enable_if_t <std::is_integral_v <T>>,
+		typename = std::enable_if_t <std::is_unsigned_v <T>>>
+	//requires
+	//	std::is_integral_v <T> &&
+	//	std::is_unsigned_v <T>
+	inline LUL_VIS_INLINE_FUNC
+	LUL_CONSTEXPR_IF_CONSTEXPR_INTRINSICS int popcount (T v)
+	{
+		return __builtin_popcount(v);
+	}
+
+	#define LUL_INTRINSIC_HAS_CLZ 1
+	#define LUL_INTRINSIC_HAS_POPCNT 1
+#endif
+
+}	//	namespace details
 
 
 /*------------------------------------------------------------------------------
@@ -192,9 +212,9 @@ _LIBCPP_END_NAMESPACE_STD
 */
 
 template <typename To, typename From,
-    typename = std::enable_if_t <sizeof (To) == sizeof (From)>,
-    typename = std::enable_if_t <std::is_trivially_copyable_v <To>>,
-    typename = std::enable_if_t <std::is_trivially_copyable_v <From>>>
+	typename = std::enable_if_t <sizeof (To) == sizeof (From)>,
+	typename = std::enable_if_t <std::is_trivially_copyable_v <To>>,
+	typename = std::enable_if_t <std::is_trivially_copyable_v <From>>>
 //requires
 //	sizeof (To) == sizeof (From) &&
 //	std::is_trivially_copyable_v <To> &&
@@ -246,16 +266,14 @@ LUL_VIS_INLINE_FUNC inline constexpr To bit_cast (const From& from) noexcept
 
 //	Returns: true if x is an integral power of two; false otherwise.
 template <class T,
-    typename = std::enable_if_t <std::is_integral_v<T>>,
-    typename = std::enable_if_t <std::is_unsigned_v<T>>>
+	typename = std::enable_if_t <std::is_integral_v<T>>,
+	typename = std::enable_if_t <std::is_unsigned_v<T>>>
 //requires
 //	std::is_integral_v<T> &&
 //	std::is_unsigned_v<T>
 constexpr bool ispow2 (T x) noexcept
 {
-	//	FIXME Identify the circumstances wherein the first option is both
-	//	available and more efficient.
-	#if 0
+	#if LUL_FEATURE_CONSTEXPR_INTRINSICS && LUL_INTRINSIC_HAS_POPCNT
 		return popcount(x) == 1;
 	#else
 		return (x != 0) and (0 == (x & (x - 1)));
@@ -266,55 +284,98 @@ constexpr bool ispow2 (T x) noexcept
 //	if y is not representable as a value of type T, the result is an
 //	unspecified value.
 template <class T,
-    typename = std::enable_if_t <std::is_integral_v<T>>,
-    typename = std::enable_if_t <std::is_unsigned_v<T>>>
+	typename = std::enable_if_t <std::is_integral_v<T>>,
+	typename = std::enable_if_t <std::is_unsigned_v<T>>>
 //requires
 //	std::is_integral_v<T> &&
 //	std::is_unsigned_v<T>
 constexpr T ceil2 (T x) noexcept
 {
-	#if 0
-		return popcount(x) == 1;
+	#if LUL_FEATURE_CONSTEXPR_INTRINSICS && LUL_INTRINSIC_HAS_CLZ
+		//	SEEME `clz(0)` may fail for some implementations, so we need to
+		//	prevent it, hence the trap for both '0' -and- '1'.
+		return (x == 0 || x == 1) ? 1
+			: 1 << (std::numeric_limits <T>::digits - clz (x - 1));
 	#else
-		return (x != 0) and (0 == (x & (x - 1)));
+		if (x == 0) return 1;
+
+		--x;
+
+		for (std::size_t i = 1; i < std::numeric_limits <T>::digits; i <<= 2)
+		{
+			x |= x >> i;
+		}
+
+		++x;
+
+		return x;
 	#endif
 }
 
-//	Returns: The minimal value y such that ispow2(y) is true and y >= x;
-//	If x == 0, 0; otherwise the maximal value y such that ispow2(y) is true
-//	and y <= x.
+//	Returns: If x == 0, 0; otherwise the maximal value y such that ispow2(y) is
+//	true and y <= x.
 template <class T,
-    typename = std::enable_if_t <std::is_integral_v<T>>,
-    typename = std::enable_if_t <std::is_unsigned_v<T>>>
+	typename = std::enable_if_t <std::is_integral_v<T>>,
+	typename = std::enable_if_t <std::is_unsigned_v<T>>>
 //requires
 //	std::is_integral_v<T> &&
 //	std::is_unsigned_v<T>
 constexpr T floor2 (T x) noexcept
 {
-	#if 0
-		return popcount(x) == 1;
+	#if LUL_FEATURE_CONSTEXPR_INTRINSICS && LUL_INTRINSIC_HAS_CLZ
+		return (x == 0) ? 0
+			: 1 << (std::numeric_limits <T>::digits - clz (x) - 1);
 	#else
-		return (x != 0) and (0 == (x & (x - 1)));
+		if (x == 0) return 0;
+
+		for (std::size_t i = 1; i < std::numeric_limits <T>::digits; i <<= 2)
+		{
+			x |= x >> i;
+		}
+
+		x >>= 1;
+		++x;
+
+		return x;
 	#endif
 }
 
 //	Returns: If x == 0, 0; otherwise one plus the base-2 logarithm of x, with
 //	any fractional part discarded.
 template <class T,
-    typename = std::enable_if_t <std::is_integral_v<T>>,
-    typename = std::enable_if_t <std::is_unsigned_v<T>>>
+	typename = std::enable_if_t <std::is_integral_v<T>>,
+	typename = std::enable_if_t <std::is_unsigned_v<T>>>
 //requires
 //	std::is_integral_v<T> &&
 //	std::is_unsigned_v<T>
 constexpr T log2p1 (T x) noexcept
 {
-	#if 0
-		return popcount(x) == 1;
+	#if LUL_FEATURE_CONSTEXPR_INTRINSICS && LUL_INTRINSIC_HAS_CLZ
+		return (x == 0) ? 0
+			: std::numeric_limits <T>::digits - clz (x) - 1;
 	#else
-		return (x != 0) and (0 == (x & (x - 1)));
+		if (x == 0) return 0;
+
+		T v = 0;
+
+		while (x >>= 1) v++;
+
+		return v;
 	#endif
 }
 
+
+#ifdef LUL_CONSTEXPR_IF_CONSTEXPR_INTRINSICS
+	#undef LUL_FEATURE_CONSTEXPR_INTRINSICS
+#endif
+
+#ifdef LUL_INTRINSIC_HAS_CLZ
+	#undef LUL_INTRINSIC_HAS_CLZ
+#endif
+
+#ifdef LUL_INTRINSIC_HAS_POPCNT
+	#undef LUL_INTRINSIC_HAS_POPCNT
+#endif
 
 } // namespace stdproxy
 
