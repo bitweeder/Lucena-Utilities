@@ -63,6 +63,13 @@
 	#error "Don’t define LUL_NAME_COMPILER outside of this file."
 #endif	//	LUL_NAME_COMPILER
 
+#if defined (LUL_TARGET_COMPILER_CLANG) || \
+	defined (LUL_TARGET_COMPILER_GCC) || \
+	defined (LUL_TARGET_COMPILER_MSVC)
+
+	#error "Don’t define LUL_TARGET_COMPILER_xxx outside of this file."
+#endif	//	LUL_TARGET_COMPILER check
+
 #if defined (LUL_TARGET_CPU_X86) || \
 	defined (LUL_TARGET_CPU_X86_64) || \
 	defined (LUL_TARGET_CPU_IA64) || \
@@ -514,7 +521,8 @@
 
 
 	//	Set up identifiers
-	#define LUL_NAME_COMPILER u8"clang version " __clang_version__
+	#define LUL_NAME_COMPILER u8"clang version " 	__clang_version__
+	#define LUL_TARGET_COMPILER_CLANG				1
 
 #elif defined (__clang__) && defined (__llvm__)
 	//	generic clang-llvm compiler
@@ -786,7 +794,8 @@
 
 
 	//	Set up identifiers
-	#define LUL_NAME_COMPILER u8"clang version " __clang_version__
+	#define LUL_NAME_COMPILER u8"clang version " 	__clang_version__
+	#define LUL_TARGET_COMPILER_CLANG				1
 
 #elif defined (__GNUC__)
 	//	generic gcc-based compiler
@@ -1055,7 +1064,8 @@
 
 
 	//	Set up identifiers
-	#define LUL_NAME_COMPILER u8"gcc version " __VERSION__
+	#define LUL_NAME_COMPILER u8"gcc version " 		__VERSION__
+	#define LUL_TARGET_COMPILER_GCC					1
 
 #elif defined (_MSC_VER) && defined (_WIN32)
 	//	Visual C++ targeting Windows; _WIN32 is also defined for 64-bit
@@ -1279,7 +1289,9 @@
 
 
 	//	Set up identifiers
-	#define LUL_NAME_COMPILER u8"MSVC version " LUL_Stringify_ (_MSC_VER)
+	#define LUL_NAME_COMPILER u8"MSVC version " 	LUL_Stringify_ (_MSC_VER)
+	#define LUL_TARGET_COMPILER_MSVC				1
+
 #else
 	//	Unsupported compiler; we don’t bother guessing.
 	#error "Unsupported compiler"
@@ -1293,6 +1305,23 @@
 #if !defined (LUL_NAME_COMPILER)
 	#error "LUL_NAME_COMPILER must be defined"
 #endif	//	LUL_NAME_COMPILER
+
+
+/*------------------------------------------------------------------------------
+	Set up the rest of the target compiler conditionals
+*/
+
+#ifndef LUL_TARGET_COMPILER_CLANG
+	#define LUL_TARGET_COMPILER_CLANG			0
+#endif
+
+#ifndef LUL_TARGET_COMPILER_GCC
+	#define LUL_TARGET_COMPILER_GCC				0
+#endif
+
+#ifndef LUL_TARGET_COMPILER_MSVC
+	#define LUL_TARGET_COMPILER_MSVC			0
+#endif
 
 
 /*------------------------------------------------------------------------------
@@ -1430,6 +1459,14 @@
 	#define LUL_TYPE_WCHAR_T_IS_16_BITS			0
 #endif
 
+
+/*------------------------------------------------------------------------------
+	Set up Feature conditionals if they weren’t previously defined.
+*/
+
+#ifndef LUL_FEATURE_CONSTEXPR_INTRINSICS
+	#define LUL_FEATURE_CONSTEXPR_INTRINSICS	0
+#endif
 
 /*------------------------------------------------------------------------------
 	Set up C++98 values if they weren’t previously defined.

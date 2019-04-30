@@ -17,7 +17,7 @@
 	* namespace changes
 	* removal of some unneeded preprocessor tests and attributes
 	* renaming of various macros to use LUL versions
-	* renaming of system-reserved symbols
+	* renaming of reserved symbols
 
 	SEEME This header requires a number of source files to provide a working
 	implementation.

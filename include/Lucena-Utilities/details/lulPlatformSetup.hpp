@@ -97,26 +97,32 @@
 
 		#include <Availability.h>
 			//	Special Apple header required for compile-time detection of the
-			//	SDK version and the targeted platform. Note that there’s no magic
-			//	here; historically the values are all dependent on which platform
-			//	SDK is being used, so if the user botches that, everything else
-			//	will be wrong.
+			//	SDK version and the targeted platform. Note that there’s no
+			//	magic here; historically the values are all dependent on which
+			//	platform SDK is being used, so if the user botches that,
+			//	everything else will be wrong.
 
 		#if LUL_TARGET_OS_OSX
 			#define LUL_TARGET_API_COCOA				1
+			#define LUL_TARGET_API_POSIX				1
 		#elif LUL_TARGET_OS_IOS || LUL_TARGET_OS_IOS_SIM
 			#define LUL_TARGET_API_COCOA_TOUCH			1
+
+			//	FIXME We should do some verification of this; there seems to be
+			//	enough drift in iOS that it might fail many of the prgmatic
+			//	litmus tests for POSIX-compatibility.
+			#define LUL_TARGET_API_POSIX				1
 		#else
 			#error "Unsupported LUL_TARGET_OS_xxx option"
 		#endif
 
-		//	Note that although shared_mutex and friends have been declared in the
-		//	libc++ headers for a long time, it was many OS releases before Apple
-		//	got around to including the necessary object code in their runtimes,
-		//	effectively leaving little bombs to surprise the unwary. We warn if the
-		//	minimum supprted OS, as specified by the user, is not up to the task of
-		//	providing shared locks, but only if the user has indicated the intent
-		//	to use them via the relevant config switch.
+		//	Note that although shared_mutex and friends have been declared in
+		//	the libc++ headers for a long time, it was many OS releases before
+		//	Apple got around to including the necessary object code in their
+		//	runtimes, effectively leaving little bombs to surprise the unwary.
+		//	We warn if the minimum supprted OS, as specified by the user, is
+		//	not up to the task of providing shared locks, but only if the user
+		//	has indicated intent to use them via the relevant config switch.
 		#if LUL_CONFIG_use_shared_lock && _LIBCPP_VERSION &&					\
 			((defined (__MAC_OS_X_VERSION_MIN_REQUIRED) &&						\
 					(__MAC_OS_X_VERSION_MIN_REQUIRED < 101200)) ||				\
@@ -132,12 +138,12 @@
 		//	Until Xcode 10.0, <experimental/any> is provided, but there is no
 		//	support for it in the runtime library (in particular, there is no
 		//	implementation of bad_any_cast, among other things). Xcode 10+
-		//	includes <any>, but the necessary object code is only available under
-		//	macOS 10.14+ and iOS 12+ (and equivalent-generation OS’s), so we force
-		//	std::any detection to fail if the minimum-targeted OS is not new
-		//	enough, otherwise setting LUL_LIBCPP17_ANY in lulAnyWrapper.hpp. Note
-		//	that the same situation and solution applies to <optional> and
-		//	<variant>, as well.
+		//	includes <any>, but the necessary object code is only available
+		//	under macOS 10.14+ and iOS 12+ (and equivalent-generation OS’s), so
+		//	we force std::any detection to fail if the minimum-targeted OS is
+		//	not new enough, otherwise setting LUL_LIBCPP17_ANY in
+		//	lulAnyWrapper.hpp. Note that the same situation and solution
+		//	applies to <optional> and <variant>, as well.
 		#if defined (_LIBCPP_VERSION) &&										\
 			((_LIBCPP_VERSION < 6000) ||										\
 			((defined (__MAC_OS_X_VERSION_MIN_REQUIRED) &&						\
@@ -168,15 +174,22 @@
 	#else
 		#if LUL_TARGET_OS_OSX
 			#define LUL_NAME_TARGET_OS u8"macOS"
+			#define LUL_TARGET_API_POSIX			1
 		#elif LUL_TARGET_OS_IOS
 			#define LUL_NAME_TARGET_OS u8"iOS"
+			#define LUL_TARGET_API_POSIX			1
 		#elif LUL_TARGET_OS_IOS_SIM
 			#define LUL_NAME_TARGET_OS u8"iOS Simulator"
+			#define LUL_TARGET_API_POSIX			1
 		#else
 			#error "Unknown Apple platform"
 		#endif
 	#endif	//	Availability.h
 #elif LUL_TARGET_OS_X11
+	#ifndef LUL_TARGET_API_POSIX
+		#define LUL_TARGET_API_POSIX				1
+	#endif
+
 	#ifndef LUL_TARGET_API_X11
 		#define LUL_TARGET_API_X11					1
 	#endif
@@ -286,6 +299,10 @@
 
 #ifndef LUL_TARGET_API_COCOA_TOUCH
 	#define LUL_TARGET_API_COCOA_TOUCH			0
+#endif
+
+#ifndef LUL_TARGET_API_POSIX
+	#define LUL_TARGET_API_POSIX				0
 #endif
 
 #ifndef LUL_TARGET_API_WIN32

@@ -69,6 +69,41 @@
 			This identifies the implementation of the C++ Standard Library used
 			to build the code.
 
+
+	LUL_TARGET_COMPILER
+	Report 1 or 0 depending on which mutually exclusive macro matches the
+	compiler used to build the code. This takes the place of direct querying,
+	as some compilers are in the habit of self-identifying as something else.
+	These are not generally useful, as there’s typically another, better
+	mechanism for solving whatever this is meant to solve, but they’re here for
+	when nothing else will do. Note that if you also need version information,
+	you’ll have to resort to drect querying, though it may still sensible to
+	filter first on these for the aforementioned reason.
+
+	SEEME These are blunt instruments. In particular, there‘s no
+	differentiation between frontened (e.g., c1xx or clang) and backend
+	(e.g., c2 or llvm). In practice, this mattered more when c2/clang was a
+	thing, but is moot now. We’ll consider revisiting if the extra granularity
+	turns out to be useful
+
+		LUL_TARGET_COMPILER_CLANG
+		LUL_TARGET_COMPILER_GCC
+		LUL_TARGET_COMPILER_MSVC
+
+
+	LUL_TARGET_STANDARD_LIBRARY
+	Report 1 or 0 depending on which mutually exclusive macro matches the C++
+	Standard Library used to build the code. This takes the place of direct
+	querying, as this may not even be an option in some cases. These are not
+	generally useful, as there’s typically another, better mechanism for
+	solving whatever this is meant to solve, but they’re here for when nothing
+	else will do. Note that if you also need version information, you’ll have
+	to resort to drect querying.
+
+		LUL_TARGET_STANDARD_LIBRARY_LIBCPP
+		LUL_TARGET_STANDARD_LIBRARY_MSVC
+		LUL_TARGET_STANDARD_LIBRARY_STDLIBCPP
+
 	LUL_TARGET_CPU
 	These conditionals specify which microprocessor instruction set is being
 	generated.	At most one of these is 1, the rest are 0.
@@ -168,8 +203,8 @@
 
 
 	LUL_TARGET_API
-	These conditionals are used to differentiate between sets of API’s on
-	the same processor under the same OS. Unlike LUL_TARGET_OS and
+	These conditionals are used to differentiate between sets of core System
+	API’s on the same processor under the same OS. Unlike LUL_TARGET_OS and
 	LUL_TARGET_CPU, these conditionals are not mutally exclusive. This header
 	will attempt to auto-configure all LUL_TARGET_API values, but will often
 	need a LUL_TARGET_API value predefined, e.g., in a .prop or .xcconfig file,
@@ -178,10 +213,10 @@
 
 	SEEME This is not intended to be an exhaustive list of APIs. Originally,
 	it was useful for differentiating between possible supported and available
-	Apple API (e.g., QuickDraw, Carbon, Cocoa, and whatever other flavor of the
-	week floats in), but it’s academic on platforms that don’t deprecate their
-	APIs with abandon. Further operational experience might find us wanting to
-	differentiate between other available OS-level APIs.
+	Apple APIs (e.g., QuickDraw, Carbon, Cocoa, and whatever other flavor of
+	the week floats in), but it’s academic on platforms that don’t deprecate
+	their APIs with abandon. Further operational experience might find us
+	wanting to differentiate between other available OS-level APIs.
 
 		LUL_TARGET_API_COCOA
 		LUL_TARGET_API_COCOA_TOUCH
@@ -189,6 +224,7 @@
 		LUL_TARGET_API_WIN32
 		LUL_TARGET_API_WIN64
 
+		LUL_TARGET_API_POSIX
 		LUL_TARGET_API_X11
 
 
@@ -245,6 +281,19 @@
 			FIXME We can probably retire this after updating the code to
 			always use the relevant std::filesystem path types instead of
 			doing our own conversions.
+
+		LUL_FEATURE_CONSTEXPR_INTRINSICS
+			Indicate whether the current compilers intrinsics are constant
+			expressions in the C++ sense. In the absence of a means to identify
+			whether a given function is constexpr at compile-time, we rely on
+			tools like this to aid us in determining, expression-by-expression,
+			whether a given function is -probably- able to be declared
+			constexpr.
+
+			SEEME This is probably insufficiently granular, but it’s academic
+			for now: none of the supportedcompilers advertise constexpr
+			intrinsics, and to the extent that they have any, it’s pure
+			happenstance and dangerous to rely on.
 
 
 	LUL_CPPxx

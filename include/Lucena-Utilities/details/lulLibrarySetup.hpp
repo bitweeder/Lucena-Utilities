@@ -68,6 +68,13 @@
 	#error "Don’t define LUL_NAME_STANDARD_LIBRARY outside of this file."
 #endif	//	LUL_NAME_STANDARD_LIBRARY
 
+#if defined (LUL_TARGET_STANDARD_LIBRARY_LIBCPP) or \
+	defined (LUL_TARGET_STANDARD_LIBRARY_MSVC) or \
+	defined (LUL_TARGET_STANDARD_LIBRARY_STDLIBCPP)
+
+	#error "Don’t define LUL_TARGET_STANDARD_LIBRARY_xxx outside of this file."
+#endif	//	LUL_TARGET_STANDARD_LIBRARY check
+
 
 /*------------------------------------------------------------------------------
 	Library Macros
@@ -133,6 +140,7 @@
 
 	//	Set up identifiers
 	#define LUL_NAME_STANDARD_LIBRARY u8"libc++ version " LUL_Stringify_ (_LIBCPP_VERSION)
+	#define LUL_TARGET_STANDARD_LIBRARY_LIBCPP					1
 #elif defined (__GLIBCXX__)
 	//	SEEME Note that older iterations of libstdc++ used __GLIBCPP__
 
@@ -170,6 +178,7 @@
 
 	//	Set up identifiers
 	#define LUL_NAME_STANDARD_LIBRARY u8"GNU libstdc++ version " LUL_Stringify_ (__GLIBCXX__)
+	#define LUL_TARGET_STANDARD_LIBRARY_STDLIBCPP				1
 #elif defined (_MSC_VER)
 	//	SEEME Not exactly an equivalent test, but I don’t know of a documented
 	//	way to reliably identify the MSVC Standard Library.
@@ -215,6 +224,7 @@
 
 	//	Set up identifiers
 	#define LUL_NAME_STANDARD_LIBRARY u8"MSVC Standard Library version" LUL_Stringify_ (_MSC_VER)
+	#define LUL_TARGET_STANDARD_LIBRARY_MSVC					1
 #else
 	#define LUL_NAME_STANDARD_LIBRARY u8"Unknown Standard Library implementation"
 #endif
@@ -228,3 +238,19 @@
 	#error "LUL_NAME_STANDARD_LIBRARY must be defined"
 #endif	//	LUL_NAME_STANDARD_LIBRARY
 
+
+/*------------------------------------------------------------------------------
+	Set up the rest of the Standard Library conditionals
+*/
+
+#ifndef LUL_TARGET_STANDARD_LIBRARY_LIBCPP
+	#define LUL_TARGET_STANDARD_LIBRARY_LIBCPP					0
+#endif
+
+#ifndef LUL_TARGET_STANDARD_LIBRARY_MSVC
+	#define LUL_TARGET_STANDARD_LIBRARY_MSVC					0
+#endif
+
+#ifndef LUL_TARGET_STANDARD_LIBRARY_STDLIBCPP
+	#define LUL_TARGET_STANDARD_LIBRARY_STDLIBCPP				0
+#endif
