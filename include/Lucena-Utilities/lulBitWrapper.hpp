@@ -46,10 +46,40 @@
 	//	APIME We don’t bother to SFINAE-out since we rely on the real
 	//	function to do that.
 	template <class T, class U>
-	LUL_VIS_INLINE_FUNC inline constexpr T bit_cast (
+	LUL_VIS_INLINE_FUNC inline
+	constexpr T bit_cast (
 		const U & v) noexcept
 	{
 		return LUL_TEMP_BIT_NAMESPACE::bit_cast <T, U> (v);
+	}
+
+	template <class T>
+	LUL_VIS_INLINE_FUNC inline
+	constexpr bool ispow2 (
+		T x) noexcept
+	{
+		return LUL_TEMP_BIT_NAMESPACE::ispow2 <T> (x);
+	}
+
+	template <class T>
+	LUL_VIS_INLINE_FUNC inline
+	constexpr T ceil2 (T x) noexcept
+	{
+		return LUL_TEMP_BIT_NAMESPACE::ceil2 <T> (x);
+	}
+
+	template <class T>
+	LUL_VIS_INLINE_FUNC inline
+	constexpr T floor2 (T x) noexcept
+	{
+		return LUL_TEMP_BIT_NAMESPACE::floor2 <T> (x);
+	}
+
+	template <class T>
+	LUL_VIS_INLINE_FUNC inline
+	constexpr T log2p1 (T x) noexcept
+	{
+		return LUL_TEMP_BIT_NAMESPACE::log2p1 <T> (x);
 	}
 
 	}	//	namespace stdproxy

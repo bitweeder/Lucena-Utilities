@@ -219,7 +219,8 @@ template <typename To, typename From,
 //	sizeof (To) == sizeof (From) &&
 //	std::is_trivially_copyable_v <To> &&
 //	std::is_trivially_copyable_v <From>
-LUL_VIS_INLINE_FUNC inline constexpr To bit_cast (const From& from) noexcept
+LUL_VIS_INLINE_FUNC inline
+constexpr To bit_cast (const From& from) noexcept
 {
 	/*
 		APIME Note that it is illegal in C++17 to simply reinterpret_cast
@@ -271,6 +272,7 @@ template <class T,
 //requires
 //	std::is_integral_v<T> &&
 //	std::is_unsigned_v<T>
+inline LUL_VIS_INLINE_FUNC
 constexpr bool ispow2 (T x) noexcept
 {
 	#if LUL_FEATURE_CONSTEXPR_INTRINSICS && LUL_INTRINSIC_HAS_POPCNT
@@ -289,6 +291,7 @@ template <class T,
 //requires
 //	std::is_integral_v<T> &&
 //	std::is_unsigned_v<T>
+inline LUL_VIS_INLINE_FUNC
 constexpr T ceil2 (T x) noexcept
 {
 	#if LUL_FEATURE_CONSTEXPR_INTRINSICS && LUL_INTRINSIC_HAS_CLZ
@@ -320,6 +323,7 @@ template <class T,
 //requires
 //	std::is_integral_v<T> &&
 //	std::is_unsigned_v<T>
+inline LUL_VIS_INLINE_FUNC
 constexpr T floor2 (T x) noexcept
 {
 	#if LUL_FEATURE_CONSTEXPR_INTRINSICS && LUL_INTRINSIC_HAS_CLZ
@@ -348,6 +352,7 @@ template <class T,
 //requires
 //	std::is_integral_v<T> &&
 //	std::is_unsigned_v<T>
+inline LUL_VIS_INLINE_FUNC
 constexpr T log2p1 (T x) noexcept
 {
 	#if LUL_FEATURE_CONSTEXPR_INTRINSICS && LUL_INTRINSIC_HAS_CLZ
