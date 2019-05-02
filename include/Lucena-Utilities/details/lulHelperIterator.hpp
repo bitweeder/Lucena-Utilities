@@ -8,16 +8,21 @@
 	This file is distributed under the University of Illinois Open Source
 	License. See license/License.txt for details.
 
-	This is a subset of libc++’s <iterator> implementation, namely some of the
-	private bits, used under the University of Illinois/NCSA Open Source
+	This is a subset of the libc++ 8.0 <iterator> implementation, namely some
+	of the private bits, used under the University of Illinois/NCSA Open Source
 	License. See “license/libc++ License” for details.
 
-	The notable differences from the libc++ version include:
+	The <span> and <filesystem> implementations require this.
 
-	* namespace changes
-	* removal of some unneeded preprocessor tests and attributes
-	* renaming of various macros to use LUL versions
-	* renaming of system-reserved symbols
+	The notable differences from the libc++ version include:
+		- namespace changes
+		- removal of some unneeded preprocessor tests and attributes
+		- renaming of various macros to use LUL versions
+		- renaming of (some) reserved symbols
+
+	SEEME Remaining (predantic) work needed:
+		- rename `__` symbols
+		- rename `\b_[A-Z]` symbols
 
 ------------------------------------------------------------------------------*/
 
@@ -45,6 +50,24 @@
 LUL_begin_v_namespace
 
 namespace stdproxy { namespace details {
+
+//	__has_iterator_typedefs
+template <class _Tp>
+struct __has_iterator_typedefs
+{
+private:
+    struct __two {char __lx; char __lxx;};
+    template <class _Up> static __two __test(...);
+    template <class _Up> static char __test(
+    	typename std::__void_t<typename _Up::iterator_category>::type* = 0,
+		typename std::__void_t<typename _Up::difference_type>::type* = 0,
+		typename std::__void_t<typename _Up::value_type>::type* = 0,
+		typename std::__void_t<typename _Up::reference>::type* = 0,
+		typename std::__void_t<typename _Up::pointer>::type* = 0
+	);
+public:
+    static const bool value = sizeof(__test<_Tp>(0,0,0,0,0)) == 1;
+};
 
 //	__has_iterator_category
 template <class _Tp>
