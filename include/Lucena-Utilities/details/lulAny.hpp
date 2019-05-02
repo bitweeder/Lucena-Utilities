@@ -8,16 +8,19 @@
 	This file is distributed under the University of Illinois Open Source
 	License. See license/License.txt for details.
 
-	This is a gently hacked up copy of the libc++ 7.0 <any> implementation,
+	This is a gently hacked up copy of the libc++ 8.0 <any> implementation,
 	used under the University of Illinois/NCSA Open Source License. See
 	“license/libc++ License” for details.
 
 	The notable differences from the libc++ version include:
+		- namespace changes
+		- removal of some unneeded preprocessor tests and attributes
+		- renaming of various macros to use LUL versions
+		- renaming of (some) reserved symbols
 
-	* namespace changes
-	* removal of some unneeded preprocessor tests and attributes
-	* renaming of various macros to use LUL versions
-	* renaming of system-reserved symbols
+	SEEME Remaining (predantic) work needed:
+		- rename `__` symbols
+		- rename `\b_[A-Z]` symbols
 
 	SEEME This header requires a source file to define bad_any_cast.
 
@@ -36,7 +39,7 @@
 /*
    any synopsis
 
-namespace std {
+namespace stdproxy {
 
   class bad_any_cast : public bad_cast
   {
@@ -99,7 +102,7 @@ namespace std {
   template<class ValueType>
     ValueType* any_cast(any* operand) noexcept;
 
-} // namespace std
+} // namespace stdproxy
 
 */
 
