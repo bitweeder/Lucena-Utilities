@@ -8,7 +8,7 @@
 	This file is distributed under the University of Illinois Open Source
 	License. See license/License.txt for details.
 
-	This is a gently hacked up copy of the libc++ 7.0 <filesystem>
+	This is a gently hacked up copy of the libc++ 8.0 <filesystem>
 	implementation, used under the University of Illinois/NCSA Open Source
 	License. See “license/libc++ License” for details.
 
@@ -311,15 +311,15 @@ struct _FilesystemClock {
 
 	LUL_VIS_INLINE_FUNC
 	static std::time_t to_time_t(const time_point& __t) noexcept {
-	typedef std::chrono::duration<rep> __secs;
-	return std::time_t(
-		std::chrono::duration_cast<__secs>(__t.time_since_epoch()).count());
+		typedef std::chrono::duration<rep> __secs;
+		return std::time_t(
+			std::chrono::duration_cast<__secs>(__t.time_since_epoch()).count());
 	}
 
 	LUL_VIS_INLINE_FUNC
 	static time_point from_time_t(std::time_t __t) noexcept {
-	typedef std::chrono::duration<rep> __secs;
-	return time_point(__secs(__t));
+		typedef std::chrono::duration<rep> __secs;
+		return time_point(__secs(__t));
 	}
 };
 
@@ -1218,11 +1218,41 @@ public:
 	return __is;
 	}
 
+	friend inline LUL_VIS_INLINE_FUNC bool operator==(const path& __lhs,
+													 const path& __rhs) noexcept {
+		return __lhs.compare(__rhs) == 0;
+	}
+
+	friend inline LUL_VIS_INLINE_FUNC bool operator!=(const path& __lhs,
+													 const path& __rhs) noexcept {
+		return __lhs.compare(__rhs) != 0;
+	}
+
+	friend inline LUL_VIS_INLINE_FUNC bool operator<(const path& __lhs,
+													const path& __rhs) noexcept {
+		return __lhs.compare(__rhs) < 0;
+	}
+
+	friend inline LUL_VIS_INLINE_FUNC bool operator<=(const path& __lhs,
+													 const path& __rhs) noexcept {
+		return __lhs.compare(__rhs) <= 0;
+	}
+
+	friend inline LUL_VIS_INLINE_FUNC bool operator>(const path& __lhs,
+													const path& __rhs) noexcept {
+		return __lhs.compare(__rhs) > 0;
+	}
+
+	friend inline LUL_VIS_INLINE_FUNC bool operator>=(const path& __lhs,
+													 const path& __rhs) noexcept {
+		return __lhs.compare(__rhs) >= 0;
+	}
+
 private:
 	inline LUL_VIS_INLINE_FUNC path&
 	__assign_view(__string_view const& __s) noexcept {
-	__pn_ = string_type(__s);
-	return *this;
+		__pn_ = string_type(__s);
+		return *this;
 	}
 	string_type __pn_;
 };
@@ -1233,36 +1263,6 @@ inline LUL_VIS_INLINE_FUNC void swap(path& __lhs, path& __rhs) noexcept {
 
 LUL_VIS_FUNC
 size_t hash_value(const path& __p) noexcept;
-
-inline LUL_VIS_INLINE_FUNC bool operator==(const path& __lhs,
-												 const path& __rhs) noexcept {
-	return __lhs.compare(__rhs) == 0;
-}
-
-inline LUL_VIS_INLINE_FUNC bool operator!=(const path& __lhs,
-												 const path& __rhs) noexcept {
-	return __lhs.compare(__rhs) != 0;
-}
-
-inline LUL_VIS_INLINE_FUNC bool operator<(const path& __lhs,
-												const path& __rhs) noexcept {
-	return __lhs.compare(__rhs) < 0;
-}
-
-inline LUL_VIS_INLINE_FUNC bool operator<=(const path& __lhs,
-												 const path& __rhs) noexcept {
-	return __lhs.compare(__rhs) <= 0;
-}
-
-inline LUL_VIS_INLINE_FUNC bool operator>(const path& __lhs,
-												const path& __rhs) noexcept {
-	return __lhs.compare(__rhs) > 0;
-}
-
-inline LUL_VIS_INLINE_FUNC bool operator>=(const path& __lhs,
-												 const path& __rhs) noexcept {
-	return __lhs.compare(__rhs) >= 0;
-}
 
 inline LUL_VIS_INLINE_FUNC path operator/(const path& __lhs,
 												const path& __rhs) {
@@ -1392,24 +1392,24 @@ class LUL_VIS_EXCEPTION filesystem_error : public std::system_error {
 public:
 	LUL_VIS_INLINE_FUNC
 	filesystem_error(const std::string& __what, std::error_code __ec)
-		: system_error(__ec, __what),
-		__storage_(std::make_shared<_Storage>(path(), path())) {
-	__create_what(0);
+		:	system_error(__ec, __what),
+			__storage_(std::make_shared<_Storage>(path(), path())) {
+		__create_what(0);
 	}
 
 	LUL_VIS_INLINE_FUNC
 	filesystem_error(const std::string& __what, const path& __p1, std::error_code __ec)
-		: system_error(__ec, __what),
-		__storage_(std::make_shared<_Storage>(__p1, path())) {
-	__create_what(1);
+		:	system_error(__ec, __what),
+			__storage_(std::make_shared<_Storage>(__p1, path())) {
+		__create_what(1);
 	}
 
 	LUL_VIS_INLINE_FUNC
 	filesystem_error(const std::string& __what, const path& __p1, const path& __p2,
 					 std::error_code __ec)
-		: std::system_error(__ec, __what),
-		__storage_(std::make_shared<_Storage>(__p1, __p2)) {
-	__create_what(2);
+		:	std::system_error(__ec, __what),
+			__storage_(std::make_shared<_Storage>(__p1, __p2)) {
+		__create_what(2);
 	}
 
 	LUL_VIS_INLINE_FUNC
@@ -1425,17 +1425,16 @@ public:
 	return __storage_->__what_.c_str();
 	}
 
-	LUL_VIS_FUNC
 	void __create_what(int __num_paths);
 
 private:
-	struct _Storage {
-	LUL_VIS_INLINE_FUNC
-	_Storage(const path& __p1, const path& __p2) : __p1_(__p1), __p2_(__p2) {}
+	struct LUL_VIS_HIDDEN _Storage {
+		LUL_VIS_INLINE_FUNC
+		_Storage(const path& __p1, const path& __p2) : __p1_(__p1), __p2_(__p2) {}
 
-	path __p1_;
-	path __p2_;
-	std::string __what_;
+		path __p1_;
+		path __p2_;
+		std::string __what_;
 	};
 	std::shared_ptr<_Storage> __storage_;
 };
@@ -2008,7 +2007,7 @@ inline LUL_VIS_INLINE_FUNC path weakly_canonical(path const& __p,
 
 class directory_iterator;
 class recursive_directory_iterator;
-class __dir_stream;
+class LUL_VIS_HIDDEN __dir_stream;
 
 class directory_entry {
 	typedef path _Path;
@@ -2672,7 +2671,7 @@ private:
 	operator==(const recursive_directory_iterator&,
 			 const recursive_directory_iterator&) noexcept;
 
-	struct __shared_imp;
+	struct LUL_VIS_HIDDEN __shared_imp;
 	std::shared_ptr<__shared_imp> __imp_;
 	bool __rec_;
 }; // class recursive_directory_iterator
