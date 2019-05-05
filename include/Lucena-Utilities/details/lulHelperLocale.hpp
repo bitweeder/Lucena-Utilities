@@ -8,7 +8,7 @@
 	This file is distributed under the University of Illinois Open Source
 	License. See license/License.txt for details.
 
-	This is a subset of libc++’s <__locale> implementation used under the
+	This is a subset of the libc++ 8.0 <__locale> implementation used under the
 	University of Illinois/NCSA Open Source License. See
 	“license/libc++ License” for details.
 
@@ -56,7 +56,7 @@ struct __narrow_to_utf8
 };
 
 template <>
-struct __narrow_to_utf8<8>
+struct LUL_VIS_CLASS_TEMPLATE __narrow_to_utf8<8>
 {
     template <class _OutputIterator, class _CharT>
     LUL_VIS_INLINE_FUNC
@@ -70,12 +70,13 @@ struct __narrow_to_utf8<8>
 };
 
 template <>
-struct __narrow_to_utf8<16>
+struct LUL_VIS_CLASS_TEMPLATE __narrow_to_utf8<16>
     : public std::codecvt<char16_t, char, std::mbstate_t>
 {
     LUL_VIS_INLINE_FUNC
     __narrow_to_utf8() : std::codecvt<char16_t, char, std::mbstate_t>(1) {}
 
+    LUL_VIS_FUNC
     ~__narrow_to_utf8();
 
     template <class _OutputIterator, class _CharT>
@@ -104,12 +105,13 @@ struct __narrow_to_utf8<16>
 };
 
 template <>
-struct __narrow_to_utf8<32>
+struct LUL_VIS_CLASS_TEMPLATE __narrow_to_utf8<32>
     : public std::codecvt<char32_t, char, std::mbstate_t>
 {
     LUL_VIS_INLINE_FUNC
     __narrow_to_utf8() : std::codecvt<char32_t, char, std::mbstate_t>(1) {}
 
+    LUL_VIS_FUNC
     ~__narrow_to_utf8();
 
     template <class _OutputIterator, class _CharT>
@@ -146,7 +148,7 @@ struct __widen_from_utf8
 };
 
 template <>
-struct __widen_from_utf8<8>
+struct LUL_VIS_CLASS_TEMPLATE __widen_from_utf8<8>
 {
     template <class _OutputIterator>
     LUL_VIS_INLINE_FUNC
@@ -160,12 +162,13 @@ struct __widen_from_utf8<8>
 };
 
 template <>
-struct __widen_from_utf8<16>
+struct LUL_VIS_CLASS_TEMPLATE __widen_from_utf8<16>
     : public std::codecvt<char16_t, char, std::mbstate_t>
 {
     LUL_VIS_INLINE_FUNC
     __widen_from_utf8() : std::codecvt<char16_t, char, std::mbstate_t>(1) {}
 
+    LUL_VIS_FUNC
     ~__widen_from_utf8();
 
     template <class _OutputIterator>
@@ -194,12 +197,13 @@ struct __widen_from_utf8<16>
 };
 
 template <>
-struct __widen_from_utf8<32>
+struct LUL_VIS_CLASS_TEMPLATE __widen_from_utf8<32>
     : public std::codecvt<char32_t, char, std::mbstate_t>
 {
     LUL_VIS_INLINE_FUNC
     __widen_from_utf8() : std::codecvt<char32_t, char, std::mbstate_t>(1) {}
 
+    LUL_VIS_FUNC
     ~__widen_from_utf8();
 
     template <class _OutputIterator>

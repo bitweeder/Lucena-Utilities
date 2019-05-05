@@ -975,7 +975,7 @@
 		LUL_VIS_FUNC_IMPORT
 			Apply these to declarations of visible functions that are defined
 			in the library binary, i.e., not inline functions, function
-			templates, or class template member functions.
+			templates, or (usually) class template member functions.
 
 		LUL_VIS_INLINE_FUNC
 			Do not export the symbol, and guarantee that it will not be subject
