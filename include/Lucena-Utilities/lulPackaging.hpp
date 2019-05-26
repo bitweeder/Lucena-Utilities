@@ -2,7 +2,7 @@
 
 	Lucena Utilities Library
 	“Packaging.hpp”
-	Copyright © 2010-2018 Lucena
+	Copyright © 2010-2019 Lucena
 	All Rights Reserved
 
 	This file is distributed under the University of Illinois Open Source
@@ -129,7 +129,7 @@
 #endif	//	LUL_PACKAGING_copyright_holder
 
 #if !defined (LUL_PACKAGING_copyright_date)
-	#define LUL_PACKAGING_copyright_date					u8"2018"
+	#define LUL_PACKAGING_copyright_date					u8"2019"
 #endif	//	LUL_PACKAGING_copyright_date
 
 #if !defined (LUL_PACKAGING_product_domain)

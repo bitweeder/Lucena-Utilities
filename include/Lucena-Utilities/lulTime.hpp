@@ -2,7 +2,7 @@
 
 	Lucena Utilities Library
 	“Time.hpp”
-	Copyright © 2011-2018 Lucena
+	Copyright © 2011-2019 Lucena
 	All Rights Reserved
 
 	This file is distributed under the University of Illinois Open Source

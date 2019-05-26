@@ -2,7 +2,7 @@
 
 	Lucena Utilities Library
 	“Types.cpp”
-	Copyright © 2013-2018 Lucena
+	Copyright © 2013-2019 Lucena
 	All Rights Reserved
 
 	This file is distributed under the University of Illinois Open Source

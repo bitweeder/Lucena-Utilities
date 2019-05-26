@@ -2,7 +2,7 @@
 
 	Lucena Utilities Library
 	“OptionalWrapper.hpp”
-	Copyright © 2014-2018 Lucena
+	Copyright © 2014-2019 Lucena
 	All Rights Reserved
 
 	This file is distributed under the University of Illinois Open Source

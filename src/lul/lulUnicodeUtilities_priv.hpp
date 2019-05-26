@@ -2,7 +2,7 @@
 
 	Lucena Utilities Library
 	“UnicodeUtilities_priv.hpp”
-	Copyright © 2010-2018 Lucena
+	Copyright © 2010-2019 Lucena
 	All Rights Reserved
 
 	This file is distributed under the University of Illinois Open Source

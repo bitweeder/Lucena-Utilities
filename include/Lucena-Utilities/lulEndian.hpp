@@ -2,7 +2,7 @@
 
 	Lucena Utilities Library
 	“Endian.hpp”
-	Portions Copyright © 2000-2018 Lucena
+	Portions Copyright © 2000-2019 Lucena
 	All Rights Reserved
 
 	This file is distributed under the University of Illinois Open Source

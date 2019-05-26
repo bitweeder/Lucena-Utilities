@@ -2,7 +2,7 @@
 
     Lucena Utilities Library
     “CMakeLists.txt”
-    Copyright © 2018 Lucena
+    Copyright © 2018-2019 Lucena
     All Rights Reserved
 
     This file is distributed under the University of Illinois Open Source
@@ -329,7 +329,7 @@ if (LUL_BUILD_LIBRARY)
             LUL_PACKAGING_PRODUCT_IDENTIFIER="${CMAKE_PROJECT_NAME}"
             LUL_PACKAGING_SIGNATURE="luul"
             LUL_PACKAGING_COPYRIGHT_HOLDER="Lucena"
-            LUL_PACKAGING_COPYRIGHT_DATE="2015-2018"
+            LUL_PACKAGING_COPYRIGHT_DATE="2015-2019"
             LUL_PACKAGING_PRODUCT_DOMAIN="com.lucena"
             LUL_PACKAGING_PREFIX="lul"
             LUL_PACKAGING_DESCRIPTION="${CMAKE_PROJECT_DESCRIPTION}"

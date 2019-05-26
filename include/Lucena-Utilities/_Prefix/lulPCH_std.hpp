@@ -2,7 +2,7 @@
 
 	Lucena Utilities Library
 	“PCH_std.hpp”
-	Copyright © 2006-2018 Lucena
+	Copyright © 2006-2019 Lucena
 	All Rights Reserved
 
 	This file is distributed under the University of Illinois Open Source

@@ -2,7 +2,7 @@
 
     Lucena Utilities Library
     “cmake/LULUtils.cmake”
-    Copyright © 2018 Lucena
+    Copyright © 2018-2019 Lucena
     All Rights Reserved
 
     This file is distributed under the University of Illinois Open Source

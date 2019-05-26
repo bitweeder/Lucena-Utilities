@@ -2,7 +2,7 @@
 
 	Lucena Utilities Library
 	“Utilities.cpp”
-	Copyright © 1999-2018 Lucena
+	Copyright © 1999-2019 Lucena
 	All Rights Reserved
 
 	This file is distributed under the University of Illinois Open Source
