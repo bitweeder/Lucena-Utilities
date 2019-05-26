@@ -44,11 +44,10 @@ namespace stdproxy {
 template <class T>
 class observer_ptr
 {
-	private:
-		using pointer = std::add_pointer_t <T>;				//	exposition-only
-		using reference = std::add_lvalue_reference_t <T>;	//	exposition-only
+	static_assert (!std::is_reference_v <T>);
 
-		static_assert (!std::is_reference_v <T>, "");
+	using pointer = std::add_pointer_t <T>;				//	exposition-only
+	using reference = std::add_lvalue_reference_t <T>;	//	exposition-only
 
 
 	public:

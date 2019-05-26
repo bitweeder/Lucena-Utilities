@@ -8,9 +8,9 @@
 	This file is distributed under the University of Illinois Open Source
 	License. See license/License.txt for details.
 
-	Include this instead of including <filesystem>, <experimental/filesystem>,
-	or the boost filesystem headers directly. This placeholder will select the 
-	correct headers based on availability.
+	Include this instead of including <filesystem> or <experimental/filesystem>
+	directly. This placeholder will select the correct headers based on
+	availability.
 
 ------------------------------------------------------------------------------*/
 
@@ -23,9 +23,6 @@
 #include <Lucena-Utilities/lulFeatureSetup.hpp>
 #include <Lucena-Utilities/lulVersion.hpp>
 
-//	SEEME This is a little hinky since the interfaces between the std and boost
-//	implementations differ in a number of places. For this reason, we have to
-//	be explicit about which one we’re supporting.
 //	FIXME This is missing a bunch of type aliases.
 #if defined (LUL_TEMP_FILESYSTEM_NAMESPACE) || defined (LUL_TEMP_ERROR_CODE_NAMESPACE)
 	#error "LUL_TEMP_FILESYSTEM_NAMESPACE should not be defined"

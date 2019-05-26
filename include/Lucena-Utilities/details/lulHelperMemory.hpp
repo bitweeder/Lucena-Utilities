@@ -8,9 +8,9 @@
 	This file is distributed under the University of Illinois Open Source
 	License. See license/License.txt for details.
 
-	This is a subset of libc++’s <memory> implementation, namely some of the
-	private bits, used under the University of Illinois/NCSA Open Source
-	License. See “license/libc++ License” for details.
+	This is a subset of the libc++ libc++ 8.0 <memory> implementation, namely
+	some of the private bits, used under the University of Illinois/NCSA Open
+	Source License. See “license/libc++ License” for details.
 
 	The notable differences from the libc++ version include:
 

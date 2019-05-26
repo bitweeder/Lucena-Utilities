@@ -69,7 +69,7 @@
 	namespace stdproxy {
 
 	template <class T>
-	using remove_cvref = LUL_TEMP_OBSERVER_PTR_NAMESPACE::remove_cvref <T>;
+	using remove_cvref = LUL_TEMP_REMOVE_CVREF_NAMESPACE::remove_cvref <T>;
 
 	template <typename T>
 	using remove_cvref_t = typename remove_cvref <T>::type;
@@ -77,6 +77,8 @@
 	}	//	namespace stdproxy
 
 	LUL_end_v_namespace
+
+	#undef LUL_TEMP_REMOVE_CVREF_NAMESPACE
 #else
 	LUL_begin_v_namespace
 
@@ -95,3 +97,14 @@
 
 	LUL_end_v_namespace
 #endif	//	LUL_TEMP_REMOVE_CVREF_NAMESPACE
+
+////	type_identity
+//template <class T>
+//struct type_identity
+//{
+//	using type = T;
+//};
+//
+//template <class T>
+//using type_identity_t = typename type_identity <T>::type;
+//
