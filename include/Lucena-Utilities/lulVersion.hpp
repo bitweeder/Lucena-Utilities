@@ -357,13 +357,8 @@
 //	override to detect it; if no explicit override is set and the SD-6 macro is
 //	unavailable, we default to 0.
 #if !defined (LUL_LIBCPP2A_BIT_CAST)
-	#if __has_include (<bit>) \
-			&& (__cpp_lib_bit_cast || !defined (__cpp_lib_bit_cast))
-		#if __cpp_lib_bit_cast
-			#define LUL_LIBCPP2A_BIT_CAST							__cpp_lib_bit_cast
-		#else
-			#define LUL_LIBCPP2A_BIT_CAST							201806L
-		#endif
+	#if __has_include (<bit>) && __cpp_lib_bit_cast
+		#define LUL_LIBCPP2A_BIT_CAST								__cpp_lib_bit_cast
 	#else
 		#define LUL_LIBCPP2A_BIT_CAST								0L
 	#endif

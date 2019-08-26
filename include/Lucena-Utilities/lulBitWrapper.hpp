@@ -39,6 +39,8 @@
 #endif
 
 #ifdef LUL_TEMP_BIT_NAMESPACE
+	#include <cmath>
+	
 	LUL_begin_v_namespace
 
 	namespace stdproxy {
