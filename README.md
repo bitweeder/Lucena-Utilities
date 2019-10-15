@@ -1,9 +1,15 @@
 
 # Lucena Utilities Library
 
-The purpose of the Lucena Utilities Library (LUL) is to abstract away portions of the build environment when working with C++17 and later Standards. It’s a foundational tool that should allow code built on top of it to remain agnostic regarding the underlying compiler, Standard Library, and aspects of the runtime. Note that LUL is specifically not a build system, but it does try to shield a project from details of the build system at the code level.
+**This document is out-of-date. See the note below.**
 
-**LUL 2.0 is in active development—expect breaking changes until the tagged 2.0 release!**
+~~The purpose of the Lucena Utilities Library (LUL) is to abstract away portions of the build environment when working with C++17 and later Standards. It’s a foundational tool that should allow code built on top of it to remain agnostic regarding the underlying compiler, Standard Library, and aspects of the runtime. Note that LUL is specifically not a build system, but it does try to shield a project from details of the build system at the code level.~~
+
+**LUL 2.0 development has been paused while significant portions of it are factored out to other libraries.**
+
+The feature detection portions of LUL 2.0 now reside in the Lucena Build Abstraction Library ([lucenaBAL](https://github.com/bitweeder/lucenaBAL/)). The Standard Library wrapper portions are being moved to the Lucena C++ Proxy Library (still private until the refactoring is further along). The remainder of LUL will be a place where helpful utilities such as the Unicode wrappers can live until they get spun out into their own fully-realized libraries. Development should resume in another month, or so.
+
+**The rest of this document is untouched from before the pause.**
 
 ## Getting Started
 
